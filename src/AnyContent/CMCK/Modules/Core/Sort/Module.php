@@ -1,9 +1,8 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Core\Menu;
+namespace AnyContent\CMCK\Modules\Core\Sort;
 
 use AnyContent\CMCK\Application\Application;
-use AnyContent\CMCK\Modules\Core\Menu\MenuManager;
 
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
@@ -12,11 +11,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     {
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
-
-        $app['menus'] = $app->share(function ($app)
-        {
-            return new MenuManager($app['repos'],$app['twig']);
-        });
+        $app->get('/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\Listing\Controller::sortRecords')->bind('sortRecords');
 
     }
 

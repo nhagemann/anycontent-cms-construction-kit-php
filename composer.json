@@ -16,8 +16,10 @@
         "silex/silex": "~1.1",
         "twig/twig": ">=1.8,<2.0-dev",
         "knplabs/knp-menu": "2.0.*@dev",
+        "nitra/php-min": "dev-master",
         "nhagemann/cmdl-parser-php": "dev-master",
         "nhagemann/anycontent-client-php": "dev-master"
+
     },
 
     "require-dev": {

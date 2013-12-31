@@ -14,230 +14,62 @@
 
 {% block content %}
 
+    <div class="row">
+
+    <h2><a href="/anycontent_0_anycontent/content/bug">Bugs</a></h2>
+    <br/>
+    <table class="table table-curved">
+        <thead>
+        <tr>
+            <th class="span1"><a href="/anycontent_0_anycontent/content/bug?id">ID</a></th>
+            <th class="span2"><a href="/anycontent_0_anycontent/content/bug?subtype">Status</a></th>
+            <th><a href="/anycontent_0_anycontent/content/bug?name">Name</a></th>
+            <th class="span2"><a href="/anycontent_0_anycontent/content/bug?change">Last change</a></th>
+            <th class="span1"><a href="/anycontent_0_anycontent/content/bug?pos">Position</a></th>
+            <th class="span2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in records %}
+            <tr>
+                <td><a href="{{ record.editUrl }}">{{ record.id }}</a></td>
+                <td><span class="label" style="background-color:#FF0000">important</span></td>
+                <td><a href="{{ record.editUrl }}">{{ record.name }}</a>
+                </td>
+
+                <td>
+                    Anonymous<br/>
+                    <small>18.06.2012 08:33</small>
+                </td>
+                <td></td>
+                <td>
+                    <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>
+                    <a href="/anycontent_0_anycontent/content/bug/delete/50"
+                       class="btn btn-danger button_delete">Delete</a>
+
+                </td>
+            </tr>
+        {% endfor %}
 
 
-<h2><a href="/anycontent_0_anycontent/content/bug">Bugs</a></h2>
-<br/>
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th class="span1"><a href="/anycontent_0_anycontent/content/bug?id">ID</a></th>
-        <th class="span2"><a href="/anycontent_0_anycontent/content/bug?subtype">Status</a></th>
-        <th><a href="/anycontent_0_anycontent/content/bug?name">Name</a></th>
-        <th class="span2"><a href="/anycontent_0_anycontent/content/bug?change">Last change</a></th>
-        <th class="span1"><a href="/anycontent_0_anycontent/content/bug?pos">Position</a></th>
-        <th class="span2"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/50">50</a></td>
-        <td><span class="label" style="background-color:#FF0000">important</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/50">Bei Duplicate muss dass Edit-Template genutzt werden.</a>
-        </td>
-
-        <td>
-            Anonymous<br/>
-            <small>18.06.2012 08:33</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/50" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/50" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/48">48</a></td>
-        <td><span class="label" style="background-color:#FF0000">important</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/48">mulitselection in Sequenz wird nicht korrekt
-                gespeichert</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>10.06.2012 19:10</small>
-        </td>
-        <td>3</td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/48" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/48" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/46">46</a></td>
-        <td><span class="label" style="background-color:#FF9C9C">minor</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/46">Help Popover within sequences destroys everything</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>10.06.2012 11:30</small>
-        </td>
-        <td>1</td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/46" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/46" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/45">45</a></td>
-        <td><span class="label" style="background-color:#AAA">done</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/45">Beim Hinzufügen eines Sequence-Items sollte dieses
-                anschließend geöffnet werden, beim Löschen eines Items das nachfolgende</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>07.06.2012 20:26</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/45" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/45" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/44">44</a></td>
-        <td><span class="label" style="background-color:#FF9C9C">minor</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/44">Sections innerhalb einer Sequence funktionieren nicht im
-                neu hinzugefügten Item</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>07.06.2012 20:17</small>
-        </td>
-        <td>2</td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/44" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/44" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/43">43</a></td>
-        <td><span class="label" style="background-color:#AAA">done</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/43">Prüfen, ob eine Mandatory Exception innerhalb einer
-                Sequence neu hinzugefügte Items am Speichern hindert (im editbuffer)</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>17.06.2012 16:14</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/43" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/43" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/42">42</a></td>
-        <td><span class="label" style="background-color:#FF9C9C">minor</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/42">Unique in Sequences macht keinen Sinn</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>07.06.2012 19:43</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/42" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/42" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/41">41</a></td>
-        <td><span class="label" style="background-color:#AAA">done</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/41">CMDL Parser erlaubt Schließen von Sections, wenn keine
-                geöffnet wurde</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>16.06.2012 15:57</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/41" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/41" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/40">40</a></td>
-        <td><span class="label" style="background-color:#AAA">done</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/40">table autogrow funktioniert nicht</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>17.06.2012 22:22</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/40" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/40" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-    <tr>
-        <td><a href="/anycontent_0_anycontent/content/bug/39">39</a></td>
-        <td><span class="label" style="background-color:#FF9C9C">minor</span></td>
-        <td><a href="/anycontent_0_anycontent/content/bug/39">Passwort im Klartext in der Sessiontabelle</a></td>
-
-        <td>
-            Anonymous<br/>
-            <small>17.06.2012 08:36</small>
-        </td>
-        <td></td>
-        <td>
-            <a href="/anycontent_0_anycontent/content/bug/39" class="btn btn-primary">Edit</a>
-            <a href="/anycontent_0_anycontent/content/bug/delete/39" class="btn btn-danger button_delete">Delete</a>
-
-        </td>
-    </tr>
-
-    </tbody>
-</table>
-<hr/>
-<div class="row">
-    <div class="span8">
-        <div class="pagination">
-            <ul>
-                <li class="active"><a href="/anycontent_0_anycontent/content/bug/page/1">1</a></li>
-                <li><a href="/anycontent_0_anycontent/content/bug/page/2">2</a></li>
-                <li><a href="/anycontent_0_anycontent/content/bug/page/3">3</a></li>
-                <li><a href="/anycontent_0_anycontent/content/bug/page/4">4</a></li>
-            </ul>
+        </tbody>
+    </table>
+    <hr/>
+    <div class="row">
+        <div class="span8">
+            <div class="pagination">
+                <ul>
+                    <li class="active"><a href="/anycontent_0_anycontent/content/bug/page/1">1</a></li>
+                    <li><a href="/anycontent_0_anycontent/content/bug/page/2">2</a></li>
+                    <li><a href="/anycontent_0_anycontent/content/bug/page/3">3</a></li>
+                    <li><a href="/anycontent_0_anycontent/content/bug/page/4">4</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 
+    <hr/>
 
-<div class="btn-toolbar">
-        <span class="btn-group">
-        <a class="btn" href="/anycontent_0_anycontent/spreadsheet/bug"><i class="icon-edit"></i> Edit Records</a>
-    </span>
-    <span class="btn-group">
-        <a class="btn" href="/anycontent_0_anycontent/content/bug/sort"><i class="icon-move"></i> Sort Records</a>
-    </span>
-    <span class="btn-group" id="button_import_export" data-mode="export"
-          data-modal-url="/anycontent_0_anycontent/content/bug/import/">
-        <a class="btn" href="/anycontent_0_anycontent/content/bug/export/"><span id="button_export_active"><i
-                        class="icon-chevron-down"></i> Export Records</span><span id="button_import_active"
-                                                                                  style="display:none"><i
-                        class="icon-chevron-up"></i> Import Records</span></a>
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" id="button_import_export"><span
-                    class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a id="button_import" href="#"><i class="icon-chevron-up"></i> Import Records</a></li>
-            <li><a id="button_export" href="#"><i class="icon-chevron-down"></i> Export Records</a></li>
-
-        </ul>
-    </span>
-    <span class="btn-group">
-        <a class="btn" href="/anycontent_0_anycontent/content/bug/insert"><i class="icon-plus"></i> Add Record</a>
-    </span>
-</div>
+    {{ buttons | raw }}
 
 {% endblock %}

@@ -31,28 +31,9 @@ class Application extends SilexApplication
     }
 
 
-    public function addRepository($url, $user = null, $password = null, $title = null)
+    public function initModules()
     {
-        if (!$title)
-        {
-            $title = $url;
-        }
 
-        $this->repositories[$title] = $url;
-    }
-
-
-
-    public function getContentList()
-    {
-        foreach ($this->repositories as $repository)
-        {
-
-        }
-    }
-
-    public function run($request = null)
-    {
         foreach ($this->modules as $module)
         {
             $module .= '\Module';
@@ -62,6 +43,17 @@ class Application extends SilexApplication
         $this->register(new \Silex\Provider\TwigServiceProvider(), array(
             'twig.path' => array_reverse($this->templatesFolder),
         ));
+    }
+
+
+    public function run($request = null)
+    {
+
+        foreach ($this->modules as $module)
+        {
+            $module .= '\Module';
+            $module::run($this);
+        }
 
         parent::run($request);
     }

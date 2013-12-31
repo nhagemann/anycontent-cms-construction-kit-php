@@ -1,0 +1,59 @@
+{% extends "layout-12.twig" %}
+
+{% block content %}
+    <div class="row">
+        {% if record %}
+            <h3><span class="badge">#{{ record.id }}</span> {{ record.name }}</h3>
+        {% else %}
+            <h3><span class="badge">#new</span> New Record</h3>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <form class="well form-horizontal" method="post" name="form_edit" action="" id="form_edit">
+
+            <fieldset>
+                {{ form | raw }}
+            </fieldset>
+
+
+            <hr/>
+            <div class="controls">
+                <div class="btn-toolbar">
+
+                    <span class="btn-group" id="form_edit_button_save">
+                        <input type="submit" class="btn btn-primary" href="#" value="{{ save_operation_title }}"/>
+                        <input type="hidden" id="form_edit_button_save_operation" name="hidden[save_operation]"
+                               value="{{ save_operation }}">
+                        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span
+                                    class="caret"></span></a>
+                        <ul class="dropdown-menu" id="form_edit_button_save_options">
+                            <li><a href="#" data-operation="save">Save</a></li>
+                            <li><a href="#" data-operation="save-insert">Save & Insert</a></li>
+                            {% if record %}
+                                <li class="divider"></li>
+                                <li><a href="#" data-operation="duplicate">Duplicate</a></li>
+                                <li><a href="#" data-operation="save-duplicate">Save & Duplicate</a></li>
+                            {% endif %}
+                            <li class="divider"></li>
+                            <li><a href="#" data-operation="save-list">Save & List</a></li>
+                        </ul>
+                    </span>
+
+                    {% if record %}
+                        <span class="btn-group">
+                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-danger button_delete">Delete</a>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+
+        </form>
+
+
+        <hr/>
+        {{ buttons | raw }}
+
+    </div>
+{% endblock %}
