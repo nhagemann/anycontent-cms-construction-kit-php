@@ -58,6 +58,7 @@ class LayoutManager
     public function render($templateFilename, $vars = array(), $displayMessages = true)
     {
 
+        $this->addCssFile('layout.css');
         $this->addJsFile('messages.js');
 
         $vars = array_merge($this->vars, $vars);

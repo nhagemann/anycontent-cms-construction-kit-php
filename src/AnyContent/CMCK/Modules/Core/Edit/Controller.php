@@ -72,6 +72,7 @@ class Controller
         $vars = array();
 
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
+        $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
@@ -110,10 +111,13 @@ class Controller
             $vars['save_operation']       = key($saveoperation);
             $vars['save_operation_title'] = array_shift($saveoperation);
 
+            $vars['links']['delete']= $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+
             return $app['layout']->render('editrecord.twig', $vars);
         }
 
         return $app['layout']->render('record-notfound.twig', $vars);
+
 
     }
 
@@ -222,6 +226,31 @@ class Controller
             return $app['layout']->render('record-notfound.twig');
         }
 
+    }
+
+
+    public function deleteRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId)
+    {
+        $recordId = (int)$recordId;
+
+        if ($recordId)
+        {
+            /** @var Repository $repository */
+            $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+
+            if ($repository->deleteRecord($recordId, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage()))
+            {
+                $app['context']->addSuccessMessage('Record ' . $recordId . ' deleted.');
+            }
+            else
+            {
+                $app['context']->addErrorMessage('Could not delete record.');
+            }
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
     }
 
 }

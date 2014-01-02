@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Core\Listing;
 
+use AnyContent\Client\ContentFilter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +15,7 @@ use AnyContent\Client\UserInfo;
 class Controller
 {
 
-    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1, $s = null)
+    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1)
     {
 
         // reset chained save operations to 'save' only upon listing of a content type
@@ -30,10 +31,10 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
 
-        $definition = $repository->getContentTypeDefinition();
-        $app['context']->setCurrentContentType($definition);
+        $contentTypeDefinition = $repository->getContentTypeDefinition();
+        $app['context']->setCurrentContentType($contentTypeDefinition);
         $app['context']->setCurrentListingPage($page);
-        $vars['definition'] = $definition;
+        $vars['definition'] = $contentTypeDefinition;
 
         $records = array();
 
@@ -43,21 +44,37 @@ class Controller
         {
             $app['context']->setCurrentSortingOrder($request->query->get('s'));
         }
+        if ($request->query->has('q'))
+        {
+            $app['context']->setCurrentSearchTerm($request->query->get('q'));
+        }
         if ($request->get('_route') == 'listRecordsReset')
         {
-            $app['context']->setCurrentSortingOrder('id',false);
+            $app['context']->setCurrentSortingOrder('id', false);
+            $app['context']->setCurrentSearchTerm('');
         }
 
-        $itemsPerPage = 10;
+        $itemsPerPage = $app['context']->getCurrentItemsPerPage();
+
+        $filter = null;
+
+        $searchTerm         = $app['context']->getCurrentSearchTerm();
+        $vars['searchTerm'] = $searchTerm;
+        if ($searchTerm != '')
+        {
+            $filter = new ContentFilter($contentTypeDefinition);
+            $filter->addCondition('name', '><', $searchTerm);
+        }
 
         /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $app['context']->getCurrentTimeShift()) AS $record)
+        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, $app['context']->getCurrentTimeShift()) AS $record)
         {
             $item                     = array();
             $item['record']           = $record;
             $item['name']             = $record->getName();
             $item['id']               = $record->getID();
             $item['editUrl']          = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+            $item['deleteUrl']        = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
             $item['status']['label']  = $record->getStatusLabel();
             $item['subtype']['label'] = $record->getSubtypeLabel();
 
@@ -82,6 +99,8 @@ class Controller
         $vars['links']['sortByLastChange'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'change' ));
         $vars['links']['sortByStatus']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'status' ));
         $vars['links']['sortByPosition']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'pos' ));
+        $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+        $vars['links']['closeSearchBox']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'q' => '' ));
 
         $app['layout']->addCssFile('listing.css');
 

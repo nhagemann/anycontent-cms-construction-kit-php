@@ -23,6 +23,10 @@ class ContextManager
         {
             $this->session->set($this->prefix . 'sorting', array());
         }
+        if (!$this->session->has($this->prefix . 'searchterms'))
+        {
+            $this->session->set($this->prefix . 'searchterms', array());
+        }
         if (!$this->session->has($this->prefix . 'listing_page'))
         {
             $this->session->set($this->prefix . 'listing_page', array());
@@ -144,6 +148,34 @@ class ContextManager
         }
 
         return '1';
+    }
+
+
+    public function setCurrentSearchTerm($searchTerm)
+    {
+        $searchTerms                                        = $this->session->get($this->prefix . 'searchterms');
+        $searchTerms[$this->contentTypeDefinion->getName()] = $searchTerm;
+        $this->session->set($this->prefix . 'searchterms', $searchTerms);
+    }
+
+    public function getCurrentSearchTerm()
+    {
+        if ($this->session->has($this->prefix . 'searchterms'))
+        {
+            $searchTerms = $this->session->get($this->prefix . 'searchterms');
+            if (array_key_exists($this->contentTypeDefinion->getName(), $searchTerms))
+            {
+                return $searchTerms[$this->contentTypeDefinion->getName()];
+            }
+        }
+
+        return '';
+    }
+
+
+    public function getCurrentItemsPerPage()
+    {
+        return 10;
     }
 
 

@@ -12,23 +12,8 @@
         </h2>
         <br/>
 
-        <div class="well">
-            <div class="col-xs-5">
-                <div class="input-group">
-                    <input type="text" class="form-control">
-                    <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span>
-                        Search
-                    </button>
-                    </span>
-                </div>
-            </div>
-            <a href="ete">
-                <button type="button" class="close" aria-hidden="true">&times;</button>
-            </a>
-            <br/>
-            <br/>
-        </div>
+
+        {% include "listing-searchbox.twig" %}
 
 
         <table class="table table-curved">
@@ -66,7 +51,7 @@
                     <td></td>
                     <td>
                         <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>
-                        <a href="/anycontent_0_anycontent/content/bug/delete/50"
+                        <a href="{{ record.deleteUrl }}"
                            class="btn btn-danger button_delete">Delete</a>
 
                     </td>
