@@ -6,6 +6,7 @@ use CMDL\Parser;
 use CMDL\ContentTypeDefinition;
 
 use AnyContent\Client\Client;
+use AnyContent\Client\UserInfo;
 
 class RepositoryManager
 {
@@ -15,6 +16,8 @@ class RepositoryManager
     protected $repositoryObjects = null;
 
     protected $accessHashes = null;
+
+    protected $userInfo = null;
 
 
     public function addAllContentTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
@@ -62,6 +65,12 @@ class RepositoryManager
 
         $this->repositoryInfos[$url] = $repositoryInfo;
 
+    }
+
+
+    public function setUserInfo(UserInfo $userInfo)
+    {
+        $this->userInfo = $userInfo;
     }
 
 
@@ -139,7 +148,13 @@ class RepositoryManager
         $this->repositoryObjects = array();
         foreach ($this->repositoryInfos as $repositoryInfo)
         {
-            $client                                          = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType']);
+            $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType']);
+
+            if ($this->userInfo)
+            {
+                $client->setUserInfo($this->userInfo);
+            }
+
             $repository                                      = $client->getRepository();
             $this->repositoryObjects[$repositoryInfo['url']] = $repository;
         }

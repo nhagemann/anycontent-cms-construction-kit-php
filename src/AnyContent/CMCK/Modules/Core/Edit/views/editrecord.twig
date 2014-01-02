@@ -3,14 +3,18 @@
 {% block content %}
     <div class="row">
         {% if record %}
-            <h3><span class="badge">#{{ record.id }}</span> {{ record.name }}</h3>
+
+            <h3><span class="label label-info">#{{ record.id }}
+                    .{{ record.revision }}</span> {{ record.name }}{% if definition.hasSubtypes() %} <span
+                        class="badge primary subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                    <span class="badge primary status">{{ record.statusLabel }}</span>{% endif %}</h3>
         {% else %}
-            <h3><span class="badge">#new</span> New Record</h3>
+            <h3><span class="label label-info">#new</span> New Record</h3>
         {% endif %}
     </div>
 
     <div class="row">
-        <form class="well form-horizontal" method="post" name="form_edit" action="" id="form_edit">
+        <form class="well" role="form" method="post" name="form_edit" action="" id="form_edit">
 
             <fieldset>
                 {{ form | raw }}
@@ -29,10 +33,9 @@
                                     class="caret"></span></a>
                         <ul class="dropdown-menu" id="form_edit_button_save_options">
                             <li><a href="#" data-operation="save">Save</a></li>
+                            <li class="divider"></li>
                             <li><a href="#" data-operation="save-insert">Save & Insert</a></li>
                             {% if record %}
-                                <li class="divider"></li>
-                                <li><a href="#" data-operation="duplicate">Duplicate</a></li>
                                 <li><a href="#" data-operation="save-duplicate">Save & Duplicate</a></li>
                             {% endif %}
                             <li class="divider"></li>
@@ -45,7 +48,12 @@
                         <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-danger button_delete">Delete</a>
                     </span>
                     {% endif %}
+
+                    <span class="btn-group">
+                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-default" role="button">Add New</a>
+                    </span>
                 </div>
+
             </div>
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Edit\Edit;
+namespace Anycontent\CMCK\Modules\Core\Edit;
 
 use CMDL\FormElementDefinition;
 
@@ -8,13 +8,15 @@ class FormManager
 {
 
     protected $twig;
+    protected $layout;
 
     protected $formElements = array();
 
 
-    public function __construct($twig)
+    public function __construct($twig,$layout)
     {
         $this->twig = $twig;
+        $this->layout = $layout;
     }
 
 
@@ -50,7 +52,7 @@ class FormManager
             $id   = $formId . '_' . $formElementDefinition->getFormElementType() . '_' . $name;
 
             $formelement = new $this->formElements[$type]($id, $name, $formElementDefinition, $this->twig, $value);
-            $html .= $formelement->render();
+            $html .= $formelement->render($this->layout);
         }
 
         return $html;

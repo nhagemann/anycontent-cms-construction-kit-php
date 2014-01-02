@@ -2,7 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Core\Listing;
 
-use AnyContent\CMCK\Application\Application;
+use AnyContent\CMCK\Modules\Core\Application\Application;
 
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
@@ -11,7 +11,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     {
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
-        $app->get('/content/list/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\Listing\Controller::listRecords')->bind('listRecords');
+        $app->get('/content/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Core\Listing\Controller::listRecords')->bind('listRecords');
 
     }
 

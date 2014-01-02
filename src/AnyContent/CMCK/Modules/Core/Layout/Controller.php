@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Core\Layout;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-use AnyContent\CMCK\Application\Application;
+use AnyContent\CMCK\Modules\Core\Application\Application;
 
 class Controller
 {

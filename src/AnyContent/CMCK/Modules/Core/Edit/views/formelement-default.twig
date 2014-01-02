@@ -1,0 +1,32 @@
+<div class="form-group formelement-{{ definition.FormElementType }}">
+    <div class="row">
+        {% block label %}
+            <div class="col-xs-8">
+                <label for="{{ id }}">{{ definition.label }}{% if definition.isMandatory == true %}*{% endif %}</label>
+            </div>
+        {% endblock %}
+    </div>
+    <div class="row">
+        {% block input %}
+            <div class="col-xs-6">
+                <textarea id="{{ id }}" name="{{ name }}" placeholder="{{ definition.placeholder }}"
+                          class="form-control"
+                          rows="3">{{ value }}</textarea>
+            </div>
+        {% endblock %}
+    </div>
+</div>
+<!--
+<div class="control-group <?php if ($validationerror):?>error<?php endif?>">
+    <label class="control-label"
+           for="<?php echo $formid?>">{{ definition.label }}{% if definition.isMandatory == true %}*{% endif %}</label>
+
+    <div class="controls">
+        <input type="text"  id="<?php echo $formid?>" name="<?php echo $attribute_name?>"
+               value="{{ value }}"
+        <data-content
+        ="<?php echo $definition->help?>">
+
+    </div>
+</div>
+-->

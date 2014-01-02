@@ -2,11 +2,12 @@
 
 namespace Anycontent\CMCK\Modules\Core\Layout;
 
-
 class LayoutManager
 {
 
     protected $twig;
+
+    protected $context;
 
     protected $vars = array();
 
@@ -14,21 +15,27 @@ class LayoutManager
 
     protected $jsFiles = array();
 
+    protected $jsLinks = array( 'head' => array(), 'body' => array() );
 
-    public function __construct($twig)
+
+    public function __construct($twig, $context)
     {
-        $this->twig = $twig;
+        $this->twig    = $twig;
+        $this->context = $context;
     }
 
-    public function addVar($key,$value)
+
+    public function addVar($key, $value)
     {
-        $this->vars[$key]=$value;
+        $this->vars[$key] = $value;
     }
+
 
     public function addCssFile($filename)
     {
         $this->cssFiles[] = $filename;
     }
+
 
     public function addJsFile($filename)
     {
@@ -36,28 +43,67 @@ class LayoutManager
     }
 
 
-    public function render($templateFilename, $vars = array())
+    public function addJsLinkToHead($link)
+    {
+        $this->jsLinks['head'][] = $link;
+    }
+
+
+    public function addJsLinkToEndOfBody($link)
+    {
+        $this->jsLinks['body'][] = $link;
+    }
+
+
+    public function render($templateFilename, $vars = array(), $displayMessages = true)
     {
 
-        $vars = array_merge($this->vars,$vars);
+        $this->addJsFile('messages.js');
+
+        $vars = array_merge($this->vars, $vars);
 
         $cssurl = '';
+        sort($this->cssFiles);
         foreach ($this->cssFiles as $cssFilename)
         {
-           $cssurl .= pathinfo($cssFilename,PATHINFO_FILENAME).'/';
+            $cssurl .= pathinfo($cssFilename, PATHINFO_FILENAME) . '/';
         }
-        $cssurl = trim($cssurl,'/');
-
-        $vars['cssurl']=$cssurl;
+        $cssurl         = trim($cssurl, '/');
+        $vars['cssurl'] = $cssurl;
 
         $jsurl = '';
+        sort($this->jsFiles);
         foreach ($this->jsFiles as $jsFilename)
         {
-            $jsurl .= pathinfo($jsFilename,PATHINFO_FILENAME).'/';
+            $jsurl .= pathinfo($jsFilename, PATHINFO_FILENAME) . '/';
         }
-        $jsurl = trim($jsurl,'/');
+        $jsurl         = trim($jsurl, '/');
+        $vars['jsurl'] = $jsurl;
 
-        $vars['jsurl']=$jsurl;
+        $jsheadlinks = '';
+        foreach ($this->jsLinks['head'] as $link)
+        {
+            $jsheadlinks .= '<script src="' . $link . '"></script>' . PHP_EOL;
+        }
+        $vars['jsheadlinks'] = $jsheadlinks;
+
+        $jsbodylinks = '';
+        foreach ($this->jsLinks['body'] as $link)
+        {
+            $jsbodylinks .= '<script src="' . $link . '"></script>' . PHP_EOL;
+        }
+        $vars['jsbodylinks'] = $jsheadlinks;
+
+        if ($displayMessages)
+        {
+
+            $messages            = array();
+            $messages['success'] = $this->context->getSuccessMessages();
+            $messages['info']    = $this->context->getInfoMessages();
+            $messages['alert']   = $this->context->getAlertMessages();
+            $messages['error']   = $this->context->getErrorMessages();
+            $vars['messages']    = $messages;
+        }
 
         return $this->twig->render($templateFilename, $vars);
     }

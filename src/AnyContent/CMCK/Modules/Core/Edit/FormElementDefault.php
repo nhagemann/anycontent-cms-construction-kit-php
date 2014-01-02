@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Edit\Edit;
+namespace Anycontent\CMCK\Modules\Core\Edit;
 
 use CMDL\FormElementDefinition;
 
@@ -34,7 +34,7 @@ class FormElementDefault
     }
 
 
-    public function render()
+    public function render($layout)
     {
         return $this->twig->render('formelement-default.twig', $this->vars);
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Edit\Edit;
+namespace AnyContent\CMCK\Modules\Core\Edit;
 
-use AnyContent\CMCK\Application\Application;
+use AnyContent\CMCK\Modules\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
 use CMDL\ClippingDefinition;
@@ -28,12 +28,14 @@ class Controller
 
         $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-        $app['layout']->addCssFile('curvedtables.css');
+        $app['layout']->addCssFile('listing.css');
 
         $vars['record'] = false;
 
         /** @var ContentTypeDefinition $contentTypeDefinition */
         $contentTypeDefinition = $repository->getContentTypeDefinition();
+
+        $vars['definition'] = $contentTypeDefinition;
 
         if ($contentTypeDefinition->hasInsertOperation())
         {
@@ -44,7 +46,7 @@ class Controller
             $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions());
 
             $buttons   = array();
-            $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-list' );
+            $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
             $buttons[] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
             $buttons[] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 
@@ -55,7 +57,7 @@ class Controller
             $vars['save_operation']       = key($saveoperation);
             $vars['save_operation_title'] = array_shift($saveoperation);
 
-            return $app['layout']->render('record-edit.twig', $vars);
+            return $app['layout']->render('editrecord.twig', $vars);
         }
         else
         {
@@ -79,7 +81,7 @@ class Controller
         /** @var Record $record */
         $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
-        $app['layout']->addCssFile('curvedtables.css');
+        $app['layout']->addCssFile('listing.css');
         $app['layout']->addJsFile('savebutton.js');
 
         if ($record)
@@ -89,13 +91,15 @@ class Controller
             /** @var ContentTypeDefinition $contentTypeDefinition */
             $contentTypeDefinition = $repository->getContentTypeDefinition();
 
+            $vars['definition'] = $contentTypeDefinition;
+
             /* @var ClippingDefinition */
             $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
 
             $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record);
 
             $buttons      = array();
-            $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-list' );
+            $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
             $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
             $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 
@@ -106,7 +110,7 @@ class Controller
             $vars['save_operation']       = key($saveoperation);
             $vars['save_operation_title'] = array_shift($saveoperation);
 
-            return $app['layout']->render('record-edit.twig', $vars);
+            return $app['layout']->render('editrecord.twig', $vars);
         }
 
         return $app['layout']->render('record-notfound.twig', $vars);
@@ -131,12 +135,6 @@ class Controller
                 $saveOperationTitle = 'Save & Insert';
                 $saveOperation      = 'save-insert';
                 $insert             = true;
-                break;
-            case 'duplicate':
-                $saveOperationTitle = 'Duplicate';
-                $saveOperation      = 'duplicate';
-                $save               = false;
-                $duplicate          = true;
                 break;
             case 'save-duplicate':
                 $saveOperationTitle = 'Save & Duplicate';
@@ -190,6 +188,14 @@ class Controller
             {
                 $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
                 $app['context']->resetTimeShift();
+                if ($recordId)
+                {
+                    $app['context']->addSuccessMessage('Record saved.');
+                }
+                else
+                {
+                    $app['context']->addErrorMessage('Could not save record.');
+                }
             }
             if ($duplicate)
             {
@@ -205,7 +211,7 @@ class Controller
 
             if ($list)
             {
-                return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 303);
+                return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 303);
             }
 
             return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);

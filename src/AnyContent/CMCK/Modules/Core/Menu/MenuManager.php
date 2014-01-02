@@ -2,62 +2,51 @@
 
 namespace Anycontent\CMCK\Modules\Core\Menu;
 
-use Knp\Menu\Matcher\Matcher;
-use Knp\Menu\MenuFactory;
-
-use AnyContent\CMCK\Modules\Core\Menu\NavBarListRenderer;
-
-use AnyContent\Client\Client;
-
 class MenuManager
 {
 
     protected $repositoryManager;
     protected $twig;
+    protected $layout;
 
 
-    public function __construct($repositoryManager, $twig)
+    public function __construct($repositoryManager, $twig, $layout)
     {
         $this->repositoryManager = $repositoryManager;
         $this->twig              = $twig;
+        $this->layout            = $layout;
     }
 
 
     public function renderMainMenu()
     {
-
-        $factory = new MenuFactory();
-
-        $menu = $factory->createItem('main')->setAttribute('class', 'dropdown-menu');
+        $items = array();
 
         foreach ($this->repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
         {
 
-            $uri    = '/content/repository/' . $repositoryItem['accessHash'];
-            $level2 = $menu->addChild($repositoryItem['title'], array( 'uri' => $uri ));
+            $url     = '/content/repository/' . $repositoryItem['accessHash'];
+            $items[] = array( 'type' => 'header', 'text' => $repositoryItem['title'], 'url' => $url );
 
             foreach ($this->repositoryManager->listContentTypes($repositoryUrl) as $contentTypName => $contentTypeItem)
             {
-                $uri = '/content/list/' . $contentTypeItem['accessHash'];
-                $level2->addChild($contentTypName, array( 'uri' => $uri ));
+                $url     = '/content/list/' . $contentTypeItem['accessHash'].'/page/1';
+                $items[] = array( 'type' => 'link', 'text' => $contentTypName, 'url' => $url, 'glyphicon' => 'glyphicon-file' );
             }
+            $items[] = array( 'type' => 'divider' );
         }
 
-        $menu->addChild('')->setAttribute('class', 'divider');
-        $uri = 'logout';
-        $menu->addChild('Logout', array( 'uri' => $uri ));
+        $items[] = array( 'type' => 'link', 'text' => 'Logout', 'url' => '#', 'glyphicon' => 'glyphicon-user' );
 
-        $options = array(
+        $this->layout->addCssFile('menu.css');
 
-            'currentClass'  => '',
-            'ancestorClass' => '',
-            'firstClass'    => '',
-            'lastClass'     => ''
-        );
+        return $this->renderDropDown($items);
+    }
 
-        $renderer = new NavBarListRenderer(new Matcher(), $options);
 
-        return $renderer->render($menu);
+    public function renderDropDown($items)
+    {
+        return $this->twig->render('core_menu_dropdown.twig', array( 'items' => $items ));
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Application;
+namespace AnyContent\CMCK\Modules\Core\Application;
 
 use Silex\Application as SilexApplication;
 

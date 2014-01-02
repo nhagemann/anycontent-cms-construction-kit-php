@@ -1,0 +1,10 @@
+{% extends "formelement-textfield.twig" %}
+
+{% block input %}
+    <div class="{{ class.size }}">
+
+        <textarea id="{{ id }}" name="{{ name }}" placeholder="{{ definition.placeholder }}" class="form-control"
+                  rows="{{ definition.rows }}">{{ value }}</textarea>
+
+    </div>
+{% endblock %}

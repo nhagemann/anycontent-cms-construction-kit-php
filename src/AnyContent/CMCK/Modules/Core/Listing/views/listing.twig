@@ -1,0 +1,85 @@
+{% extends "layout-12.twig" %}
+
+{% block title %}{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+
+        <h2>
+            <a href="/anycontent_0_anycontent/content/bug">{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</a>
+        </h2>
+        <br/>
+
+        <div class="well">
+            <div class="col-xs-5">
+                <div class="input-group">
+                    <input type="text" class="form-control">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span>
+                        Search
+                    </button>
+                    </span>
+                </div>
+            </div>
+            <a href="ete"><button type="button" class="close" aria-hidden="true">&times;</button></a>
+            <br/>
+            <br/>
+        </div>
+
+
+        <table class="table table-curved">
+            <thead>
+            <tr>
+                <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?id">ID</a></th>
+                {% if definition.hasSubtypes() %}
+                    <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?subtype">Subtype</a></th>
+                {% endif %}
+                <th><a href="/anycontent_0_anycontent/content/bug?name">Name</a></th>
+                <th class="scol-xs-2"><a href="/anycontent_0_anycontent/content/bug?change">Last change</a></th>
+                {% if definition.hasStatusList() %}
+                    <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?subtype">Status</a></th>
+                {% endif %}
+                <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?pos">Position</a></th>
+                <th class="col-xs-2"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for record in records %}
+                <tr>
+                    <td><a href="{{ record.editUrl }}">{{ record.id }}</a></td>
+                    {% if definition.hasSubtypes() %}
+                        <td><span class="badge subtype">{{ record.subtype.label }}</span></td>
+                    {% endif %}
+                    <td><a href="{{ record.editUrl }}">{{ record.name }}</a>
+                    </td>
+
+                    <td>
+                        {% include "listing-userinfo.twig" %}
+                    </td>
+                    {% if definition.hasStatusList() %}
+                        <td><span class="badge status">{{ record.status.label }}</span></td>
+                    {% endif %}
+                    <td></td>
+                    <td>
+                        <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>
+                        <a href="/anycontent_0_anycontent/content/bug/delete/50"
+                           class="btn btn-danger button_delete">Delete</a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {{ pager | raw }}
+    </div>
+
+
+    <div class="row">
+        <hr/>
+        {{ buttons | raw }}
+    </div>
+
+{% endblock %}

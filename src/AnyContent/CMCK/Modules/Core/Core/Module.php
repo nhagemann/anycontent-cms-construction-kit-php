@@ -2,7 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Core\Core;
 
-use AnyContent\CMCK\Application\Application;
+use AnyContent\CMCK\Modules\Core\Application\Application;
 
 abstract class Module
 {
