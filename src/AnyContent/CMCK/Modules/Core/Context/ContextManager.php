@@ -19,6 +19,14 @@ class ContextManager
         {
             $this->session->set($this->prefix . 'messages', array( 'success' => array(), 'info' => array(), 'alert' => array(), 'error' => array() ));
         }
+        if (!$this->session->has($this->prefix . 'sorting'))
+        {
+            $this->session->set($this->prefix . 'sorting', array());
+        }
+        if (!$this->session->has($this->prefix . 'listing_page'))
+        {
+            $this->session->set($this->prefix . 'listing_page', array());
+        }
     }
 
 
@@ -68,6 +76,74 @@ class ContextManager
     public function resetTimeShift()
     {
 
+    }
+
+
+    public function setCurrentSortingOrder($order, $switch = true)
+    {
+        $options = array( 'id', 'subtype', 'name', 'change', 'status', 'pos' );
+        if (in_array($order, $options))
+        {
+
+            if ($switch == true)
+            {
+                if ($this->getCurrentSortingOrder() == $order)
+                {
+                    $order = $order . '-';
+
+                }
+                if ($this->getCurrentSortingOrder() == $order . '-')
+                {
+                    $order = trim($order, '-');
+                }
+            }
+        }
+        else
+        {
+            $order = 'id';
+        }
+
+        $sorting                                        = $this->session->get($this->prefix . 'sorting');
+        $sorting[$this->contentTypeDefinion->getName()] = $order;
+        $this->session->set($this->prefix . 'sorting', $sorting);
+    }
+
+
+    public function getCurrentSortingOrder()
+    {
+        if ($this->session->has($this->prefix . 'sorting'))
+        {
+            $sorting = $this->session->get($this->prefix . 'sorting');
+            if (array_key_exists($this->contentTypeDefinion->getName(), $sorting))
+            {
+                return $sorting[$this->contentTypeDefinion->getName()];
+            }
+        }
+
+        return 'id';
+    }
+
+
+    public function setCurrentListingPage($page)
+    {
+        $listing                                        = $this->session->get($this->prefix . 'listing_page');
+        $listing[$this->contentTypeDefinion->getName()] = $page;
+        $this->session->set($this->prefix . 'listing_page', $listing);
+    }
+
+
+    public function getCurrentListingPage()
+    {
+        if ($this->session->has($this->prefix . 'listing_page'))
+        {
+            $listing = $this->session->get($this->prefix . 'listing_page');
+            if (array_key_exists($this->contentTypeDefinion->getName(), $listing))
+            {
+                return $listing[$this->contentTypeDefinion->getName()];
+            }
+        }
+
+        return '1';
     }
 
 

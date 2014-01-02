@@ -14,15 +14,14 @@ use AnyContent\Client\UserInfo;
 class Controller
 {
 
-    public static function listRecords(Application $app, $contentTypeAccessHash, $page)
+    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1, $s = null)
     {
+
         // reset chained save operations to 'save' only upon listing of a content type
         if (key($app['context']->getCurrentSaveOperation()) != 'save-list')
         {
             $app['context']->setCurrentSaveOperation('save', 'Save');
         }
-
-        $itemsPerPage = 10;
 
         $vars = array();
 
@@ -31,13 +30,28 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
 
-        $definition         = $repository->getContentTypeDefinition();
+        $definition = $repository->getContentTypeDefinition();
+        $app['context']->setCurrentContentType($definition);
+        $app['context']->setCurrentListingPage($page);
         $vars['definition'] = $definition;
 
         $records = array();
 
+        // check for sorting/search query parameters
+
+        if ($request->query->has('s'))
+        {
+            $app['context']->setCurrentSortingOrder($request->query->get('s'));
+        }
+        if ($request->get('_route') == 'listRecordsReset')
+        {
+            $app['context']->setCurrentSortingOrder('id',false);
+        }
+
+        $itemsPerPage = 10;
+
         /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), 'id', array(), $itemsPerPage, $page, $app['context']->getCurrentTimeShift()) AS $record)
+        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $app['context']->getCurrentTimeShift()) AS $record)
         {
             $item                     = array();
             $item['record']           = $record;
@@ -60,10 +74,19 @@ class Controller
 
         $vars['records'] = $records;
 
+        // sorting links
+
+        $vars['links']['sortById']         = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'id' ));
+        $vars['links']['sortBySubtype']    = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'subtype' ));
+        $vars['links']['sortByName']       = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+        $vars['links']['sortByLastChange'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'change' ));
+        $vars['links']['sortByStatus']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'status' ));
+        $vars['links']['sortByPosition']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'pos' ));
+
         $app['layout']->addCssFile('listing.css');
 
         $buttons      = array();
-        $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
+        $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecordsReset', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-list' );
         $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
         $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 

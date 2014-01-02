@@ -23,7 +23,9 @@
                     </span>
                 </div>
             </div>
-            <a href="ete"><button type="button" class="close" aria-hidden="true">&times;</button></a>
+            <a href="ete">
+                <button type="button" class="close" aria-hidden="true">&times;</button>
+            </a>
             <br/>
             <br/>
         </div>
@@ -32,16 +34,16 @@
         <table class="table table-curved">
             <thead>
             <tr>
-                <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?id">ID</a></th>
+                <th class="col-xs-1"><a href="{{ links.sortById }}">ID</a></th>
                 {% if definition.hasSubtypes() %}
-                    <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?subtype">Subtype</a></th>
+                    <th class="col-xs-1"><a href="{{ links.sortBySubtype }}">Subtype</a></th>
                 {% endif %}
-                <th><a href="/anycontent_0_anycontent/content/bug?name">Name</a></th>
-                <th class="scol-xs-2"><a href="/anycontent_0_anycontent/content/bug?change">Last change</a></th>
+                <th><a href="{{ links.sortByName }}">Name</a></th>
+                <th class="scol-xs-2"><a href="{{ links.sortByLastChange }}">Last change</a></th>
                 {% if definition.hasStatusList() %}
-                    <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?subtype">Status</a></th>
+                    <th class="col-xs-1"><a href="{{ links.sortByStatus }}">Status</a></th>
                 {% endif %}
-                <th class="col-xs-1"><a href="/anycontent_0_anycontent/content/bug?pos">Position</a></th>
+                <th class="col-xs-1"><a href="{{ links.sortByPosition }}">Position</a></th>
                 <th class="col-xs-2"></th>
             </tr>
             </thead>
