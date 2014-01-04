@@ -2,6 +2,8 @@
 
 namespace Anycontent\CMCK\Modules\Core\Context;
 
+use CMDL\ContentTypeDefinition;
+
 class ContextManager
 {
 
@@ -35,24 +37,86 @@ class ContextManager
         {
             $this->session->set($this->prefix . 'timeshift', 0);
         }
+        if (!$this->session->has($this->prefix . 'workspace'))
+        {
+            $this->session->set($this->prefix . 'workspace', 'default');
+        }
+        if (!$this->session->has($this->prefix . 'language'))
+        {
+            $this->session->set($this->prefix . 'language', 'none');
+        }
     }
 
 
-    public function setCurrentContentType($contentTypeDefinition)
+    public function setCurrentContentType(ContentTypeDefinition $contentTypeDefinition)
     {
         $this->contentTypeDefinion = $contentTypeDefinition;
+
+        $contentType = $contentTypeDefinition->getTitle();
+        if (!$contentType)
+        {
+            $contentType = $contentTypeDefinition->getName();
+        }
+        // check workspaces
+
+        $workspaces = $contentTypeDefinition->getWorkspaces();
+
+        if (!array_key_exists($this->getCurrentWorkspace(), $workspaces))
+        {
+            reset($workspaces);
+            list($key, $workspace) = each($workspaces);
+
+            $this->setCurrentWorkspace($key);
+            $this->addInfoMessage('Switching to workspace ' . $workspace . ' (' . $key . ') for content type ' . $contentType . '.');
+        }
+
+        if ($contentTypeDefinition->hasLanguages())
+        {
+            $languages = $contentTypeDefinition->getLanguages();
+        }
+        else
+        {
+            $languages = array( 'none' => 'None' );
+        }
+
+        if (!array_key_exists($this->getCurrentLanguage(), $languages))
+        {
+            reset($languages);
+            list($key, $language) = each($languages);
+
+            $this->setCurrentLanguage($key);
+            $this->addInfoMessage('Switching to language ' . $language . ' (' . $key . ') for content type ' . $contentType . '.');
+        }
+    }
+
+
+    public function getCurrentContentType()
+    {
+        return $this->contentTypeDefinion;
+    }
+
+
+    public function setCurrentWorkspace($workspace)
+    {
+        return $this->session->set($this->prefix . 'workspace', $workspace);
+    }
+
+
+    public function setCurrentLanguage($language)
+    {
+        return $this->session->set($this->prefix . 'language', $language);
     }
 
 
     public function getCurrentWorkspace()
     {
-        return 'default';
+        return $this->session->get($this->prefix . 'workspace');
     }
 
 
     public function getCurrentLanguage()
     {
-        return 'null';
+        return $this->session->get($this->prefix . 'language');
     }
 
 

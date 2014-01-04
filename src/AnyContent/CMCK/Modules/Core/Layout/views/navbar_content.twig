@@ -9,74 +9,83 @@
 
 
     <div class="collapse navbar-collapse navbar-right">
-        <ul class="nav navbar-nav " style="padding-top:8px;padding-right: 10px; ">
+        <ul class="nav navbar-nav " style="padding-top:8px;padding-right: 8px ">
 
             {% if links.timeshift %}
-            <li>
-                <form class="form-inline" action="{{ links.timeshift }}" method="post">
-                    <div class="form-group">
-                        <div class="pull-left">
-                            <button type="submit" class="btn btn-default"><span
-                                        class="glyphicon glyphicon-backward"></span>
-                                TimeShift
-                            </button>
-                        </div>
-                        <div class="pull-left" style="width:145px">
-                            <div class="bfh-datepicker" data-name="date" data-max="today"
-                                 data-date="{{ timeshift.date }}" data-format='d.m.y'>
+                <li style="padding-right: 10px">
+                    <form class="form-inline" action="{{ links.timeshift }}" method="post">
+                        <div class="form-group">
+                            <div class="pull-left">
+                                <button type="submit" class="btn btn-default"><span
+                                            class="glyphicon glyphicon-backward"></span>
+                                    TimeShift
+                                </button>
+                            </div>
+                            <div class="pull-left" style="width:145px">
+                                <div class="bfh-datepicker" data-name="date" data-max="today"
+                                     data-date="{{ timeshift.date }}" data-format='d.m.y'>
+
+                                </div>
+                            </div>
+                            <div class="pull-left" style="width:105px">
+                                <div class="bfh-timepicker" data-name="time" data-time="{{ timeshift.time }}">
+
+
+                                </div>
+                            </div>
+                            <div class="pull-left">
+                                <button type="submit" name="reset"
+                                        class="btn btn-default{% if not timeshift.active %} disabled{% endif %}"><span
+                                            class="glyphicon glyphicon-forward"></span>
+                                    Now
+                                </button>
 
                             </div>
                         </div>
-                        <div class="pull-left" style="width:105px">
-                            <div class="bfh-timepicker" data-name="time" data-time="{{ timeshift.time }}">
-
-
-                            </div>
-                        </div>
-                        <div class="pull-left">
-                            <button type="submit" name="reset"
-                                    class="btn btn-default{% if not timeshift.active %} disabled{% endif %}"><span
-                                        class="glyphicon glyphicon-forward"></span>
-                                Now
-                            </button>
-
-                        </div>
-                    </div>
-                </form>
-            </li>
+                    </form>
+                </li>
             {% endif %}
-            <li>
-                <form class="form-inline" action="{{ links.search }}" style="padding-right:10px;padding-left:10px">
+            {% if workspaces.active %}
+            <li style="padding-right: 10px">
+                <form class="form-inline" action="{{ links.workspaces }}" method="post"
+                      style="padding-right:10px;padding-left:10px">
 
                     <div class="form-group">
                         <label>Workspace</label>
                     </div>
                     <div class="form-group">
-                        <select class="form-control">
-                            <option>Live</option>
-                            <option>Draft</option>
+                        <select class="form-control" onchange="this.form.submit()" name="workspace">
+                            {% for key,value in workspaces.list %}
+                                <option value="{{ key }}"{% if key == workspaces.current %} selected="selected"{% endif %}>{{ value }}</option>
+                            {% endfor %}
+
                         </select>
 
 
                     </div>
                 </form>
             </li>
-            <li>
-                <form class="form-inline" action="{{ links.search }}" style="padding-right:10px;padding-left:10px">
+            {% endif %}
+            {% if languages.active %}
+            <li style="padding-right: 10px">
+                <form class="form-inline" action="{{ links.languages }}" method='post'
+                      style="padding-right:10px;padding-left:10px">
 
                     <div class="form-group">
                         <label>Language</label>
                     </div>
                     <div class="form-group">
-                        <select class="form-control">
-                            <option>Live</option>
-                            <option>Draft</option>
+                        <select class="form-control" onchange="this.form.submit()" name="language">
+                            {% for key,value in languages.list %}
+                                <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
+                            {% endfor %}
                         </select>
 
 
                     </div>
                 </form>
             </li>
+            {% endif %}
         </ul>
     </div>
 

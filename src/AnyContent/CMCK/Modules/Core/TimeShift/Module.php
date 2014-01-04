@@ -14,7 +14,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     {
 
         $app
-            ->post('/timeshift/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Core\TimeShift\Controller::timeShiftListRecords')
+            ->post('/timeshift/content/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Core\TimeShift\Controller::timeShiftListRecords')
             ->bind('timeShiftListRecords');
         $app
             ->post('/timeshift/content/edit/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Core\TimeShift\Controller::timeShiftEditRecord')

@@ -150,7 +150,6 @@ class RepositoryManager
         return false;
     }
 
-
     protected function initRepositoryObjects()
     {
         $this->repositoryObjects = array();
