@@ -43,7 +43,7 @@ class ContextManager
         }
         if (!$this->session->has($this->prefix . 'language'))
         {
-            $this->session->set($this->prefix . 'language', 'none');
+            $this->session->set($this->prefix . 'language', 'default');
         }
     }
 
@@ -76,7 +76,7 @@ class ContextManager
         }
         else
         {
-            $languages = array( 'none' => 'None' );
+            $languages = array( 'default' => 'None' );
         }
 
         if (!array_key_exists($this->getCurrentLanguage(), $languages))

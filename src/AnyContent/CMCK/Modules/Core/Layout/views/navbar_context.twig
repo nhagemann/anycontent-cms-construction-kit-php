@@ -22,5 +22,53 @@
         </ul>
     </div>
 
+    <div class="collapse navbar-collapse" style="padding-top:8px;opacity: 0.7">
+
+        <ul class="nav navbar-nav" style="padding-left:50px;">
+            {% if workspaces.active %}
+                <li style="padding-right: 10px">
+                    <form class="form-inline" action="{{ links.workspaces }}" method="post"
+                          style="padding-right:10px;padding-left:10px">
+
+                        <div class="form-group">
+                            <em>Workspace:</em>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" onchange="this.form.submit()" name="workspace">
+                                {% for key,value in workspaces.list %}
+                                    <option value="{{ key }}"{% if key == workspaces.current %} selected="selected"{% endif %}>{{ value }}</option>
+                                {% endfor %}
+
+                            </select>
+
+
+                        </div>
+                    </form>
+                </li>
+            {% endif %}
+            {% if languages.active %}
+                <li style="padding-right: 10px">
+                    <form class="form-inline" action="{{ links.languages }}" method='post'
+                          style="padding-right:10px;padding-left:10px">
+
+                        <div class="form-group">
+                            <em>Language:</em>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" onchange="this.form.submit()" name="language">
+                                {% for key,value in languages.list %}
+                                    <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            </select>
+
+
+                        </div>
+                    </form>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+
 
 </nav>
