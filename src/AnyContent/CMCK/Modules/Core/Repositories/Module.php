@@ -13,7 +13,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 
         $app['repos'] = $app->share(function ($app)
         {
-            return new RepositoryManager($app);
+            return new RepositoryManager($app['cache']);
         });
 
     }

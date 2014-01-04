@@ -11,6 +11,8 @@ use AnyContent\Client\UserInfo;
 class RepositoryManager
 {
 
+    protected $cache = null;
+
     protected $repositoryInfos = array();
 
     protected $repositoryObjects = null;
@@ -18,6 +20,12 @@ class RepositoryManager
     protected $accessHashes = null;
 
     protected $userInfo = null;
+
+
+    public function __construct($cache)
+    {
+        $this->cache = $cache;
+    }
 
 
     public function addAllContentTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
@@ -148,7 +156,7 @@ class RepositoryManager
         $this->repositoryObjects = array();
         foreach ($this->repositoryInfos as $repositoryInfo)
         {
-            $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType']);
+            $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache);
 
             if ($this->userInfo)
             {

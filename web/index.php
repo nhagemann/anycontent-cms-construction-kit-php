@@ -16,12 +16,23 @@ $app->registerModule('AnyContent\CMCK\Modules\Core\Listing');
 $app->registerModule('AnyContent\CMCK\Modules\Core\Pager');
 $app->registerModule('AnyContent\CMCK\Modules\Core\Sort');
 $app->registerModule('AnyContent\CMCK\Modules\Core\Edit');
+$app->registerModule('AnyContent\CMCK\Modules\Core\TimeShift');
 
+$app->registerModule('AnyContent\CMCK\Modules\Libs\BootstrapFormHelpers');
 
 $app->registerModule('AnyContent\CMCK\Modules\Edit\TextFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Edit\RichtextTinyMCEFormElements');
 
+
+
 $app->initModules();
+
+$memcache = new \Memcached();
+$memcache->addServer('localhost', 11211);
+$cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
+$cacheDriver->setMemcached($memcache);
+$app->setCacheDriver($cacheDriver);
+
 
 $app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/example'));
 $app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/nhagemann'));

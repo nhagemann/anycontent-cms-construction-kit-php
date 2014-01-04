@@ -31,6 +31,11 @@ class Application extends SilexApplication
     }
 
 
+    public function setCacheDriver($cache)
+    {
+        $this['cache']=$cache;
+    }
+
     public function initModules()
     {
 
@@ -41,8 +46,10 @@ class Application extends SilexApplication
         }
 
         $this->register(new \Silex\Provider\TwigServiceProvider(), array(
-            'twig.path' => array_reverse($this->templatesFolder),
+            'twig.path' => array_reverse($this->templatesFolder)
         ));
+
+        $this['twig']->setCache('../twig-cache');
     }
 
 
@@ -56,6 +63,18 @@ class Application extends SilexApplication
         }
 
         parent::run($request);
+    }
+
+
+    public function renderPage($templateFilename, $vars = array(), $displayMessages = true)
+    {
+        foreach ($this->modules as $module)
+        {
+            $module .= '\Module';
+            $module::preRender($this);
+        }
+
+        return $this['layout']->render($templateFilename, $vars, $displayMessages);
     }
 
 }

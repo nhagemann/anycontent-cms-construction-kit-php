@@ -57,11 +57,17 @@ class Controller
             $vars['save_operation']       = key($saveoperation);
             $vars['save_operation_title'] = array_shift($saveoperation);
 
-            return $app['layout']->render('editrecord.twig', $vars);
+            $vars['links']['search']    = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+            $vars['links']['timeshift'] = false;
+
+
+            return $app->renderPage('editrecord.twig', $vars);
+
         }
         else
         {
-            return $app['layout']->render('forbidden.twig', $vars);
+            return $app->renderPage('forbidden.twig', $vars);
+
         }
 
     }
@@ -71,8 +77,8 @@ class Controller
     {
         $vars = array();
 
-        $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
-        $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+        $vars['menu_mainmenu']   = $app['menus']->renderMainMenu();
+        $vars['links']['search'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
@@ -111,13 +117,15 @@ class Controller
             $vars['save_operation']       = key($saveoperation);
             $vars['save_operation_title'] = array_shift($saveoperation);
 
-            $vars['links']['delete']= $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+            $vars['links']['search']    = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+            $vars['links']['delete']    = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+            $vars['links']['timeshift'] = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
 
-            return $app['layout']->render('editrecord.twig', $vars);
+            return $app->renderPage('editrecord.twig', $vars);
+
         }
 
-        return $app['layout']->render('record-notfound.twig', $vars);
-
+        return $app->renderPage('record-not-found.twig', $vars);
 
     }
 

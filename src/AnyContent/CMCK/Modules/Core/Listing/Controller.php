@@ -102,6 +102,10 @@ class Controller
         $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
         $vars['links']['closeSearchBox']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'q' => '' ));
 
+        // context links
+
+        $vars['links']['timeshift'] = $app['url_generator']->generate('timeShiftListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
+
         $app['layout']->addCssFile('listing.css');
 
         $buttons      = array();
@@ -111,10 +115,11 @@ class Controller
 
         $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
-        $count         = $repository->getRecordsCount($app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+        $count = $repository->countRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, $app['context']->getCurrentTimeShift());
+
         $vars['pager'] = $app['pager']->renderPager($count, $itemsPerPage, $page, 'listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
-        return $app['layout']->render('listing.twig', $vars);
+        return $app->renderPage('listing.twig', $vars);
 
     }
 }

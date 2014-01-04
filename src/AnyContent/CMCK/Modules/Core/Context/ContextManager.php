@@ -31,6 +31,10 @@ class ContextManager
         {
             $this->session->set($this->prefix . 'listing_page', array());
         }
+        if (!$this->session->has($this->prefix . 'timeshift'))
+        {
+            $this->session->set($this->prefix . 'timeshift', 0);
+        }
     }
 
 
@@ -54,7 +58,7 @@ class ContextManager
 
     public function getCurrentTimeShift()
     {
-        return 0;
+        return $this->session->get($this->prefix . 'timeshift');
     }
 
 
@@ -77,9 +81,15 @@ class ContextManager
     }
 
 
+    public function setCurrentTimeShift($timestamp)
+    {
+        $this->session->set($this->prefix . 'timeshift', $timestamp);
+    }
+
+
     public function resetTimeShift()
     {
-
+        $this->session->set($this->prefix . 'timeshift', 0);
     }
 
 
@@ -158,6 +168,7 @@ class ContextManager
         $this->session->set($this->prefix . 'searchterms', $searchTerms);
     }
 
+
     public function getCurrentSearchTerm()
     {
         if ($this->session->has($this->prefix . 'searchterms'))
@@ -175,7 +186,7 @@ class ContextManager
 
     public function getCurrentItemsPerPage()
     {
-        return 10;
+        return 5;
     }
 
 

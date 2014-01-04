@@ -17,4 +17,10 @@ abstract class Module
     {
 
     }
+
+
+    public static function preRender(Application $app)
+    {
+
+    }
 }

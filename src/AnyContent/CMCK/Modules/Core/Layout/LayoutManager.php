@@ -31,6 +31,17 @@ class LayoutManager
     }
 
 
+    public function getVar($key, $default = '')
+    {
+        if (array_key_exists($key, $this->vars))
+        {
+            return $this->vars[$key];
+        }
+
+        return $default;
+    }
+
+
     public function addCssFile($filename)
     {
         $this->cssFiles[] = $filename;
@@ -64,7 +75,6 @@ class LayoutManager
         $vars = array_merge($this->vars, $vars);
 
         $cssurl = '';
-        sort($this->cssFiles);
         foreach ($this->cssFiles as $cssFilename)
         {
             $cssurl .= pathinfo($cssFilename, PATHINFO_FILENAME) . '/';
@@ -73,7 +83,6 @@ class LayoutManager
         $vars['cssurl'] = $cssurl;
 
         $jsurl = '';
-        sort($this->jsFiles);
         foreach ($this->jsFiles as $jsFilename)
         {
             $jsurl .= pathinfo($jsFilename, PATHINFO_FILENAME) . '/';
