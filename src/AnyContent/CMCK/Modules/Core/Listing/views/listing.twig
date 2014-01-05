@@ -16,6 +16,7 @@
         {% include "listing-searchbox.twig" %}
 
 
+        {% if records %}
         <table class="table table-curved">
             <thead>
             <tr>
@@ -60,7 +61,9 @@
             </tbody>
         </table>
 
+
         {{ pager | raw }}
+        {% endif %}
     </div>
 
 

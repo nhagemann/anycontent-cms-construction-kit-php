@@ -19,28 +19,31 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
         $app
             ->post('/timeshift/content/edit/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Core\TimeShift\Controller::timeShiftEditRecord')
             ->bind('timeShiftEditRecord');
+        $app
+            ->post('/timeshift/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\TimeShift\Controller::timeShiftSortRecords')
+            ->bind('timeShiftSortRecords');
 
     }
 
 
     public static function preRender(Application $app)
     {
-        $timeshift              = $app['layout']->getVar('timeshift',array());
+        $date = new \DateTime();
+
+        $timeshift              = $app['layout']->getVar('timeshift', array());
         $timeshift['active']    = false;
-        $timeshift['date']      = 'today';
-        $timeshift['time']      = 'now';
+        $timeshift['date']      = $date->format('d.m.Y');
+        $timeshift['time']      = $date->format('H:i');
         $timeshift['timestamp'] = time();
 
         if ($app['context']->getCurrentTimeShift() != 0)
         {
-            $date = new \DateTime();
+
             $date->setTimestamp($app['context']->getCurrentTimeShift());
             $timeshift['active']    = true;
             $timeshift['timestamp'] = $app['context']->getCurrentTimeShift();
             $timeshift['date']      = $date->format('d.m.Y');
             $timeshift['time']      = $date->format('H:i');
-            //->setTimeStamp($timestamp);
-
         }
         $app['layout']->addVar('timeshift', $timeshift);
     }

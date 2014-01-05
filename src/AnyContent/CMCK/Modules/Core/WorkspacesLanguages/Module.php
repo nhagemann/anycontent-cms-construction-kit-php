@@ -24,6 +24,9 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
         $app
             ->post('/change-workspace/content/add/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\WorkspacesLanguages\Controller::changeWorkspaceAddRecord')
             ->bind('changeWorkspaceAddRecord');
+        $app
+            ->post('/change-workspace/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\WorkspacesLanguages\Controller::changeWorkspaceSortRecords')
+            ->bind('changeWorkspaceSortRecords');
 
         $app
             ->post('/change-language/content/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Core\WorkspacesLanguages\Controller::changeLanguageListRecords')
@@ -34,6 +37,9 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
         $app
             ->post('/change-language/content/add/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\WorkspacesLanguages\Controller::changeLanguageAddRecord')
             ->bind('changeLanguageAddRecord');
+        $app
+            ->post('/change-language/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\WorkspacesLanguages\Controller::changeLanguageSortRecords')
+            ->bind('changeLanguageSortRecords');
 
     }
 

@@ -10,8 +10,9 @@ use CMDL\ClippingDefinition;
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class Controller

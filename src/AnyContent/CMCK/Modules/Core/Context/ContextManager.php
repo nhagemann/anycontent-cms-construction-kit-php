@@ -147,12 +147,24 @@ class ContextManager
 
     public function setCurrentTimeShift($timestamp)
     {
-        $this->session->set($this->prefix . 'timeshift', $timestamp);
+        $date = New \DateTime();
+        if ($timestamp > $date->getTimestamp())
+        {
+            $this->addErrorMessage('Cannot time shift into the future! - "Jesus, George, it was a wonder I was even born." (Marty McFly)');
+        }
+        else
+        {
+            $this->session->set($this->prefix . 'timeshift', $timestamp);
+        }
     }
 
 
     public function resetTimeShift()
     {
+        if ($this->getCurrentTimeShift() != 0)
+        {
+            $this->addInfoMessage('Switching back to real time.');
+        }
         $this->session->set($this->prefix . 'timeshift', 0);
     }
 

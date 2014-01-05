@@ -4,6 +4,7 @@ namespace AnyContent\CMCK\Modules\Core\Listing;
 
 use AnyContent\Client\ContentFilter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 use AnyContent\CMCK\Modules\Core\Application\Application;
@@ -36,8 +37,6 @@ class Controller
         $app['context']->setCurrentListingPage($page);
         $vars['definition'] = $contentTypeDefinition;
 
-        $records = array();
-
         // check for sorting/search query parameters
 
         if ($request->query->has('s'))
@@ -63,33 +62,21 @@ class Controller
         if ($searchTerm != '')
         {
             $filter = new ContentFilter($contentTypeDefinition);
+
+            if (is_numeric($searchTerm))
+            {
+                $recordId = (int)$searchTerm;
+                 if ($repository->getRecord($recordId,$app['context']->getCurrentWorkspace(),'default',$app['context']->getCurrentLanguage(),$app['context']->getCurrentTimeShift()))
+                 {
+                     $app['context']->setCurrentSearchTerm('');
+                     return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId'=>$recordId)), 303);
+                 }
+            }
             $filter->addCondition('name', '><', $searchTerm);
+
         }
 
-        /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, $app['context']->getCurrentTimeShift()) AS $record)
-        {
-            $item                     = array();
-            $item['record']           = $record;
-            $item['name']             = $record->getName();
-            $item['id']               = $record->getID();
-            $item['editUrl']          = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-            $item['deleteUrl']        = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-            $item['status']['label']  = $record->getStatusLabel();
-            $item['subtype']['label'] = $record->getSubtypeLabel();
-
-            /** @var UserInfo $userInfo */
-            $userInfo         = $record->getLastChangeUserInfo();
-            $item['username'] = $userInfo->getName();
-            $date             = new \DateTime();
-            $date->setTimestamp($userInfo->getTimestamp());
-            $item['lastChangeDate'] = $date->format('d.m.Y H:i:s');
-            $item['gravatar']       = '<img src="https://www.gravatar.com/avatar/' . md5(trim($userInfo->getUsername())) . '?s=40" height="40" width="40"/>';
-
-            $records[] = $item;
-        }
-
-        $vars['records'] = $records;
+        $vars['records'] = self::getRecords($app, $repository, $contentTypeAccessHash, null, 'default', $itemsPerPage, $page, $filter);
 
         // sorting links
 
@@ -103,10 +90,9 @@ class Controller
         $vars['links']['closeSearchBox']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'q' => '' ));
 
         // context links
-        $vars['links']['timeshift'] = $app['url_generator']->generate('timeShiftListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
+        $vars['links']['timeshift']  = $app['url_generator']->generate('timeShiftListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
         $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
-        $vars['links']['languages'] = $app['url_generator']->generate('changeLanguageListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
-
+        $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
 
         $app['layout']->addCssFile('listing.css');
 
@@ -117,11 +103,50 @@ class Controller
 
         $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
-        $count = $repository->countRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, $app['context']->getCurrentTimeShift());
+        $count = $repository->countRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $app['context']->getCurrentTimeShift());
 
         $vars['pager'] = $app['pager']->renderPager($count, $itemsPerPage, $page, 'listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
         return $app->renderPage('listing.twig', $vars);
 
+    }
+
+
+    protected function getRecords($app, Repository $repository, $contentTypeAccessHash, $orderBy = null, $clippingName = 'default', $itemsPerPage = null, $page = 1, $filter = null, $subset = null)
+    {
+        $records = array();
+
+        if (!$orderBy)
+        {
+            $orderBy = $app['context']->getCurrentSortingOrder();
+        }
+
+        /** @var Record $record */
+        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $subset, $app['context']->getCurrentTimeShift()) AS $record)
+        {
+            $item                     = array();
+            $item['record']           = $record;
+            $item['name']             = $record->getName();
+            $item['id']               = $record->getID();
+            $item['editUrl']          = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+            $item['deleteUrl']        = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+            $item['status']['label']  = $record->getStatusLabel();
+            $item['subtype']['label'] = $record->getSubtypeLabel();
+            $item['position'] = $record->getPosition();
+            $item['level']= $record->getLevelWithinSortedTree();
+
+
+            /** @var UserInfo $userInfo */
+            $userInfo         = $record->getLastChangeUserInfo();
+            $item['username'] = $userInfo->getName();
+            $date             = new \DateTime();
+            $date->setTimestamp($userInfo->getTimestamp());
+            $item['lastChangeDate'] = $date->format('d.m.Y H:i:s');
+            $item['gravatar']       = '<img src="https://www.gravatar.com/avatar/' . md5(trim($userInfo->getUsername())) . '?s=40" height="40" width="40"/>';
+
+            $records[] = $item;
+        }
+
+        return $records;
     }
 }

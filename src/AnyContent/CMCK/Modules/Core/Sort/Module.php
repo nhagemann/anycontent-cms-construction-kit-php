@@ -11,8 +11,17 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     {
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
-        $app->get('/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\Listing\Controller::sortRecords')->bind('sortRecords');
+        $app->get('/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\Sort\Controller::sortRecords')
+            ->bind('sortRecords');
+        $app->post('/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Core\Sort\Controller::postSortRecords')
+            ->bind('postSortRecords');
 
     }
 
+
+    public static function run(Application $app)
+    {
+        $app['layout']->addJsFile('sort.js');
+        $app['layout']->addCssFile('sort.css');
+    }
 }

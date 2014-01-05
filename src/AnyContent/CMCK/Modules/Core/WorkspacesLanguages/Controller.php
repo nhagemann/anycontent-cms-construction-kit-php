@@ -39,6 +39,13 @@ class Controller
     }
 
 
+    public static function changeWorkspaceSortRecords(Application $app, Request $request, $contentTypeAccessHash)
+    {
+        $app['context']->setCurrentWorkspace($request->get('workspace'));
+
+        return $app->redirect($app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash)),303);
+    }
+
     public static function changeLanguageListRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1)
     {
         $app['context']->setCurrentLanguage($request->get('language'));
@@ -62,4 +69,10 @@ class Controller
         return $app->redirect($app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )),303);
     }
 
+    public static function changeLanguageSortRecords(Application $app, Request $request, $contentTypeAccessHash)
+    {
+        $app['context']->setCurrentLanguage($request->get('language'));;
+
+        return $app->redirect($app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash)),303);
+    }
 }
