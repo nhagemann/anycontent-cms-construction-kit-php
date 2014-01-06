@@ -21,7 +21,7 @@ class Controller extends \AnyContent\CMCK\Modules\Core\Listing\Controller
         $vars = array();
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
@@ -70,7 +70,7 @@ class Controller extends \AnyContent\CMCK\Modules\Core\Listing\Controller
     public static function postSortRecords(Application $app, Request $request, $contentTypeAccessHash)
     {
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);

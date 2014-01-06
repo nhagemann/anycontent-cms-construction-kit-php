@@ -25,7 +25,7 @@ class Controller
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
@@ -83,7 +83,7 @@ class Controller
         $vars['links']['search'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
@@ -170,7 +170,7 @@ class Controller
         }
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
         $app['context']->setCurrentSaveOperation($saveOperation, $saveOperationTitle);
@@ -248,7 +248,7 @@ class Controller
         if ($recordId)
         {
             /** @var Repository $repository */
-            $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+            $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 

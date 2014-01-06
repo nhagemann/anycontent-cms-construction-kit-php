@@ -1,0 +1,4 @@
+http://www.online-excel.de/excel/singsel.php?f=128
+http://stackoverflow.com/questions/11172644/php-convert-the-full-excel-date-serial-format-to-unix-timestamp
+http://de.wikipedia.org/wiki/ISO_8601
+http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3

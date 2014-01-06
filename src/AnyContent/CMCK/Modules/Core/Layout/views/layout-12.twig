@@ -16,8 +16,14 @@
 </head>
 <body>
 
-{% include 'navbar_context.twig' %}
-{% include 'navbar_content.twig' %}
+{% block navbar %}
+    {% block navbar_top %}
+        {% include 'navbar_top.twig' %}
+    {% endblock %}
+    {% block navbar_bottom %}
+        {% include 'navbar_bottom.twig' %}
+    {% endblock %}
+{% endblock %}
 
 <div class="container">
     <br/>

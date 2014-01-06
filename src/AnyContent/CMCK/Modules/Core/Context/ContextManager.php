@@ -2,6 +2,7 @@
 
 namespace Anycontent\CMCK\Modules\Core\Context;
 
+use CMDL\ConfigTypeDefinition;
 use CMDL\ContentTypeDefinition;
 
 class ContextManager
@@ -12,6 +13,8 @@ class ContextManager
     protected $contentTypeDefinion = null;
 
     protected $prefix = 'context_';
+
+    protected $context = null;
 
 
     public function __construct($session)
@@ -51,6 +54,7 @@ class ContextManager
     public function setCurrentContentType(ContentTypeDefinition $contentTypeDefinition)
     {
         $this->contentTypeDefinion = $contentTypeDefinition;
+        $this->context             = 'content';
 
         $contentType = $contentTypeDefinition->getTitle();
         if (!$contentType)
@@ -87,9 +91,62 @@ class ContextManager
             $this->setCurrentLanguage($key);
             $this->addInfoMessage('Switching to language ' . $language . ' (' . $key . ') for content type ' . $contentType . '.');
         }
+
+        if (!$contentTypeDefinition->isTimeShiftable() AND $this->getCurrentTimeShift() != 0)
+        {
+            $this->resetTimeShift();
+        }
     }
 
 
+    public function setCurrentConfigType(ConfigTypeDefinition $configTypeDefinition)
+    {
+        $this->context = 'config';
+    }
+
+
+    public function setFilesContext()
+    {
+        $this->context = 'files';
+    }
+
+
+    public function isContentContext()
+    {
+        if ($this->context == 'content')
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public function isConfigContext()
+    {
+        if ($this->context == 'config')
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public function isFilesContext()
+    {
+        if ($this->context == 'files')
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @return ContentTypeDefinition
+     */
     public function getCurrentContentType()
     {
         return $this->contentTypeDefinion;
@@ -163,7 +220,20 @@ class ContextManager
     {
         if ($this->getCurrentTimeShift() != 0)
         {
-            $this->addInfoMessage('Switching back to real time.');
+            if ($this->isContentContext() AND $this->getCurrentContentType()->isTimeShiftable() == false)
+            {
+                $contentType = $this->getCurrentContentType()->getTitle();
+                if (!$contentType)
+                {
+                    $contentType = $this->getCurrentContentType()->getName();
+                }
+
+                $this->addInfoMessage('Content type ' . $contentType . ' doesn\'t support time shifting. Switching back to real time.');
+            }
+            else
+            {
+                $this->addInfoMessage('Switching back to real time.');
+            }
         }
         $this->session->set($this->prefix . 'timeshift', 0);
     }
@@ -339,5 +409,55 @@ class ContextManager
         $this->session->set($this->prefix . 'messages', $messages);
 
         return $result;
+    }
+
+
+    public function canDoTimeshift()
+    {
+        if ($this->isContentContext())
+        {
+            if ($this->getCurrentContentType())
+            {
+                return $this->getCurrentContentType()->isTimeShiftable();
+            }
+        }
+
+        return false;
+    }
+
+
+    public function canDoSearch()
+    {
+        if ($this->isContentContext())
+        {
+            if ($this->getCurrentContentType())
+            {
+                return $this->getCurrentContentType()->hasListOperation();
+            }
+        }
+
+        return false;
+    }
+
+
+    public function canChangeWorkspace()
+    {
+        if ($this->isContentContext())
+        {
+            return $this->getCurrentContentType()->hasWorkspaces();
+        }
+
+        return false;
+    }
+
+
+    public function canChangeLanguage()
+    {
+        if ($this->isContentContext())
+        {
+            return $this->getCurrentContentType()->hasLanguages();
+        }
+
+        return false;
     }
 }

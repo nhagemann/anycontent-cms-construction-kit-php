@@ -13,11 +13,11 @@ class RepositoryManager
 
     protected $cache = null;
 
-    protected $repositoryInfos = array();
+    protected $requestedRepositories = array();
 
     protected $repositoryObjects = null;
 
-    protected $accessHashes = null;
+    protected $contentTypeAccessHashes = null;
 
     protected $userInfo = null;
 
@@ -43,16 +43,16 @@ class RepositoryManager
         }
         $repository['contentTypes'] = array( '*' => '*' );
 
-        $this->repositoryInfos[$url] = $repository;
+        $this->requestedRepositories[$url] = $repository;
 
     }
 
 
     public function addOneContentType($contentTypeName, $url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $contentTypeTitle = null)
     {
-        if (array_key_exists($url, $this->repositoryInfos))
+        if (array_key_exists($url, $this->requestedRepositories))
         {
-            $repositoryInfo = $this->repositoryInfos[$url];
+            $repositoryInfo = $this->requestedRepositories[$url];
         }
         else
         {
@@ -71,7 +71,7 @@ class RepositoryManager
 
         $repositoryInfo['contentTypes'][$contentTypeName] = $contentTypeTitle;
 
-        $this->repositoryInfos[$url] = $repositoryInfo;
+        $this->requestedRepositories[$url] = $repositoryInfo;
 
     }
 
@@ -86,7 +86,7 @@ class RepositoryManager
     {
 
         $repositories = array();
-        foreach ($this->repositoryInfos as $repositoryInfo)
+        foreach ($this->requestedRepositories as $repositoryInfo)
         {
             $hash                                 = md5($repositoryInfo['url']);
             $repositories[$repositoryInfo['url']] = array( 'title' => $repositoryInfo['title'], 'accessHash' => $hash );
@@ -104,9 +104,9 @@ class RepositoryManager
             $this->initRepositoryObjects();
         }
 
-        if (array_key_exists($url, $this->repositoryInfos))
+        if (array_key_exists($url, $this->requestedRepositories))
         {
-            $repositoryInfo = $this->repositoryInfos[$url];
+            $repositoryInfo = $this->requestedRepositories[$url];
 
             $contentTypes = array();
 
@@ -132,17 +132,23 @@ class RepositoryManager
     }
 
 
-    public function getRepositoryContentAccessByHash($hash)
+    public function hasFiles($url)
     {
-        if (!$this->accessHashes)
+        return true;
+    }
+
+
+    public function getRepositoryByContentTypeAccessHash($hash)
+    {
+        if (!$this->contentTypeAccessHashes)
         {
             $this->initAccessHashes();
         }
 
-        if (array_key_exists($hash, $this->accessHashes))
+        if (array_key_exists($hash, $this->contentTypeAccessHashes))
         {
-            $repository = $this->accessHashes[$hash]['repository'];
-            $repository->selectContentType($this->accessHashes[$hash]['contentTypeName']);
+            $repository = $this->contentTypeAccessHashes[$hash]['repository'];
+            $repository->selectContentType($this->contentTypeAccessHashes[$hash]['contentTypeName']);
 
             return $repository;
         }
@@ -150,21 +156,26 @@ class RepositoryManager
         return false;
     }
 
-    protected function initRepositoryObjects()
+
+    public function getRepositoryByRepositoryAccessHash($hash)
     {
-        $this->repositoryObjects = array();
-        foreach ($this->repositoryInfos as $repositoryInfo)
+        if (!$this->repositoryObjects)
         {
-            $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache);
-
-            if ($this->userInfo)
-            {
-                $client->setUserInfo($this->userInfo);
-            }
-
-            $repository                                      = $client->getRepository();
-            $this->repositoryObjects[$repositoryInfo['url']] = $repository;
+            $this->initRepositoryObjects();
         }
+
+        foreach ($this->listRepositories() AS $url => $item)
+        {
+            if ($item['accessHash'] = $hash)
+            {
+                if (array_key_exists($url, $this->repositoryObjects))
+                {
+                    return $this->repositoryObjects[$url];
+                }
+            }
+        }
+
+        return false;
     }
 
 
@@ -175,15 +186,36 @@ class RepositoryManager
             $this->initRepositoryObjects();
         }
 
-        $this->accessHashes = array();
-        foreach ($this->repositoryInfos as $repositoryInfo)
+        $this->contentTypeAccessHashes = array();
+        foreach ($this->requestedRepositories as $repositoryInfo)
         {
             $repository = $this->repositoryObjects[$repositoryInfo['url']];
 
             foreach ($this->listContentTypes($repositoryInfo['url']) as $contentTypName => $contentTypeItem)
             {
-                $this->accessHashes[$contentTypeItem['accessHash']] = array( 'contentTypeName' => $contentTypName, 'repository' => $repository );
+                $this->contentTypeAccessHashes[$contentTypeItem['accessHash']] = array( 'contentTypeName' => $contentTypName, 'repository' => $repository );
             }
+        }
+
+    }
+
+
+    protected function initRepositoryObjects()
+    {
+        $this->repositoryObjects = array();
+        foreach ($this->requestedRepositories as $repositoryInfo)
+        {
+
+            $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache);
+
+            if ($this->userInfo)
+            {
+                $client->setUserInfo($this->userInfo);
+            }
+
+            $repository = $client->getRepository();
+
+            $this->repositoryObjects[$repositoryInfo['url']] = $repository;
         }
 
     }

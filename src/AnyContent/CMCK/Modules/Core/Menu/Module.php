@@ -15,7 +15,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 
         $app['menus'] = $app->share(function ($app)
         {
-            return new MenuManager($app['repos'],$app['twig'],$app['layout']);
+            return new MenuManager($app['repos'],$app['twig'],$app['layout'],$app['url_generator']);
         });
 
     }

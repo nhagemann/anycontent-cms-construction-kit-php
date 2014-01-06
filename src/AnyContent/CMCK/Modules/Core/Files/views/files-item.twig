@@ -1,0 +1,35 @@
+<div class="file-item pull-left">
+    <div class="panel panel-default">
+        <ul class="media-list">
+            <li class="media">
+                {% if file.isImage %}
+                    <a class="pull-left" href="#">
+                        <img class="media-object" src="http://placehold.it/60x60" alt="...">
+                    </a>
+                {% endif %}
+
+                <div class="media-body">
+                    <h4 class="media-heading"><a href="test">{{ file.getName }}</a></h4>
+                    {{ (file.getSize/1024) |number_format(1) }}
+                    Kb {% if file.isImage() %}({{ file.getWidth }} x {{ file.getHeight }}){% endif %}
+                    <br/>
+                    {% if file.getTimestampLastChange %}
+                        <small>{{ file.getTimestampLastChange|date('d.m.Y H:i') }}</small>
+                        <br/>
+                    {% endif %}
+                    <div class="file-actions">
+                        <div class="pull-left">
+                            <a href="test" alt="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                            &nbsp; <a href="test" alt="Edit"><span class="glyphicon glyphicon-edit"></span></a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="test" alt="Download"><span class="glyphicon glyphicon-cloud-download"></span></a>
+                            &nbsp; <a href="test" alt="Zoom"><span class="glyphicon glyphicon-zoom-in"></span></a>
+
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -30,7 +30,7 @@ class Controller
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryContentAccessByHash($contentTypeAccessHash);
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
