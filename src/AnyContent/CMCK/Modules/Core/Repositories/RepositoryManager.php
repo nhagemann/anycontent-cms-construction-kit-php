@@ -220,4 +220,18 @@ class RepositoryManager
 
     }
 
+
+    public function getAccessHash($repository, $contentTypeDefinition = null)
+    {
+        foreach ($this->repositoryObjects as $repositoryUrl => $repositoryObject)
+        {
+            if ($repository == $repositoryObject)
+            {
+                return md5($repositoryUrl . '-' . $contentTypeDefinition->getName());
+            }
+        }
+
+        return false;
+    }
+
 }

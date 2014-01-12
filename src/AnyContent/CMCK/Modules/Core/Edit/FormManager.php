@@ -9,14 +9,16 @@ class FormManager
 
     protected $twig;
     protected $layout;
+    protected $url_generator;
 
     protected $formElements = array();
 
 
-    public function __construct($twig,$layout)
+    public function __construct($app)
     {
-        $this->twig = $twig;
-        $this->layout = $layout;
+        $this->app    = $app;
+        $this->twig   = $app['twig'];
+        $this->layout = $app['layout'];
     }
 
 
@@ -26,7 +28,7 @@ class FormManager
     }
 
 
-    public function renderFormElements($formId, $formElementsDefinition, $record = null)
+    public function renderFormElements($formId, $formElementsDefinition, $values = array(),$prefix='')
     {
         $html = '';
         /** @var FormElementDefinition $formElementDefinition */
@@ -41,17 +43,20 @@ class FormManager
 
             }
 
-            if ($record)
+            if (array_key_exists($formElementDefinition->getName(), $values))
             {
-                $property = $formElementDefinition->getName();
-                $value    = $record->getProperty($property);
-                $formElementDefinition->getPlaceholder();
+                $value = $values[$formElementDefinition->getName()];
             }
 
             $name = $formElementDefinition->getName();
+
+            if ($prefix)
+            {
+                $name = trim($prefix,'_').'_'.$name;
+            }
             $id   = $formId . '_' . $formElementDefinition->getFormElementType() . '_' . $name;
 
-            $formelement = new $this->formElements[$type]($id, $name, $formElementDefinition, $this->twig, $value);
+            $formelement = new $this->formElements[$type]($id, $name, $formElementDefinition, $this->app, $value);
             $html .= $formelement->render($this->layout);
         }
 

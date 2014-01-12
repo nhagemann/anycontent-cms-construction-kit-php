@@ -2,15 +2,21 @@
 
 namespace Anycontent\CMCK\Modules\Core\Context;
 
+use AnyContent\Client\Repository;
 use CMDL\ConfigTypeDefinition;
 use CMDL\ContentTypeDefinition;
+use AnyContent\Client\Record;
 
 class ContextManager
 {
 
     protected $session;
 
-    protected $contentTypeDefinion = null;
+    protected $repository = null;
+
+    protected $contentTypeDefinition = null;
+
+    protected $record = null;
 
     protected $prefix = 'context_';
 
@@ -51,9 +57,21 @@ class ContextManager
     }
 
 
+    public function setCurrentRepository(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+
+    public function getCurrentRepository()
+    {
+        return $this->repository;
+    }
+
+
     public function setCurrentContentType(ContentTypeDefinition $contentTypeDefinition)
     {
-        $this->contentTypeDefinion = $contentTypeDefinition;
+        $this->contentTypeDefinition = $contentTypeDefinition;
         $this->context             = 'content';
 
         $contentType = $contentTypeDefinition->getTitle();
@@ -97,6 +115,27 @@ class ContextManager
             $this->resetTimeShift();
         }
     }
+
+    /**
+     * @return ContentTypeDefinition
+     */
+    public function getCurrentContentType()
+    {
+        return $this->contentTypeDefinition;
+    }
+
+
+    public function setCurrentRecord(Record $record)
+    {
+        $this->record = $record;
+    }
+
+
+    public function getCurrentRecord()
+    {
+        return $this->record;
+    }
+
 
 
     public function setCurrentConfigType(ConfigTypeDefinition $configTypeDefinition)
@@ -144,13 +183,6 @@ class ContextManager
     }
 
 
-    /**
-     * @return ContentTypeDefinition
-     */
-    public function getCurrentContentType()
-    {
-        return $this->contentTypeDefinion;
-    }
 
 
     public function setCurrentWorkspace($workspace)
@@ -264,7 +296,7 @@ class ContextManager
         }
 
         $sorting                                        = $this->session->get($this->prefix . 'sorting');
-        $sorting[$this->contentTypeDefinion->getName()] = $order;
+        $sorting[$this->contentTypeDefinition->getName()] = $order;
         $this->session->set($this->prefix . 'sorting', $sorting);
     }
 
@@ -274,9 +306,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'sorting'))
         {
             $sorting = $this->session->get($this->prefix . 'sorting');
-            if (array_key_exists($this->contentTypeDefinion->getName(), $sorting))
+            if (array_key_exists($this->contentTypeDefinition->getName(), $sorting))
             {
-                return $sorting[$this->contentTypeDefinion->getName()];
+                return $sorting[$this->contentTypeDefinition->getName()];
             }
         }
 
@@ -287,7 +319,7 @@ class ContextManager
     public function setCurrentListingPage($page)
     {
         $listing                                        = $this->session->get($this->prefix . 'listing_page');
-        $listing[$this->contentTypeDefinion->getName()] = $page;
+        $listing[$this->contentTypeDefinition->getName()] = $page;
         $this->session->set($this->prefix . 'listing_page', $listing);
     }
 
@@ -297,9 +329,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'listing_page'))
         {
             $listing = $this->session->get($this->prefix . 'listing_page');
-            if (array_key_exists($this->contentTypeDefinion->getName(), $listing))
+            if (array_key_exists($this->contentTypeDefinition->getName(), $listing))
             {
-                return $listing[$this->contentTypeDefinion->getName()];
+                return $listing[$this->contentTypeDefinition->getName()];
             }
         }
 
@@ -310,7 +342,7 @@ class ContextManager
     public function setCurrentSearchTerm($searchTerm)
     {
         $searchTerms                                        = $this->session->get($this->prefix . 'searchterms');
-        $searchTerms[$this->contentTypeDefinion->getName()] = $searchTerm;
+        $searchTerms[$this->contentTypeDefinition->getName()] = $searchTerm;
         $this->session->set($this->prefix . 'searchterms', $searchTerms);
     }
 
@@ -320,9 +352,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'searchterms'))
         {
             $searchTerms = $this->session->get($this->prefix . 'searchterms');
-            if (array_key_exists($this->contentTypeDefinion->getName(), $searchTerms))
+            if (array_key_exists($this->contentTypeDefinition->getName(), $searchTerms))
             {
-                return $searchTerms[$this->contentTypeDefinion->getName()];
+                return $searchTerms[$this->contentTypeDefinition->getName()];
             }
         }
 

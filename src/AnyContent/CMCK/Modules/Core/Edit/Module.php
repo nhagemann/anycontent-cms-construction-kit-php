@@ -29,7 +29,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 
         $app['form'] = $app->share(function ($app)
         {
-            return new FormManager($app['twig'],$app['layout']);
+            return new FormManager($app);
         });
 
     }

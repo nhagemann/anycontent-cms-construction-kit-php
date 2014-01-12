@@ -44,13 +44,21 @@ class LayoutManager
 
     public function addCssFile($filename)
     {
-        $this->cssFiles[] = $filename;
+        if (!in_array($filename, $this->cssFiles))
+        {
+            $this->cssFiles[] = $filename;
+        }
+
     }
 
 
     public function addJsFile($filename)
     {
-        $this->jsFiles[] = $filename;
+
+        if (!in_array($filename, $this->jsFiles))
+        {
+            $this->jsFiles[] = $filename;
+        }
     }
 
 

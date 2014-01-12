@@ -30,6 +30,7 @@ class Controller
 
         if ($repository)
         {
+            $app['context']->setCurrentRepository($repository);
             $path = '/' . trim($path, '/');
 
             $breadcrumbs = explode('/', $path);
@@ -63,12 +64,22 @@ class Controller
                     }
                     $folders[] = $items;
 
-                    $files = $folder->getFiles();
+                    $files = array();
+                    foreach ($folder->getFiles() as $file)
+                    {
+                        $item                      = array();
+                        $item['file']              = $file;
+                        $item['links']['download'] = $app['url_generator']->generate('downloadFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
+                        $item['links']['view']     = $app['url_generator']->generate('viewFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
+                        $item['links']['delete']   = $app['url_generator']->generate('deleteFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
+
+                        $files[] = $item;
+                    }
 
                 }
                 else
                 {
-                    return new RedirectResponse($vars['links']['files'],303);
+                    return new RedirectResponse($vars['links']['files'], 303);
                 }
 
             }
@@ -80,8 +91,6 @@ class Controller
 
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
 
-        $buttons = array();
-
         $buttons      = array();
         $buttons[100] = array( 'label' => 'Upload File', 'url' => '', 'glyphicon' => 'glyphicon-cloud-upload' );
         $buttons[200] = array( 'label' => 'Create Folder', 'url' => '', 'glyphicon' => 'glyphicon-folder-open' );
@@ -90,5 +99,21 @@ class Controller
         $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
         return $app->renderPage('files.twig', $vars);
+    }
+
+
+    public static function viewFile(Application $app, Request $request, $repositoryAccessHash, $id)
+    {
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
+
+        if ($repository)
+        {
+            $app['context']->setCurrentRepository($repository);
+            $file = $repository->getFile($id);
+
+            var_dump($file);
+        }
+        echo $id;
     }
 }

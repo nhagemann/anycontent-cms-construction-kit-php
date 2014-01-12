@@ -2,19 +2,19 @@
     <div class="panel panel-default">
         <ul class="media-list">
             <li class="media">
-                {% if file.isImage %}
+                {% if file.file.isImage %}
                     <a class="pull-left" href="#">
-                        <img class="media-object" src="http://placehold.it/60x60" alt="...">
+                        <img class="media-object" src="{{ file.links.view }}" width="60" alt="...">
                     </a>
                 {% endif %}
 
                 <div class="media-body">
-                    <h4 class="media-heading"><a href="test">{{ file.getName }}</a></h4>
-                    {{ (file.getSize/1024) |number_format(1) }}
-                    Kb {% if file.isImage() %}({{ file.getWidth }} x {{ file.getHeight }}){% endif %}
+                    <h4 class="media-heading"><a href="{{ file.links.view }}">{{ file.file.getName }}</a></h4>
+                    {{ (file.file.getSize/1024) |number_format(1) }}
+                    Kb {% if file.file.isImage() %}({{ file.file.getWidth }} x {{ file.file.getHeight }}){% endif %}
                     <br/>
-                    {% if file.getTimestampLastChange %}
-                        <small>{{ file.getTimestampLastChange|date('d.m.Y H:i') }}</small>
+                    {% if file.file.getTimestampLastChange %}
+                        <small>{{ file.file.getTimestampLastChange|date('d.m.Y H:i') }}</small>
                         <br/>
                     {% endif %}
                     <div class="file-actions">

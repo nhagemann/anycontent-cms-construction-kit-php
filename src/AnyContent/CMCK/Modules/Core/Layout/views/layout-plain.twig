@@ -15,23 +15,13 @@
     <link rel="stylesheet" href="/css/{{ cssurl }}">
     {{ jsheadlinks | raw }}
 </head>
-<body>
+<body style="background-color:#F5F5F5">
 
-{% block navbar %}
-    {% block navbar_top %}
-        {% include 'navbar_top.twig' %}
-    {% endblock %}
-    {% block navbar_bottom %}
-        {% include 'navbar_bottom.twig' %}
-    {% endblock %}
-{% endblock %}
 
-<div class="container">
     <br/>
     {% include 'messages.twig' %}
+{% block content %}{% endblock %}
 
-    <div class="row">{% block content %}{% endblock %}</div>
-</div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://code.jquery.com/jquery.js"></script>

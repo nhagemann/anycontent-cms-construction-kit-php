@@ -1,0 +1,28 @@
+<div>
+    <input type="hidden" name="sequence[]" value="{{ item.sequence }}"/>
+    <input type="hidden" name="type[]" value="{{ item.type }}"/>
+
+    {{ item.form | raw }}
+
+    <br/>
+
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-default sequence-remove-item"
+                data-item="{{ item.sequence }}">-
+        </button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            +
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu sequence-add-item" data-item="{{ item.sequence }}">
+            {% for name,title in inserts %}
+                <li>
+                    <a data-insert="{{ name }}">add {{ title }}</a>
+                </li>
+            {% endfor %}
+            <?php endforeach ?>
+        </ul>
+    </div>
+
+
+</div>

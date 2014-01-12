@@ -33,6 +33,7 @@ class Controller
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
+        $app['context']->setCurrentRepository($repository);
         $app['context']->setCurrentContentType($contentTypeDefinition);
         $app['context']->setCurrentListingPage($page);
         $vars['definition'] = $contentTypeDefinition;

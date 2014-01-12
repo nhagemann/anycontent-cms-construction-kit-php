@@ -10,7 +10,6 @@ use CMDL\ClippingDefinition;
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,49 +26,53 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
-        $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
-
-        $app['layout']->addCssFile('listing.css');
-
-        $vars['record'] = false;
-
-        /** @var ContentTypeDefinition $contentTypeDefinition */
-        $contentTypeDefinition = $repository->getContentTypeDefinition();
-
-        $vars['definition'] = $contentTypeDefinition;
-
-        if ($contentTypeDefinition->hasInsertOperation())
+        if ($repository)
         {
-            /* @var ClippingDefinition */
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+            $app['layout']->addCssFile('listing.css');
 
-            $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions());
+            $vars['record'] = false;
 
-            $buttons   = array();
-            $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
-            $buttons[] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
-            $buttons[] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
+            /** @var ContentTypeDefinition $contentTypeDefinition */
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
 
-            $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
+            $vars['definition'] = $contentTypeDefinition;
 
-            $saveoperation = $app['context']->getCurrentSaveOperation();
+            if ($contentTypeDefinition->hasInsertOperation())
+            {
+                /* @var ClippingDefinition */
 
-            $vars['save_operation']       = key($saveoperation);
-            $vars['save_operation_title'] = array_shift($saveoperation);
+                $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
 
-            $vars['links']['search']    = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
-            $vars['links']['timeshift'] = false;
-            $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceAddRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash));
-            $vars['links']['languages'] = $app['url_generator']->generate('changeLanguageAddRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash));
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions());
 
-            return $app->renderPage('editrecord.twig', $vars);
+                $buttons   = array();
+                $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
+                $buttons[] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
+                $buttons[] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 
-        }
-        else
-        {
-            return $app->renderPage('forbidden.twig', $vars);
+                $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
+                $saveoperation = $app['context']->getCurrentSaveOperation();
+
+                $vars['save_operation']       = key($saveoperation);
+                $vars['save_operation_title'] = array_shift($saveoperation);
+
+                $vars['links']['search']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+                $vars['links']['timeshift']  = false;
+                $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceAddRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
+                $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageAddRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
+
+                return $app->renderPage('editrecord.twig', $vars);
+
+            }
+            else
+            {
+                return $app->renderPage('forbidden.twig', $vars);
+
+            }
         }
 
     }
@@ -85,48 +88,53 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
-        $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
-
-        /** @var Record $record */
-        $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
-
-        $app['layout']->addCssFile('listing.css');
-        $app['layout']->addJsFile('savebutton.js');
-
-        if ($record)
+        if ($repository)
         {
-            $vars['record'] = $record;
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            /** @var ContentTypeDefinition $contentTypeDefinition */
-            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            /** @var Record $record */
+            $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
-            $vars['definition'] = $contentTypeDefinition;
+            $app['layout']->addCssFile('listing.css');
+            $app['layout']->addJsFile('editrecord.js');
 
-            /* @var ClippingDefinition */
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+            if ($record)
+            {
+                $app['context']->setCurrentRecord($record);
+                $vars['record'] = $record;
 
-            $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record);
+                /** @var ContentTypeDefinition $contentTypeDefinition */
+                $contentTypeDefinition = $repository->getContentTypeDefinition();
 
-            $buttons      = array();
-            $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 'glyphicon' => 'glyphicon-list' );
-            $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
-            $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
+                $vars['definition'] = $contentTypeDefinition;
 
-            $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
+                /* @var ClippingDefinition */
+                $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
 
-            $saveoperation = $app['context']->getCurrentSaveOperation();
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
 
-            $vars['save_operation']       = key($saveoperation);
-            $vars['save_operation_title'] = array_shift($saveoperation);
+                $buttons      = array();
+                $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 'glyphicon' => 'glyphicon-list' );
+                $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
+                $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 
-            $vars['links']['search']    = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
-            $vars['links']['delete']    = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-            $vars['links']['timeshift'] = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-            $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-            $vars['links']['languages'] = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+                $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
-            return $app->renderPage('editrecord.twig', $vars);
+                $saveoperation = $app['context']->getCurrentSaveOperation();
 
+                $vars['save_operation']       = key($saveoperation);
+                $vars['save_operation_title'] = array_shift($saveoperation);
+
+                $vars['links']['search']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+                $vars['links']['delete']     = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+                $vars['links']['timeshift']  = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+                $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+                $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
+
+                return $app->renderPage('editrecord.twig', $vars);
+
+            }
         }
 
         return $app->renderPage('record-not-found.twig', $vars);
@@ -172,72 +180,75 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
-        $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
-        $app['context']->setCurrentSaveOperation($saveOperation, $saveOperationTitle);
-
-        if ($recordId)
+        if ($repository)
         {
-            /** @var Record $record */
-            $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
-        }
-        else
-        {
-            $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
-        }
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+            $app['context']->setCurrentSaveOperation($saveOperation, $saveOperationTitle);
 
-        if ($record)
-        {
-            /** @var ContentTypeDefinition $contentTypeDefinition */
-            $contentTypeDefinition = $repository->getContentTypeDefinition();
-
-            /* @var ClippingDefinition */
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
-
-            $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions());
-
-            foreach ($values as $property => $value)
+            if ($recordId)
             {
-                $record->setProperty($property, $value);
+                /** @var Record $record */
+                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+            }
+            else
+            {
+                $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
             }
 
-            if ($save)
+            if ($record)
             {
-                $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
-                $app['context']->resetTimeShift();
-                if ($recordId)
+                /** @var ContentTypeDefinition $contentTypeDefinition */
+                $contentTypeDefinition = $repository->getContentTypeDefinition();
+
+                /* @var ClippingDefinition */
+                $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions());
+
+                foreach ($values as $property => $value)
                 {
-                    $app['context']->addSuccessMessage('Record saved.');
+                    $record->setProperty($property, $value);
                 }
-                else
+
+                if ($save)
                 {
-                    $app['context']->addErrorMessage('Could not save record.');
+                    $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+                    $app['context']->resetTimeShift();
+                    if ($recordId)
+                    {
+                        $app['context']->addSuccessMessage('Record saved.');
+                    }
+                    else
+                    {
+                        $app['context']->addErrorMessage('Could not save record.');
+                    }
                 }
+                if ($duplicate)
+                {
+                    $record->setID(null);
+                    $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+                    $app['context']->resetTimeShift();
+                }
+
+                if ($insert)
+                {
+                    return new RedirectResponse($app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 303);
+                }
+
+                if ($list)
+                {
+                    return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
+                }
+
+                return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
+
             }
-            if ($duplicate)
+            else
             {
-                $record->setID(null);
-                $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
-                $app['context']->resetTimeShift();
+                return $app['layout']->render('record-notfound.twig');
             }
-
-            if ($insert)
-            {
-                return new RedirectResponse($app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 303);
-            }
-
-            if ($list)
-            {
-                return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
-            }
-
-            return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
-
         }
-        else
-        {
-            return $app['layout']->render('record-notfound.twig');
-        }
-
     }
 
 
@@ -250,19 +261,23 @@ class Controller
             /** @var Repository $repository */
             $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
-            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+            if ($repository)
+            {
+                $app['context']->setCurrentRepository($repository);
+                $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            if ($repository->deleteRecord($recordId, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage()))
-            {
-                $app['context']->addSuccessMessage('Record ' . $recordId . ' deleted.');
+                if ($repository->deleteRecord($recordId, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage()))
+                {
+                    $app['context']->addSuccessMessage('Record ' . $recordId . ' deleted.');
+                }
+                else
+                {
+                    $app['context']->addErrorMessage('Could not delete record.');
+                }
             }
-            else
-            {
-                $app['context']->addErrorMessage('Could not delete record.');
-            }
+
+            return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
         }
-
-        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
     }
 
 }

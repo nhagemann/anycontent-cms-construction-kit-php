@@ -14,17 +14,19 @@ class FormElementDefault
     protected $definition;
     protected $value = '';
 
+    protected $app;
     protected $twig;
 
     protected $vars = array();
 
 
-    public function __construct($id, $name, $formElementDefinition, $twig, $value = '')
+    public function __construct($id, $name, $formElementDefinition, $app, $value = '')
     {
         $this->id         = $id;
         $this->name       = $name;
         $this->definition = $formElementDefinition;
-        $this->twig       = $twig;
+        $this->app        = $app;
+        $this->twig       = $app['twig'];
         $this->value      = $value;
 
         $this->vars['id']         = $this->id;
