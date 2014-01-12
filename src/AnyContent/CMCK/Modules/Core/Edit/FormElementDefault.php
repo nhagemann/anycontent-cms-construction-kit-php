@@ -4,6 +4,8 @@ namespace Anycontent\CMCK\Modules\Core\Edit;
 
 use CMDL\FormElementDefinition;
 
+use AnyContent\CMCK\Modules\Core\Edit\FormManager;
+
 class FormElementDefault
 {
 
@@ -11,13 +13,19 @@ class FormElementDefault
 
     protected $name = '';
 
+    /** @var  FormElementDefinition */
     protected $definition;
     protected $value = '';
 
     protected $app;
     protected $twig;
 
+    /** @var  FormManager */
+    protected $form;
+
     protected $vars = array();
+
+    protected $isFirstElement = false;
 
 
     public function __construct($id, $name, $formElementDefinition, $app, $value = '')
@@ -27,6 +35,7 @@ class FormElementDefault
         $this->definition = $formElementDefinition;
         $this->app        = $app;
         $this->twig       = $app['twig'];
+        $this->form       = $app['form'];
         $this->value      = $value;
 
         $this->vars['id']         = $this->id;
@@ -38,6 +47,23 @@ class FormElementDefault
 
     public function render($layout)
     {
-        return $this->twig->render('formelement-default.twig', $this->vars);
+        if ($this->definition->getName()) // skip elements, that don't have a name, i.e. cannot get stored into a property
+        {
+            return $this->twig->render('formelement-default.twig', $this->vars);
+        }
+
     }
+
+
+    public function setIsFirstElement($boolean)
+    {
+        $this->isFirstElement = $boolean;
+    }
+
+
+    public function isFirstElement()
+    {
+        return (boolean)$this->isFirstElement;
+    }
+
 }

@@ -7,6 +7,7 @@ use AnyContent\CMCK\Modules\Core\Application\Application;
 use CMDL\ContentTypeDefinition;
 use CMDL\ClippingDefinition;
 use CMDL\FormElementDefinition;
+use CMDL\InsertionDefinition;
 
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
@@ -71,18 +72,21 @@ class Controller
                     foreach ($sequence as $item)
                     {
                         $i++;
-                        $insertion           = key($item);
-                        $properties          = array_shift($item);
+                        $insertion  = key($item);
+                        $properties = array_shift($item);
+                        /** @var InsertionDefinition $insertionDefinition */
                         $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insertion);
                         $item                = array();
                         $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, 'item_' . $i);
                         $item['type']        = $insertion;
+                        $item['title']       = $insertionDefinition->getName();
                         $item['sequence']    = $i;
                         $vars['items'][]     = $item;
 
                     }
 
                     $app['layout']->addJsFile('editsequence.js');
+                    $app['layout']->addCssFile('editsequence.css');
 
                     return $app->renderPage('editsequence.twig', $vars);
                 }
@@ -168,6 +172,7 @@ class Controller
                         $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), 'item_' . $count);
                         $item['type']        = $insertion;
                         $item['sequence']    = $count;
+                        $item['title']       = $insertionDefinition->getName();
                         $vars['item']        = $item;
 
                         $vars['inserts'] = $formElementDefinition->getInserts();

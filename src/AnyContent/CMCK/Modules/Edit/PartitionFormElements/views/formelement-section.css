@@ -1,0 +1,15 @@
+.formelement-section .panel-heading {
+    background-color: #ebebeb;
+}
+
+.formelement-section h4 {
+    color: #333333;
+
+    font-weight: normal;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+.formelement-section a {
+    text-decoration: none;
+}

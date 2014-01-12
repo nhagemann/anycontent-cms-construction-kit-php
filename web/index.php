@@ -23,9 +23,9 @@ $app->registerModule('AnyContent\CMCK\Modules\Core\WorkspacesLanguages');
 $app->registerModule('AnyContent\CMCK\Modules\Libs\BlockUI');
 $app->registerModule('AnyContent\CMCK\Modules\Libs\BootstrapFormHelpers');
 $app->registerModule('AnyContent\CMCK\Modules\Libs\NestedSortable');
-$app->registerModule('AnyContent\CMCK\Modules\Libs\jQueryIframeAutoHeight');
 
 $app->registerModule('AnyContent\CMCK\Modules\Edit\TextFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Edit\PartitionFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Edit\RichtextTinyMCEFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Edit\SequenceFormElement');
 $app->initModules();
