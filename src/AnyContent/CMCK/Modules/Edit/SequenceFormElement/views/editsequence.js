@@ -18,6 +18,7 @@
             iframe = '#form_edit_sequence_' + $('#form_sequence').attr('data-property') + '_iframe';
 
             if (firstRun) {
+                // resize without animation effects, when called for the first time
                 $(iframe, window.parent.document).height(h);
                 firstRun = false;
 
@@ -79,6 +80,7 @@
 
                     $(".sequence-remove-item").click(function () {
 
+
                         item = $(this).attr('data-item');
 
                         $.event.trigger('cmck', {type: 'sequenceForm.remove', item: item});
@@ -102,9 +104,15 @@
                         item = params.item;
                         if (parseInt(item) > 0) {
                             $('#form_sequence_item_' + item).after(data);
+
+                            n = $('div.sequence-item').index($('#form_sequence_item_' + item)) + 1;
+                            $('#form_sequence').attr('data-active-item', n);
                         }
                         else {
                             $('.sequence-accordion').append(data);
+
+                            n = $('div.sequence-item').length - 1;
+                            $('#form_sequence').attr('data-active-item', n);
                         }
 
                         $.event.trigger('cmck', {type: 'editForm.init', refresh: true});
@@ -116,7 +124,17 @@
 
                 case 'sequenceForm.remove':
                     item = parseInt(params.item);
+                    n = $('div.sequence-item').index($('#form_sequence_item_' + item));
                     $('#form_sequence_item_' + item).remove();
+
+
+                    // make sure to open the new last item, if you just removed the previous last item
+                    if (n == $('div.sequence-item').length) {
+                        n = n - 1;
+                    }
+
+                    $('#form_sequence').attr('data-active-item', n);
+
 
                     $.event.trigger('cmck', {type: 'editForm.init', refresh: true});
 

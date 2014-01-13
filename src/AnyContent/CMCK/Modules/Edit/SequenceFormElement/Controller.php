@@ -66,20 +66,21 @@ class Controller
                     $vars['count'] = count($sequence);
                     $vars['items'] = array();
 
-                    $vars['inserts'] = $formElementDefinition->getInserts();
+                    $inserts = $formElementDefinition->getInserts();
+                    $vars['inserts'] =  $inserts;
 
                     $i = 0;
                     foreach ($sequence as $item)
                     {
                         $i++;
-                        $insertion  = key($item);
+                        $insert  = key($item);
                         $properties = array_shift($item);
                         /** @var InsertionDefinition $insertionDefinition */
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insertion);
+                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
                         $item                = array();
                         $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, 'item_' . $i);
-                        $item['type']        = $insertion;
-                        $item['title']       = $insertionDefinition->getName();
+                        $item['type']        = $insert;
+                        $item['title']       = $inserts[$insert];
                         $item['sequence']    = $i;
                         $vars['items'][]     = $item;
 
@@ -164,15 +165,16 @@ class Controller
                 {
                     if ($request->query->has('insert') AND $request->query->has('count'))
                     {
-                        $insertion = $request->query->get('insert');
+                        $inserts = $formElementDefinition->getInserts();
+                        $insert = $request->query->get('insert');
                         $count     = $request->query->get('count');
 
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insertion);
+                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
                         $item                = array();
                         $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), 'item_' . $count);
-                        $item['type']        = $insertion;
+                        $item['type']        = $insert;
                         $item['sequence']    = $count;
-                        $item['title']       = $insertionDefinition->getName();
+                        $item['title']       = $inserts[$insert];
                         $vars['item']        = $item;
 
                         $vars['inserts'] = $formElementDefinition->getInserts();
