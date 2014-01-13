@@ -7,6 +7,8 @@ class FormElementTabStart extends \AnyContent\CMCK\Modules\Core\Edit\FormElement
 
     public function render($layout)
     {
+        $this->form->setFormVar('tab.label', $this->definition->getLabel());
+
         $this->form->startBuffer();
 
         return '';

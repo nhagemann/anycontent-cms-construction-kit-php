@@ -13,6 +13,8 @@ class FormElementSectionStart extends \AnyContent\CMCK\Modules\Core\Edit\FormEle
 
         $this->vars['index'] = $nr;
 
+        $this->vars['opened']= $this->definition->getOpened();
+
         return $this->twig->render('formelement-section-start.twig', $this->vars);
     }
 }
