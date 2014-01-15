@@ -124,8 +124,9 @@ class Controller
             $orderBy = $app['context']->getCurrentSortingOrder();
         }
 
+
         /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $subset, $app['context']->getCurrentTimeShift()) AS $record)
+        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $app['context']->getCurrentTimeShift()) AS $record)
         {
             $item                     = array();
             $item['record']           = $record;

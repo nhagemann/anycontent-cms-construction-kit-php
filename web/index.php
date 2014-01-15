@@ -29,7 +29,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement');
 
-$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Export',array('FormatCode.DateTime'=>'dd.mm.YYYY hh:mm'));
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Export',array('FormatCode.DateTime'=>'d.m.YYYY hh:mm'));
 
 $app->initModules();
 
