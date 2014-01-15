@@ -8,14 +8,15 @@ class Application extends SilexApplication
 {
 
     protected $modules = array();
+
     protected $templatesFolder = array();
 
     protected $repositories = array();
 
 
-    public function registerModule($class)
+    public function registerModule($class, $options = array())
     {
-        $this->modules[] = $class;
+        $this->modules[$class] = array( 'class' => $class, 'options' => $options );
 
     }
 
@@ -33,16 +34,20 @@ class Application extends SilexApplication
 
     public function setCacheDriver($cache)
     {
-        $this['cache']=$cache;
+        $this['cache'] = $cache;
     }
+
 
     public function initModules()
     {
 
         foreach ($this->modules as $module)
         {
-            $module .= '\Module';
-            $module::init($this);
+            $class = $module['class'] . '\Module';
+            $o     = new $class;
+            $o->init($this, $module['options']);
+            $module['module']      = $o;
+            $this->modules[$module['class']] = $module;
         }
 
         $this->register(new \Silex\Provider\TwigServiceProvider(), array(
@@ -58,8 +63,8 @@ class Application extends SilexApplication
 
         foreach ($this->modules as $module)
         {
-            $module .= '\Module';
-            $module::run($this);
+            $module['module']->run($this);
+
         }
 
         parent::run($request);
@@ -70,8 +75,8 @@ class Application extends SilexApplication
     {
         foreach ($this->modules as $module)
         {
-            $module .= '\Module';
-            $module::preRender($this);
+            $module['module']->preRender($this);
+
         }
 
         return $this['layout']->render($templateFilename, $vars, $displayMessages);

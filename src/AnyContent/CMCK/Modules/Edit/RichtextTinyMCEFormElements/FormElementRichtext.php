@@ -11,6 +11,7 @@ class FormElementRichtext extends \AnyContent\CMCK\Modules\Edit\TextFormElements
     public function render($layout)
     {
         $layout->addJsLinkToHead('//tinymce.cachefly.net/4/tinymce.min.js');
+        //$layout->addJsLinkToHead('/js/tinymce/tinymce.min.js');
 
         $layout->addJsFile('fe-richtext.js');
 

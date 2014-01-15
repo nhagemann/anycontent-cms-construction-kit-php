@@ -7,7 +7,7 @@ use AnyContent\CMCK\Modules\Core\Application\Application;
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
 
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
         $app->addTemplatesFolders(__DIR__ . '/views/');
 
@@ -25,7 +25,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     }
 
 
-    public static function run(Application $app)
+    public function run(Application $app)
     {
         $app['form']->registerFormElement('sequence', 'AnyContent\CMCK\Modules\Edit\SequenceFormElement\FormElementSequence');
 

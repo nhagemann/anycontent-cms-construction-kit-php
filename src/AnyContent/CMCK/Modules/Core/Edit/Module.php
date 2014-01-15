@@ -9,8 +9,10 @@ use AnyContent\CMCK\Modules\Core\Edit\FormManager;
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
 
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
+
         $app->addTemplatesFolders(__DIR__ . '/views/');
         $app
             ->get('/content/edit/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Core\Edit\Controller::editRecord')
@@ -35,7 +37,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     }
 
 
-    public static function run(Application $app)
+    public function run(Application $app)
     {
         $app['form']->registerFormElement('default', 'AnyContent\CMCK\Modules\Core\Edit\FormElementDefault');
         //$app['form']->registerFormElement('textfield', 'AnyContent\CMCK\Modules\Edit\Edit\FormElementTextfield');

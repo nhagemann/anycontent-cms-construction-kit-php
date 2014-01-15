@@ -17,7 +17,8 @@
         "twig/twig": ">=1.8,<2.0-dev",
         "nitra/php-min": "dev-master",
         "nhagemann/cmdl-parser-php": "dev-master",
-        "nhagemann/anycontent-client-php": "dev-master"
+        "nhagemann/anycontent-client-php": "dev-master",
+        "phpoffice/phpexcel": "1.7.9"
 
     },
 

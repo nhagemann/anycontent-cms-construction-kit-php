@@ -9,15 +9,17 @@ use AnyContent\CMCK\Modules\Edit\Edit\FormManager;
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
 
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
+
         $app->addTemplatesFolders(__DIR__ . '/views/');
 
 
     }
 
 
-    public static function run(Application $app)
+    public function run(Application $app)
     {
         $app['form']->registerFormElement('richtext', 'AnyContent\CMCK\Modules\Edit\RichtextTinyMCEFormElements\FormElementRichtext');
     }

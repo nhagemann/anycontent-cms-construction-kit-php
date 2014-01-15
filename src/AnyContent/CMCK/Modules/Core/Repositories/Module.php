@@ -8,8 +8,9 @@ use AnyContent\CMCK\Modules\Core\Repositories\RepositoryManager;
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
 
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
 
         $app['repos'] = $app->share(function ($app)
         {

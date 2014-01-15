@@ -9,9 +9,10 @@ use Doctrine\Common\Cache\ArrayCache;
 
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
-
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
+
         $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
         $app->register(new \Silex\Provider\SessionServiceProvider());
 

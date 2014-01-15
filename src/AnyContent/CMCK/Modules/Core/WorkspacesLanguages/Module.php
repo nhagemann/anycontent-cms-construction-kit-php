@@ -12,8 +12,9 @@ use CMDL\ContentTypeDefinition;
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
 
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
 
         $app
             ->post('/change-workspace/content/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Core\WorkspacesLanguages\Controller::changeWorkspaceListRecords')
@@ -44,7 +45,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     }
 
 
-    public static function preRender(Application $app)
+    public function preRender(Application $app)
     {
         $workspaces = $app['layout']->getVar('workspaces', array());
 

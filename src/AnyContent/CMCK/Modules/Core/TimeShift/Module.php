@@ -10,8 +10,9 @@ use AnyContent\CMCK\Modules\Core\Application\Application;
 class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
 {
 
-    public static function init(Application $app)
+    public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
 
         $app
             ->post('/timeshift/content/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Core\TimeShift\Controller::timeShiftListRecords')
@@ -26,7 +27,7 @@ class Module extends \AnyContent\CMCK\Modules\Core\Core\Module
     }
 
 
-    public static function preRender(Application $app)
+    public function preRender(Application $app)
     {
         $date = new \DateTime();
 
