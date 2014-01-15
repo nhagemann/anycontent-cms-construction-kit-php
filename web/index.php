@@ -4,32 +4,32 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$app          = new \AnyContent\CMCK\Modules\Core\Application\Application();
+$app          = new \AnyContent\CMCK\Modules\Backend\Core\Application\Application();
 $app['debug'] = true;
 
-$app->registerModule('AnyContent\CMCK\Modules\Core\Init');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Layout');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Repositories');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Context');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Menu');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Listing');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Pager');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Sort');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Edit');
-$app->registerModule('AnyContent\CMCK\Modules\Core\Files');
-$app->registerModule('AnyContent\CMCK\Modules\Core\TimeShift');
-$app->registerModule('AnyContent\CMCK\Modules\Core\WorkspacesLanguages');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Init');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Layout');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Repositories');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Context');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Menu');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Listing');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Pager');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Sort');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Edit');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Files');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\TimeShift');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages');
 
-$app->registerModule('AnyContent\CMCK\Modules\Libs\BlockUI');
-$app->registerModule('AnyContent\CMCK\Modules\Libs\BootstrapFormHelpers');
-$app->registerModule('AnyContent\CMCK\Modules\Libs\NestedSortable');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\BlockUI');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\BootstrapFormHelpers');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\NestedSortable');
 
-$app->registerModule('AnyContent\CMCK\Modules\Edit\TextFormElements');
-$app->registerModule('AnyContent\CMCK\Modules\Edit\PartitionFormElements');
-$app->registerModule('AnyContent\CMCK\Modules\Edit\RichtextTinyMCEFormElements');
-$app->registerModule('AnyContent\CMCK\Modules\Edit\SequenceFormElement');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TextFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement');
 
-$app->registerModule('AnyContent\CMCK\Modules\Edit\Export',array('FormatCode.DateTime'=>'dd.mm.YYYY hh:mm'));
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Export',array('FormatCode.DateTime'=>'dd.mm.YYYY hh:mm'));
 
 $app->initModules();
 
