@@ -27,6 +27,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\NestedSortable');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TextFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\InsertFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements');

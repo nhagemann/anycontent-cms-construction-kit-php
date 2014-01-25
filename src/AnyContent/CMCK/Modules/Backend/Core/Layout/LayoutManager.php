@@ -17,6 +17,8 @@ class LayoutManager
 
     protected $jsLinks = array( 'head' => array(), 'body' => array() );
 
+    protected $cssLinks = array( 'head' => array(), 'body' => array() );
+
 
     public function __construct($twig, $context)
     {
@@ -73,6 +75,17 @@ class LayoutManager
         $this->jsLinks['body'][] = $link;
     }
 
+    public function addCssLinkToHead($link)
+    {
+        $this->cssLinks['head'][] = $link;
+    }
+
+
+    public function addCssLinkToEndOfBody($link)
+    {
+        $this->cssLinks['body'][] = $link;
+    }
+
 
     public function render($templateFilename, $vars = array(), $displayMessages = true)
     {
@@ -111,6 +124,20 @@ class LayoutManager
             $jsbodylinks .= '<script src="' . $link . '"></script>' . PHP_EOL;
         }
         $vars['jsbodylinks'] = $jsheadlinks;
+        $cssheadlinks = '';
+        foreach ($this->cssLinks['head'] as $link)
+        {
+            $cssheadlinks .= '<link rel="stylesheet" href="' . $link . '"></link>' . PHP_EOL;
+        }
+        $vars['cssheadlinks'] = $cssheadlinks;
+
+        $cssbodylinks = '';
+        foreach ($this->cssLinks['body'] as $link)
+        {
+            $cssbodylinks .= '<link rel="stylesheet" href="' . $link . '"></link>' . PHP_EOL;
+        }
+        $vars['cssbodylinks'] = $cssbodylinks;
+
 
         if ($displayMessages)
         {
