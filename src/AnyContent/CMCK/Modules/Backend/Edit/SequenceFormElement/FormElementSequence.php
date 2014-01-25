@@ -9,8 +9,6 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
     {
         parent::__construct($id, $name, $formElementDefinition, $app, $value);
 
-        //$this->vars['class']['size']         = $sizes[$this->definition->getSize()];
-
     }
 
 

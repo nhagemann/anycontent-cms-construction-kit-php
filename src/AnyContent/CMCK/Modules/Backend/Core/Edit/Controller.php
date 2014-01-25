@@ -31,6 +31,8 @@ class Controller
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
+            $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
+
             $app['layout']->addCssFile('listing.css');
 
             $vars['record'] = false;
@@ -95,6 +97,8 @@ class Controller
         {
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+
+            $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
 
             /** @var Record $record */
             $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
@@ -190,6 +194,9 @@ class Controller
         {
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+
+            $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
+
             $app['context']->setCurrentSaveOperation($saveOperation, $saveOperationTitle);
 
             if ($recordId)
@@ -213,7 +220,7 @@ class Controller
                 /* @var ClippingDefinition */
                 $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
 
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions());
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(),$record->getProperties());
 
                 foreach ($values as $property => $value)
                 {
