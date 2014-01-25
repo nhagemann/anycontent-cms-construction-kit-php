@@ -77,6 +77,7 @@ class Controller
 
         }
 
+
         $vars['records'] = self::getRecords($app, $repository, $contentTypeAccessHash, null, 'default', $itemsPerPage, $page, $filter);
 
         // sorting links
@@ -126,7 +127,7 @@ class Controller
 
 
         /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $app['context']->getCurrentTimeShift()) AS $record)
+        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $subset, $app['context']->getCurrentTimeShift()) AS $record)
         {
             $item                     = array();
             $item['record']           = $record;

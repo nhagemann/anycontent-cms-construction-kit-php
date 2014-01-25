@@ -11,14 +11,14 @@ abstract class Module
 
     protected $options = array();
 
+    protected $app;
+
 
     public function init(Application $app, $options = array())
     {
-
+        $this->app     = $app;
         $this->options = array_merge($this->defaultOptions, $options);
-
     }
-
 
     public function run(Application $app)
     {

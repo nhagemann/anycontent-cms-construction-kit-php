@@ -1,0 +1,40 @@
+{% extends "formelement-default.twig" %}
+
+{% block input %}
+
+    {% if type=='short' %}
+        <div class="col-xs-1">
+            <select class="form-control pull-left" name="{{ name }}[]">
+                <option>Day</option>
+                {% for i in 1..31 %}
+                    {% if i == day %}
+                        <option selected="selected">{{ i }}</option>
+                    {% else %}
+                        <option>{{ i }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div id="{{ id }}" class="col-xs-1">
+            <select class="form-control pull-left" name="{{ name }}[]">
+                <option>Month</option>
+                {% for i in 1..12 %}
+                    {% if i == month %}
+                        <option selected="selected">{{ i }}</option>
+                    {% else %}
+                        <option>{{ i }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+        </div>
+    {% endif %}
+    {% if type=='long' %}
+        <div class="col-xs-2">
+            <div class="bfh-datepicker" data-format="{{ format }}" data-name="{{ name }}" data-date="{{ value }}"
+                 id="{{ id }}">
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -3,7 +3,6 @@
 namespace Anycontent\CMCK\Modules\Backend\Core\Repositories;
 
 use CMDL\Parser;
-use CMDL\ContentTypeDefinition;
 
 use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
@@ -20,7 +19,6 @@ class RepositoryManager
     protected $contentTypeAccessHashes = null;
 
     protected $userInfo = null;
-
 
     public function __construct($cache)
     {
@@ -166,7 +164,7 @@ class RepositoryManager
 
         foreach ($this->listRepositories() AS $url => $item)
         {
-            if ($item['accessHash'] = $hash)
+            if ($item['accessHash'] == $hash)
             {
                 if (array_key_exists($url, $this->repositoryObjects))
                 {

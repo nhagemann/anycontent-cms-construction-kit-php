@@ -27,8 +27,10 @@ class FormElementDefault
 
     protected $isFirstElement = false;
 
+    protected $options = array();
 
-    public function __construct($id, $name, $formElementDefinition, $app, $value = '')
+
+    public function __construct($id, $name, $formElementDefinition, $app, $value = '', $options = array())
     {
         $this->id         = $id;
         $this->name       = $name;
@@ -37,6 +39,7 @@ class FormElementDefault
         $this->twig       = $app['twig'];
         $this->form       = $app['form'];
         $this->value      = $value;
+        $this->options    = $options;
 
         $this->vars['id']         = $this->id;
         $this->vars['name']       = $this->name;
@@ -64,6 +67,35 @@ class FormElementDefault
     public function isFirstElement()
     {
         return (boolean)$this->isFirstElement;
+    }
+
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+
+    public function getOption($key, $default = null)
+    {
+        if (array_key_exists($key, $this->options))
+        {
+            return $this->options[$key];
+        }
+
+        return $default;
+    }
+
+
+    public function parseFormInput($input)
+    {
+        return $input;
     }
 
 }

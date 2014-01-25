@@ -28,9 +28,10 @@ class FormManager
     }
 
 
-    public function registerFormElement($type, $class)
+    public function registerFormElement($type, $class, $options=array())
     {
-        $this->formElements[$type] = $class;
+
+        $this->formElements[$type] = array('class'=>$class,'options'=>$options);
     }
 
 
@@ -65,7 +66,10 @@ class FormManager
             }
             $id = $formId . '_' . $formElementDefinition->getFormElementType() . '_' . $name;
 
-            $formelement = new $this->formElements[$type]($id, $name, $formElementDefinition, $this->app, $value);
+            $class = $this->formElements[$type]['class'];
+
+            $formelement = new $class($id, $name, $formElementDefinition, $this->app, $value,$this->formElements[$type]['options']);
+
             if ($i == 1)
             {
                 $formelement->setIsFirstElement(true);
@@ -92,13 +96,26 @@ class FormManager
         /** @var FormElementDefinition $formElementDefinition */
         foreach ($formElementsDefinition as $formElementDefinition)
         {
+            $name = $formElementDefinition->getName();
+            $type  = $formElementDefinition->getFormElementType();
+
+            if (!array_key_exists($type, $this->formElements))
+            {
+                $type = 'default';
+
+            }
+            $class = $this->formElements[$type]['class'];
+
+
+            $formelement = new $class(null, $name, $formElementDefinition, $this->app, null,$this->formElements[$type]['options']);
+
+
             $property = $formElementDefinition->getName();
             if ($property)
             {
-                $values[$property] = $request->get($property);
+                $values[$property] = $formelement->parseFormInput($request->get($property));
             }
         }
-
         return $values;
     }
 

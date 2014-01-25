@@ -30,6 +30,7 @@ class Controller
 
         if ($repository)
         {
+
             $app['context']->setCurrentRepository($repository);
             $path = '/' . trim($path, '/');
 
@@ -104,16 +105,52 @@ class Controller
 
     public static function viewFile(Application $app, Request $request, $repositoryAccessHash, $id)
     {
+
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
 
         if ($repository)
         {
             $app['context']->setCurrentRepository($repository);
+            /** @var File $file */
             $file = $repository->getFile($id);
 
-            var_dump($file);
+            if ($file)
+            {
+                $binary = $repository->getBinary($file);
+
+                if ($binary)
+                {
+                    $headers = array( 'Content-Type' => 'application/unknown' );
+
+                    if ($file->isImage())
+                    {
+
+
+                        switch (strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION)))
+                        {
+                            case 'jpg':
+                                $headers = array( 'Content-Type' => 'image/jpg' );
+                                break;
+                            case 'gif':
+                                $headers = array( 'Content-Type' => 'image/gif' );
+                                break;
+                            case 'png':
+                                $headers = array( 'Content-Type' => 'image/png' );
+                                break;
+                        }
+
+                    }
+
+                    return new Response($binary, 200, $headers);
+
+                }
+
+            }
+
         }
-        echo $id;
+
+        return new Response('File not found', 404);
+
     }
 }

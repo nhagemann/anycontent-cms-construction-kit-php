@@ -44,7 +44,8 @@ class Controller
             {
                 /* @var ClippingDefinition */
 
-                $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+
+                $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
 
                 $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions());
 
@@ -148,6 +149,7 @@ class Controller
 
     public static function saveRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId = null)
     {
+
         $hidden = $request->get('hidden');
 
         $saveOperationTitle = 'Save';
@@ -198,7 +200,10 @@ class Controller
             else
             {
                 $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+
             }
+
+
 
             if ($record)
             {
@@ -218,6 +223,7 @@ class Controller
                 if ($save)
                 {
                     $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+
                     $app['context']->resetTimeShift();
                     if ($recordId)
                     {
@@ -226,6 +232,7 @@ class Controller
                     else
                     {
                         $app['context']->addErrorMessage('Could not save record.');
+                        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
                     }
                 }
                 if ($duplicate)

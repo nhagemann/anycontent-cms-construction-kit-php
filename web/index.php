@@ -28,6 +28,8 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TextFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\DateTimeFormElements');//array('Format.Long'=>'d.m.Y','Format.Short'=>'d.m','Format.DateTime'=>'d.m.Y H:i','Format.Full'=>'d.m.Y H:i:s')
 
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Export',array('FormatCode.DateTime'=>'d.m.YYYY hh:mm'));
 
@@ -44,6 +46,8 @@ $app->setCacheDriver($cacheDriver);
 
 $app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/example'));
 $app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/nhagemann'));
+$app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/demo'));
+
 
 $app['repos']->setUserInfo(new \AnyContent\Client\UserInfo('mail@nilshagemann.de', 'Nils', 'Hagemann'));
 $app->run();
