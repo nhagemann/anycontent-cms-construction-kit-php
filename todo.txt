@@ -8,7 +8,16 @@ https://packagist.org/packages/phpoffice/phpexcel
 Excel auf Basis von Core/Listing bei Initialisierung Export-Typ angeben
 
 
+Locale management for date and numbers
+
 Files: 
 - Cachhing noch rein, dazu Timestamp-Ermittlung für alle Files auf Server (sollte über die knp-API) gehen.
 - Repository-Selection hat einen Bug es kommt immer example
 - get ist für laden, href für linken, wenn href dann href!
+
+Numbers:
+- eventually no digit management if left blank (minDigits, maxDigits, Unit) Default 0 2
+
+Filter:
+- use record.id and property.id to distinct
+- check sort parameter of repository
