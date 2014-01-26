@@ -19,7 +19,10 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     public function run(Application $app)
     {
         $app['form']->registerFormElement('sourcecode', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementSourceCode');
-
+        $app['form']->registerFormElement('markdown', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementMarkdown');
+        $app['form']->registerFormElement('html', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementHTML');
+        $app['form']->registerFormElement('cmdl', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementCMDL');
+        $app['layout']->addCssFile('fe-sourcecode.css');
     }
 
 }

@@ -66,24 +66,37 @@ class LayoutManager
 
     public function addJsLinkToHead($link)
     {
-        $this->jsLinks['head'][] = $link;
+        if (!in_array($link, $this->jsLinks['head']))
+        {
+            $this->jsLinks['head'][] = $link;
+        }
     }
 
 
     public function addJsLinkToEndOfBody($link)
     {
-        $this->jsLinks['body'][] = $link;
+        if (!in_array($link, $this->jsLinks['body']))
+        {
+            $this->jsLinks['body'][] = $link;
+        }
     }
+
 
     public function addCssLinkToHead($link)
     {
-        $this->cssLinks['head'][] = $link;
+        if (!in_array($link, $this->cssLinks['head']))
+        {
+            $this->cssLinks['head'][] = $link;
+        }
     }
 
 
     public function addCssLinkToEndOfBody($link)
     {
-        $this->cssLinks['body'][] = $link;
+        if (!in_array($link, $this->cssLinks['body']))
+        {
+            $this->cssLinks['body'][] = $link;
+        }
     }
 
 
@@ -124,7 +137,7 @@ class LayoutManager
             $jsbodylinks .= '<script src="' . $link . '"></script>' . PHP_EOL;
         }
         $vars['jsbodylinks'] = $jsheadlinks;
-        $cssheadlinks = '';
+        $cssheadlinks        = '';
         foreach ($this->cssLinks['head'] as $link)
         {
             $cssheadlinks .= '<link rel="stylesheet" href="' . $link . '"></link>' . PHP_EOL;
@@ -137,7 +150,6 @@ class LayoutManager
             $cssbodylinks .= '<link rel="stylesheet" href="' . $link . '"></link>' . PHP_EOL;
         }
         $vars['cssbodylinks'] = $cssbodylinks;
-
 
         if ($displayMessages)
         {
