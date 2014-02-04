@@ -30,11 +30,20 @@ class Controller
         return $app->redirect($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )));
     }
 
+
     public static function timeShiftSortRecords(Application $app, Request $request, $contentTypeAccessHash)
     {
         self::doTimeShift($app, $request);
 
         return $app->redirect($app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )));
+    }
+
+
+    public static function timeShiftEditConfig(Application $app, Request $request, $configTypeAccessHash)
+    {
+        self::doTimeShift($app, $request);
+
+        return $app->redirect($app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeAccessHash )));
     }
 
 

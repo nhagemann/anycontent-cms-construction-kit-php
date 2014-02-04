@@ -6,6 +6,7 @@ use CMDL\Parser;
 
 use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
+use Anycontent\Client\Repository;
 
 class RepositoryManager
 {
@@ -17,8 +18,10 @@ class RepositoryManager
     protected $repositoryObjects = null;
 
     protected $contentTypeAccessHashes = null;
+    protected $configTypeAccessHashes = null;
 
     protected $userInfo = null;
+
 
     public function __construct($cache)
     {
@@ -29,17 +32,54 @@ class RepositoryManager
     public function addAllContentTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
     {
 
-        $repository                = array();
-        $repository['url']         = $url;
-        $repository['apiUser']     = $apiUser;
-        $repository['apiPassword'] = $apiPassword;
-        $repository['authType']    = $authType;
-        $repository['title']       = $url;
-        if ($repositoryTitle)
+        if (array_key_exists($url, $this->requestedRepositories))
         {
-            $repository['title'] = $repositoryTitle;
+            $repository = $this->requestedRepositories[$url];
         }
+        else
+        {
+            $repository                = array();
+            $repository['url']         = $url;
+            $repository['apiUser']     = $apiUser;
+            $repository['apiPassword'] = $apiPassword;
+            $repository['authType']    = $authType;
+            $repository['title']       = $url;
+            if ($repositoryTitle)
+            {
+                $repository['title'] = $repositoryTitle;
+            }
+            $repository['configTypes'] = array();
+
+        }
+
         $repository['contentTypes'] = array( '*' => '*' );
+
+        $this->requestedRepositories[$url] = $repository;
+
+    }
+
+
+    public function addAllConfigTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
+    {
+        if (array_key_exists($url, $this->requestedRepositories))
+        {
+            $repository = $this->requestedRepositories[$url];
+        }
+        else
+        {
+            $repository                = array();
+            $repository['url']         = $url;
+            $repository['apiUser']     = $apiUser;
+            $repository['apiPassword'] = $apiPassword;
+            $repository['authType']    = $authType;
+            $repository['title']       = $url;
+            if ($repositoryTitle)
+            {
+                $repository['title'] = $repositoryTitle;
+            }
+            $repository['contentTypes'] = array();
+        }
+        $repository['configTypes'] = array( '*' => '*' );
 
         $this->requestedRepositories[$url] = $repository;
 
@@ -118,12 +158,47 @@ class RepositoryManager
                     {
                         $contentTypeTitle = $contentTypeName;
                     }
-                    $hash                           = md5($url . '-' . $contentTypeName);
+                    $hash                           = md5($url . '-contentType-' . $contentTypeName);
                     $contentTypes[$contentTypeName] = array( 'title' => $contentTypeTitle, 'accessHash' => $hash );
                 }
             }
 
             return $contentTypes;
+        }
+
+        return false;
+    }
+
+
+    public function listConfigTypes($url)
+    {
+        if (!$this->repositoryObjects)
+        {
+            $this->initRepositoryObjects();
+        }
+
+        if (array_key_exists($url, $this->requestedRepositories))
+        {
+            $repositoryInfo = $this->requestedRepositories[$url];
+
+            $configTypes = array();
+
+            $repository = $this->repositoryObjects[$repositoryInfo['url']];
+
+            foreach ($repository->getConfigTypes() as $configTypeName => $configTypeTitle)
+            {
+                if (array_key_exists('*', $repositoryInfo['configTypes']) OR array_key_exists($configTypeName, $repositoryInfo['configTypes']))
+                {
+                    if (!$configTypeTitle)
+                    {
+                        $configTypeTitle = $configTypeName;
+                    }
+                    $hash                         = md5($url . '-configType-' . $configTypeName);
+                    $configTypes[$configTypeName] = array( 'title' => $configTypeTitle, 'accessHash' => $hash );
+                }
+            }
+
+            return $configTypes;
         }
 
         return false;
@@ -149,6 +224,43 @@ class RepositoryManager
             $repository->selectContentType($this->contentTypeAccessHashes[$hash]['contentTypeName']);
 
             return $repository;
+        }
+
+        return false;
+    }
+
+
+    public function getRepositoryByConfigTypeAccessHash($hash)
+    {
+        if (!$this->configTypeAccessHashes)
+        {
+            $this->initAccessHashes();
+        }
+
+        if (array_key_exists($hash, $this->configTypeAccessHashes))
+        {
+            $repository = $this->configTypeAccessHashes[$hash]['repository'];
+
+            return $repository;
+        }
+
+        return false;
+    }
+
+
+    public function getConfigTypeDefinitionByConfigTypeAccessHash($hash)
+    {
+        if (!$this->configTypeAccessHashes)
+        {
+            $this->initAccessHashes();
+        }
+
+        if (array_key_exists($hash, $this->configTypeAccessHashes))
+        {
+            /** @var Repository $repository */
+            $repository = $this->configTypeAccessHashes[$hash]['repository'];
+
+            return $repository->getConfigTypeDefinition($this->configTypeAccessHashes[$hash]['configTypeName']);
         }
 
         return false;
@@ -185,6 +297,8 @@ class RepositoryManager
         }
 
         $this->contentTypeAccessHashes = array();
+        $this->configTypeAccessHashes  = array();
+
         foreach ($this->requestedRepositories as $repositoryInfo)
         {
             $repository = $this->repositoryObjects[$repositoryInfo['url']];
@@ -192,6 +306,10 @@ class RepositoryManager
             foreach ($this->listContentTypes($repositoryInfo['url']) as $contentTypName => $contentTypeItem)
             {
                 $this->contentTypeAccessHashes[$contentTypeItem['accessHash']] = array( 'contentTypeName' => $contentTypName, 'repository' => $repository );
+            }
+            foreach ($this->listConfigTypes($repositoryInfo['url']) as $configTypeName => $configTypeItem)
+            {
+                $this->configTypeAccessHashes[$configTypeItem['accessHash']] = array( 'configTypeName' => $configTypeName, 'repository' => $repository );
             }
         }
 

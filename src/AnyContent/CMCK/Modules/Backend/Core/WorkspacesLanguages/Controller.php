@@ -46,6 +46,13 @@ class Controller
         return $app->redirect($app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash)),303);
     }
 
+    public static function changeWorkspaceEditConfig(Application $app, Request $request, $configTypeAccessHash)
+    {
+        $app['context']->setCurrentWorkspace($request->get('workspace'));;
+
+        return $app->redirect($app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeAccessHash)),303);
+    }
+
     public static function changeLanguageListRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1)
     {
         $app['context']->setCurrentLanguage($request->get('language'));
@@ -75,4 +82,13 @@ class Controller
 
         return $app->redirect($app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash)),303);
     }
+
+    public static function changeLanguageEditConfig(Application $app, Request $request, $configTypeAccessHash)
+    {
+        $app['context']->setCurrentLanguage($request->get('language'));;
+
+        return $app->redirect($app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeAccessHash)),303);
+    }
+
+
 }

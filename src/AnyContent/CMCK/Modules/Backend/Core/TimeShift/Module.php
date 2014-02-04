@@ -23,6 +23,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app
             ->post('/timeshift/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\TimeShift\Controller::timeShiftSortRecords')
             ->bind('timeShiftSortRecords');
+        $app
+            ->post('/timeshift/config/edit/{configTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\TimeShift\Controller::timeShiftEditConfig')
+            ->bind('timeShiftEditConfig');
 
     }
 

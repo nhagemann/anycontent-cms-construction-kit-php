@@ -3,9 +3,11 @@
 namespace Anycontent\CMCK\Modules\Backend\Core\Context;
 
 use AnyContent\Client\Repository;
+use CMDL\DataTypeDefinition;
 use CMDL\ConfigTypeDefinition;
 use CMDL\ContentTypeDefinition;
 use AnyContent\Client\Record;
+use AnyContent\Client\Config;
 
 class ContextManager
 {
@@ -14,9 +16,11 @@ class ContextManager
 
     protected $repository = null;
 
-    protected $contentTypeDefinition = null;
+    protected $dataTypeDefinition = null;
 
     protected $record = null;
+
+    protected $config = null;
 
     protected $prefix = 'context_';
 
@@ -71,17 +75,32 @@ class ContextManager
 
     public function setCurrentContentType(ContentTypeDefinition $contentTypeDefinition)
     {
-        $this->contentTypeDefinition = $contentTypeDefinition;
-        $this->context             = 'content';
+        $this->context = 'content';
 
-        $contentType = $contentTypeDefinition->getTitle();
+        return $this->setCurrentDataType($contentTypeDefinition);
+    }
+
+
+    public function setCurrentConfigType(ConfigTypeDefinition $configTypeDefinition)
+    {
+        $this->context = 'config';
+
+        return $this->setCurrentDataType($configTypeDefinition);
+    }
+
+
+    public function setCurrentDataType(DataTypeDefinition $dataTypeDefinition)
+    {
+        $this->dataTypeDefinition = $dataTypeDefinition;
+
+        $contentType = $dataTypeDefinition->getTitle();
         if (!$contentType)
         {
-            $contentType = $contentTypeDefinition->getName();
+            $contentType = $dataTypeDefinition->getName();
         }
         // check workspaces
 
-        $workspaces = $contentTypeDefinition->getWorkspaces();
+        $workspaces = $dataTypeDefinition->getWorkspaces();
 
         if (!array_key_exists($this->getCurrentWorkspace(), $workspaces))
         {
@@ -92,9 +111,9 @@ class ContextManager
             $this->addInfoMessage('Switching to workspace ' . $workspace . ' (' . $key . ') for content type ' . $contentType . '.');
         }
 
-        if ($contentTypeDefinition->hasLanguages())
+        if ($dataTypeDefinition->hasLanguages())
         {
-            $languages = $contentTypeDefinition->getLanguages();
+            $languages = $dataTypeDefinition->getLanguages();
         }
         else
         {
@@ -110,18 +129,28 @@ class ContextManager
             $this->addInfoMessage('Switching to language ' . $language . ' (' . $key . ') for content type ' . $contentType . '.');
         }
 
-        if (!$contentTypeDefinition->isTimeShiftable() AND $this->getCurrentTimeShift() != 0)
+        if (!$dataTypeDefinition->isTimeShiftable() AND $this->getCurrentTimeShift() != 0)
         {
             $this->resetTimeShift();
         }
     }
+
 
     /**
      * @return ContentTypeDefinition
      */
     public function getCurrentContentType()
     {
-        return $this->contentTypeDefinition;
+        return $this->dataTypeDefinition;
+    }
+
+
+    /**
+     * @return ConfigTypeDefinition
+     */
+    public function getCurrentConfigType()
+    {
+        return $this->dataTypeDefinition;
     }
 
 
@@ -137,10 +166,15 @@ class ContextManager
     }
 
 
-
-    public function setCurrentConfigType(ConfigTypeDefinition $configTypeDefinition)
+    public function setCurrentConfig(Config $config)
     {
-        $this->context = 'config';
+        $this->config = $config;
+    }
+
+
+    public function getCurrentConfig()
+    {
+        return $this->config;
     }
 
 
@@ -181,8 +215,6 @@ class ContextManager
 
         return false;
     }
-
-
 
 
     public function setCurrentWorkspace($workspace)
@@ -295,8 +327,8 @@ class ContextManager
             $order = 'id';
         }
 
-        $sorting                                        = $this->session->get($this->prefix . 'sorting');
-        $sorting[$this->contentTypeDefinition->getName()] = $order;
+        $sorting                                       = $this->session->get($this->prefix . 'sorting');
+        $sorting[$this->dataTypeDefinition->getName()] = $order;
         $this->session->set($this->prefix . 'sorting', $sorting);
     }
 
@@ -306,9 +338,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'sorting'))
         {
             $sorting = $this->session->get($this->prefix . 'sorting');
-            if (array_key_exists($this->contentTypeDefinition->getName(), $sorting))
+            if (array_key_exists($this->dataTypeDefinition->getName(), $sorting))
             {
-                return $sorting[$this->contentTypeDefinition->getName()];
+                return $sorting[$this->dataTypeDefinition->getName()];
             }
         }
 
@@ -318,8 +350,8 @@ class ContextManager
 
     public function setCurrentListingPage($page)
     {
-        $listing                                        = $this->session->get($this->prefix . 'listing_page');
-        $listing[$this->contentTypeDefinition->getName()] = $page;
+        $listing                                       = $this->session->get($this->prefix . 'listing_page');
+        $listing[$this->dataTypeDefinition->getName()] = $page;
         $this->session->set($this->prefix . 'listing_page', $listing);
     }
 
@@ -329,9 +361,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'listing_page'))
         {
             $listing = $this->session->get($this->prefix . 'listing_page');
-            if (array_key_exists($this->contentTypeDefinition->getName(), $listing))
+            if (array_key_exists($this->dataTypeDefinition->getName(), $listing))
             {
-                return $listing[$this->contentTypeDefinition->getName()];
+                return $listing[$this->dataTypeDefinition->getName()];
             }
         }
 
@@ -341,8 +373,8 @@ class ContextManager
 
     public function setCurrentSearchTerm($searchTerm)
     {
-        $searchTerms                                        = $this->session->get($this->prefix . 'searchterms');
-        $searchTerms[$this->contentTypeDefinition->getName()] = $searchTerm;
+        $searchTerms                                       = $this->session->get($this->prefix . 'searchterms');
+        $searchTerms[$this->dataTypeDefinition->getName()] = $searchTerm;
         $this->session->set($this->prefix . 'searchterms', $searchTerms);
     }
 
@@ -352,9 +384,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'searchterms'))
         {
             $searchTerms = $this->session->get($this->prefix . 'searchterms');
-            if (array_key_exists($this->contentTypeDefinition->getName(), $searchTerms))
+            if (array_key_exists($this->dataTypeDefinition->getName(), $searchTerms))
             {
-                return $searchTerms[$this->contentTypeDefinition->getName()];
+                return $searchTerms[$this->dataTypeDefinition->getName()];
             }
         }
 
@@ -453,6 +485,13 @@ class ContextManager
                 return $this->getCurrentContentType()->isTimeShiftable();
             }
         }
+        if ($this->isConfigContext())
+        {
+            if ($this->getCurrentConfigType())
+            {
+                return $this->getCurrentConfigType()->isTimeShiftable();
+            }
+        }
 
         return false;
     }
@@ -479,6 +518,11 @@ class ContextManager
             return $this->getCurrentContentType()->hasWorkspaces();
         }
 
+        if ($this->isConfigContext())
+        {
+            return $this->getCurrentConfigType()->hasWorkspaces();
+        }
+
         return false;
     }
 
@@ -488,6 +532,10 @@ class ContextManager
         if ($this->isContentContext())
         {
             return $this->getCurrentContentType()->hasLanguages();
+        }
+        if ($this->isConfigContext())
+        {
+            return $this->getCurrentConfigType()->hasLanguages();
         }
 
         return false;

@@ -28,7 +28,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app
             ->post('/change-workspace/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages\Controller::changeWorkspaceSortRecords')
             ->bind('changeWorkspaceSortRecords');
-
+        $app
+            ->post('/change-workspace/config/edit/{configTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages\Controller::changeWorkspaceEditConfig')
+            ->bind('changeWorkspaceEditConfig');
         $app
             ->post('/change-language/content/list/{contentTypeAccessHash}/page/{page}', 'AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages\Controller::changeLanguageListRecords')
             ->bind('changeLanguageListRecords');
@@ -41,6 +43,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app
             ->post('/change-language/content/sort/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages\Controller::changeLanguageSortRecords')
             ->bind('changeLanguageSortRecords');
+        $app
+            ->post('/change-language/config/edit/{configTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages\Controller::changeLanguageEditConfig')
+            ->bind('changeLanguageEditConfig');
 
     }
 
@@ -57,9 +62,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             $workspaces['active'] = true;
             $workspaces['list']   = $contentTypeDefinition->getWorkspaces();
 
-            if (count($contentTypeDefinition->getWorkspaces())<2)
+            if (count($contentTypeDefinition->getWorkspaces()) < 2)
             {
-                $workspaces['active']=false;
+                $workspaces['active'] = false;
             }
         }
         else
@@ -85,7 +90,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
             if (!$contentTypeDefinition->hasLanguages())
             {
-                $languages['active']=false;
+                $languages['active'] = false;
             }
         }
         else
