@@ -343,7 +343,7 @@ class RepositoryManager
         {
             if ($repository == $repositoryObject)
             {
-                return md5($repositoryUrl . '-' . $contentTypeDefinition->getName());
+                return md5($repositoryUrl . '-contentType-' . $contentTypeDefinition->getName());
             }
         }
 

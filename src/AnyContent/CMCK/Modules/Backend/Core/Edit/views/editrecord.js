@@ -13,8 +13,7 @@ $(document).ready(function () {
 
         $.event.trigger('cmck', {type: 'editform.Save'});
         countdown = parseInt($('#form_edit').attr('data-event-countdown'));
-        if (countdown==0)
-        {
+        if (countdown == 0) {
             return true;
         }
         return false;
@@ -29,8 +28,7 @@ $(document).ready(function () {
                 $('#form_edit [name=' + params.property + ']').val(params.value);
 
                 if (params.save == true) {
-                    if (parseInt($('#form_edit').attr('data-event-countdown'))==0)
-                    {
+                    if (parseInt($('#form_edit').attr('data-event-countdown')) == 0) {
                         $('#form_edit').submit();
                     }
                 }
@@ -39,4 +37,28 @@ $(document).ready(function () {
 
     });
 
+    $.event.trigger('cmck', {type: 'editForm.init', refresh: false});
+
+
+});
+
+
+function cmck_modal(url, event, options) {
+
+    var target = $('#modal_edit');
+    $(target).modal({
+        keyboard: true,
+        remote: url
+    }).on('shown.bs.modal', function () {
+            $.event.trigger('cmck', {type: event, options: options});
+        }).on('hide.bs.modal',function(){
+            $('#modal_button_select').unbind('click');
+            $('#modal_edit').removeData();
+        });
+
+};
+
+
+$('body').on('hidden', '.modal', function () {
+    $(this).removeData('#modal_edit');
 });

@@ -15,6 +15,7 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
     public function render($layout)
     {
 
+
         $contentTypeAccessHash = $this->app['repos']->getAccessHash($this->app['context']->getCurrentRepository(), $this->app['context']->getCurrentContentType());
         $record                = $this->app['context']->getCurrentRecord();
         $recordId              = 0;

@@ -136,7 +136,7 @@ class LayoutManager
         {
             $jsbodylinks .= '<script src="' . $link . '"></script>' . PHP_EOL;
         }
-        $vars['jsbodylinks'] = $jsheadlinks;
+        $vars['jsbodylinks'] = $jsbodylinks;
         $cssheadlinks        = '';
         foreach ($this->cssLinks['head'] as $link)
         {

@@ -48,6 +48,7 @@ class Controller
 
                 if ($formElementDefinition->getFormElementType() == 'sequence')
                 {
+
                     $sequence = array();
 
                     if ($recordId)
@@ -66,14 +67,21 @@ class Controller
                     $vars['count'] = count($sequence);
                     $vars['items'] = array();
 
-                    $inserts = $formElementDefinition->getInserts();
-                    $vars['inserts'] =  $inserts;
+                    $inserts         = $formElementDefinition->getInserts();
+                    $vars['inserts'] = $inserts;
+
+                    // silently render all potential inserts to add their Javascript-Files to the Layout
+                    foreach ($inserts as $insert)
+                    {
+                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), null );
+                    }
 
                     $i = 0;
                     foreach ($sequence as $item)
                     {
                         $i++;
-                        $insert  = key($item);
+                        $insert     = key($item);
                         $properties = array_shift($item);
                         /** @var InsertionDefinition $insertionDefinition */
                         $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
@@ -166,8 +174,8 @@ class Controller
                     if ($request->query->has('insert') AND $request->query->has('count'))
                     {
                         $inserts = $formElementDefinition->getInserts();
-                        $insert = $request->query->get('insert');
-                        $count     = $request->query->get('count');
+                        $insert  = $request->query->get('insert');
+                        $count   = $request->query->get('count');
 
                         $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
                         $item                = array();
