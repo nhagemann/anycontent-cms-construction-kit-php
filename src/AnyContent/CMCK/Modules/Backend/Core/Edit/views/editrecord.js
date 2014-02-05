@@ -37,28 +37,24 @@ $(document).ready(function () {
 
     });
 
-    $.event.trigger('cmck', {type: 'editForm.init', refresh: false});
+    //$.event.trigger('cmck', {type: 'editForm.init', refresh: false});
 
 
 });
 
 
-function cmck_modal(url, event, options) {
+function cmck_modal(url, onShown, options) {
 
     var target = $('#modal_edit');
     $(target).modal({
         keyboard: true,
         remote: url
-    }).on('shown.bs.modal', function () {
-            $.event.trigger('cmck', {type: event, options: options});
-        }).on('hide.bs.modal',function(){
-            $('#modal_button_select').unbind('click');
+    }).on('shown.bs.modal', onShown).on('hide.bs.modal', function () {
+            // make sure the modal content is loaded everytime and all event listeners are deleted
             $('#modal_edit').removeData();
+            $('#modal_edit',parent.window.document).removeData();
+            $(target).unbind();
         });
 
 };
 
-
-$('body').on('hidden', '.modal', function () {
-    $(this).removeData('#modal_edit');
-});

@@ -15,68 +15,50 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
 
-            $(document).on("cmck", function (e, params) {
+        var cmck_modal_shown = function (options) {
 
-                switch (params.type) {
+            var lat = options.lat.val();
+            var long = options.long.val();
 
+            var map;
 
-                    case 'modal.shown.geolocation':
+            if (lat != '' && long != '') {
+                var mapOptions = {
+                    zoom: 8,
+                    center: new google.maps.LatLng(lat, long)
+                };
+            }
+            else {
+                var mapOptions = {
+                    zoom: 2,
+                    center: new google.maps.LatLng(0, 0)
+                };
+            }
 
-                        var lat = '{{ lat }}';
-                        var long = '{{ long }}';
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-                        var map;
+            marker = new google.maps.Marker(
+                    {
+                        map: map,
+                        draggable: true,
+                        animation: google.maps.Animation.DROP,
+                        position: map.getCenter()
+                    });
 
+            google.maps.event.addListener(marker, 'dragend', function () {
+                console.log(marker.getPosition());
 
-                            console.log(params.options.name);
-
-                        if (lat != '' && long != '') {
-                            var mapOptions = {
-                                zoom: 10,
-                                center: new google.maps.LatLng(lat, long)
-                            };
-                        }
-                        else {
-                            var mapOptions = {
-                                zoom: 2,
-                                center: new google.maps.LatLng(0,0)
-                            };
-                        }
-
-                        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-                        marker = new google.maps.Marker(
-                                {
-                                    map: map,
-                                    draggable: true,
-                                    animation: google.maps.Animation.DROP,
-                                    position: map.getCenter()
-                                });
-
-                        google.maps.event.addListener(marker, 'dragend', function () {
-                            console.log(marker.getPosition());
-
-
-                        });
-
-                        $('#modal_button_select').click(function () {
-                            params.options.lat.val(marker.getPosition().d);
-                            params.options.long.val(marker.getPosition().e);
-                            console.log('select button');
-                            $('#modal_edit').modal('hide');
-                        });
-
-
-                        break;
-                }
-                ;
 
             });
 
+            $('#modal_button_select').click(function () {
+                options.lat.val(marker.getPosition().d);
+                options.long.val(marker.getPosition().e);
+                $('#modal_edit').modal('hide');
+            });
+        };
 
-        });
 
     </script>
 </div>

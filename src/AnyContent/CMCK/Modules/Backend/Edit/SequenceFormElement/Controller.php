@@ -71,9 +71,10 @@ class Controller
                     $vars['inserts'] = $inserts;
 
                     // silently render all potential inserts to add their Javascript-Files to the Layout
-                    foreach ($inserts as $insert)
+                    foreach ($inserts as $k => $v)
                     {
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+
+                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($k);
                         $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), null );
                     }
 

@@ -8,17 +8,19 @@
             $('.formelement-geolocation-modal-button').click(function () {
 
 
-                var lat = $($(this).attr('data-input')+'_lat');
-                var long = $($(this).attr('data-input')+'_long');
+                console.log('click');
+                var lat = $($(this).attr('data-input') + '_lat');
+                var long = $($(this).attr('data-input') + '_long');
 
-                var options = {lat:lat,long:long,name:name};
+                var options = {lat: lat, long: long};
 
 
-                parent.cmck_modal($(this).attr('href'),'modal.shown.geolocation',options);
+                var onShown = function () {
+                    parent.cmck_modal_shown(options);
 
+                };
+                parent.cmck_modal($(this).attr('href'), onShown, options);
                 return false;
-
-
             });
         };
 
@@ -30,7 +32,7 @@
 
                 case 'editForm.init':
 
-                    init();
+                    //init();
                     break;
             }
         });
