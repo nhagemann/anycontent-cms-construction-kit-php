@@ -8,7 +8,6 @@
             $('.formelement-geolocation-modal-button').click(function () {
 
 
-                console.log('click');
                 var lat = $($(this).attr('data-input') + '_lat');
                 var long = $($(this).attr('data-input') + '_long');
 
@@ -32,7 +31,7 @@
 
                 case 'editForm.init':
 
-                    //init();
+                    init();
                     break;
             }
         });

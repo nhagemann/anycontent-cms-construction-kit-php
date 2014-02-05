@@ -15,6 +15,7 @@ use AnyContent\Client\Record;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class Controller
 {
@@ -75,7 +76,7 @@ class Controller
                     {
 
                         $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($k);
-                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), null );
+                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), null);
                     }
 
                     $i = 0;
@@ -112,40 +113,58 @@ class Controller
     public static function postSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $property)
     {
 
-        $items = array();
-        foreach ($request->request->getIterator() as $key => $value)
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+
+        if ($repository)
         {
-            $split = explode('_', $key);
+            /** @var ContentTypeDefinition $contentTypeDefinition */
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
 
-            if (count($split >= 3))
+            $items = array();
+            foreach ($request->request->getIterator() as $key => $value)
             {
+                $split = explode('_', $key);
 
-                if ($split[0] == 'item')
+                if (count($split >= 3))
                 {
-                    $nr                    = (int)($split[1]);
-                    $l                     = strlen('item_' . $nr);
-                    $property              = substr($key, $l + 1);
-                    $items[$nr][$property] = $value;
 
+                    if ($split[0] == 'item')
+                    {
+                        $nr                    = (int)($split[1]);
+                        $l                     = strlen('item_' . $nr);
+                        $property              = substr($key, $l + 1);
+                        $items[$nr][$property] = $value;
+
+                    }
+                }
+
+            }
+
+            $sequence = array();
+            if ($request->request->has('sequence'))
+            {
+                $types = $request->get('type');
+                $i     = 0;
+                foreach ($request->get('sequence') as $nr)
+                {
+                    $item       = $items[$nr];
+                    $type       = $types[$i];
+
+                    $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($type);
+
+                    $bag = new ParameterBag();
+                    $bag->add($item);
+
+                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $insertionDefinition->getFormElementDefinitions(),array());
+
+                    $sequence[] = array( $type => $item );
+                    $i++;
                 }
             }
 
+            return $app->json(array( 'sequence' => $sequence ));
         }
-        $sequence = array();
-        if ($request->request->has('sequence'))
-        {
-            $types = $request->get('type');
-            $i     = 0;
-            foreach ($request->get('sequence') as $nr)
-            {
-                $item       = $items[$nr];
-                $type       = $types[$i];
-                $sequence[] = array( $type => $item );
-                $i++;
-            }
-        }
-
-        return $app->json(array( 'sequence' => $sequence ));
 
     }
 
