@@ -34,6 +34,9 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\NumberFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\DateTimeFormElements');//array('Format.Long'=>'d.m.Y','Format.Short'=>'d.m','Format.DateTime'=>'d.m.Y H:i','Format.Full'=>'d.m.Y H:i:s')
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\InsertFormElement');
+
+
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement');
 
 

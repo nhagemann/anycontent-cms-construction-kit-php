@@ -21,3 +21,6 @@ Numbers:
 Filter:
 - use record.id and property.id to distinct
 - check sort parameter of repository
+
+Sequences:
+- must work for configtypes and contenttypes equally
