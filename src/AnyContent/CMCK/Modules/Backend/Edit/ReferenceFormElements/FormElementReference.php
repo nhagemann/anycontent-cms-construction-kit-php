@@ -29,7 +29,7 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
         $options = array();
         foreach ($records as $record)
         {
-            $options[$record->getId()]=$record->getName();
+            $options[$record->getId()]='#'.$record->getId().' '.$record->getName();
         }
 
         $this->vars['options'] = $options;

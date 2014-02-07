@@ -19,12 +19,12 @@
                     {% endif %}
                     <div class="file-actions">
                         <div class="pull-left">
-                            <a href="test" alt="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-                            &nbsp; <a href="test" alt="Edit"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a href="{{ file.links.delete }}" alt="Delete" class="files-delete-file" data-title="{{ file.file.getName }}"><span class="glyphicon glyphicon-trash"></span></a>
+                            &nbsp; <a href="test" alt="Edit" class="files-file-edit" data-title="{{ file.file.getID }}"><span class="glyphicon glyphicon-edit"></span></a>
                         </div>
                         <div class="pull-right">
-                            <a href="test" alt="Download"><span class="glyphicon glyphicon-cloud-download"></span></a>
-                            &nbsp; <a href="test" alt="Zoom"><span class="glyphicon glyphicon-zoom-in"></span></a>
+                            <a href="{{ file.links.download }}" alt="Download"><span class="glyphicon glyphicon-cloud-download"></span></a>
+                            &nbsp; <a href="{{ file.links.view }}" alt="Zoom" class="files-file-zoom" data-title="{{ file.file.getName }}"><span class="glyphicon glyphicon-zoom-in"></span></a>
 
                         </div>
                     </div>

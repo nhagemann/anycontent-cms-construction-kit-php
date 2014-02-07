@@ -20,6 +20,7 @@ class Controller
     public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '')
     {
         $app['layout']->addCssFile('files');
+        $app['layout']->addJsFile('files');
 
         $vars                   = array();
         $vars['root']           = false;
@@ -33,6 +34,9 @@ class Controller
 
             $app['context']->setCurrentRepository($repository);
             $path = '/' . trim($path, '/');
+
+            $vars['delete_folder_path'] = $path;
+            $vars['create_folder_path'] = trim($path, '/') . '/';
 
             $breadcrumbs = explode('/', $path);
 
@@ -93,9 +97,9 @@ class Controller
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
 
         $buttons      = array();
-        $buttons[100] = array( 'label' => 'Upload File', 'url' => '', 'glyphicon' => 'glyphicon-cloud-upload' );
-        $buttons[200] = array( 'label' => 'Create Folder', 'url' => '', 'glyphicon' => 'glyphicon-folder-open' );
-        $buttons[300] = array( 'label' => 'Delete Folder', 'url' => '', 'glyphicon' => 'glyphicon-trash' );
+        $buttons[100] = array( 'label' => 'Upload File', 'url' => '', 'glyphicon' => 'glyphicon-cloud-upload', 'id' => 'form_files_button_upload_file' );
+        $buttons[200] = array( 'label' => 'Create Folder', 'url' => '', 'glyphicon' => 'glyphicon-folder-open', 'id' => 'form_files_button_create_folder' );
+        $buttons[300] = array( 'label' => 'Delete Folder', 'url' => '', 'glyphicon' => 'glyphicon-trash', 'id' => 'form_files_button_delete_folder' );
 
         $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
@@ -117,15 +121,16 @@ class Controller
 
             if ($file)
             {
+
                 $binary = $repository->getBinary($file);
 
-                if ($binary)
+                if ($binary !== false)
                 {
+
                     $headers = array( 'Content-Type' => 'application/unknown' );
 
                     if ($file->isImage())
                     {
-
 
                         switch (strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION)))
                         {
@@ -152,5 +157,119 @@ class Controller
 
         return new Response('File not found', 404);
 
+    }
+
+
+    public static function downloadFile(Application $app, Request $request, $repositoryAccessHash, $id)
+    {
+
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
+
+        if ($repository)
+        {
+            $app['context']->setCurrentRepository($repository);
+            /** @var File $file */
+            $file = $repository->getFile($id);
+
+            if ($file)
+            {
+
+                $binary = $repository->getBinary($file);
+
+                if ($binary !== false)
+                {
+
+                    $headers = array( 'Content-Type' => 'application/download', 'Content-Disposition' => 'attachment;filename="'.$file->getName().'"' );
+
+                    return new Response($binary, 200, $headers);
+
+                }
+
+            }
+
+        }
+
+        return new Response('File not found', 404);
+
+    }
+
+
+    public static function deleteFile(Application $app, Request $request, $repositoryAccessHash, $id)
+    {
+
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
+
+        if ($repository)
+        {
+            $app['context']->setCurrentRepository($repository);
+            /** @var File $file */
+            $file = $repository->getFile($id);
+
+            if ($file)
+            {
+                $app['context']->addSuccessMessage('File ' . $id . ' deleted.');
+
+            }
+            else
+            {
+                $app['context']->addAlertMessage('File ' . $id . ' not found.');
+            }
+
+        }
+
+
+        $path = pathinfo($id,PATHINFO_DIRNAME);
+
+        $url = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+
+        return new RedirectResponse($url, 303);
+
+    }
+
+    public static function post(Application $app, Request $request, $repositoryAccessHash, $path = '')
+    {
+
+        if ($request->request->has('create_folder_path'))
+        {
+            $newPath = $request->get('create_folder_path');
+            $app['context']->addSuccessMessage('Folder ' . $newPath . ' created.');
+
+        }
+
+        if ($request->request->has('delete_folder'))
+        {
+            $app['context']->addSuccessMessage('Folder ' . $path . ' deleted.');
+        }
+
+
+        if ($request->request->has('delete_file'))
+        {
+            $app['context']->addSuccessMessage('File ' . $request->request->get('delete_file') . ' deleted.');
+        }
+
+
+        if ($request->request->has('file_original'))
+        {
+            $app['context']->addSuccessMessage('File '.$request->request->get('file_original').' renamed to ' . $request->request->get('file_rename') . '.');
+        }
+
+        if ($request->files->count() > 0)
+        {
+            if ($request->files->get('upload_file'))
+            {
+                $app['context']->addSuccessMessage('File upload complete.');
+            }
+            else
+            {
+                $app['context']->addAlertMessage('No file selected.');
+            }
+
+        }
+
+        $url = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+
+        return new RedirectResponse($url, 303);
     }
 }

@@ -25,6 +25,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->get('/file/{repositoryAccessHash}/delete/{id}', 'AnyContent\CMCK\Modules\Backend\Core\Files\Controller::deleteFile')
             ->assert('id', '.*')->bind('deleteFile');
 
+        $app->post('/files/{repositoryAccessHash}/{path}', 'AnyContent\CMCK\Modules\Backend\Core\Files\Controller::post')
+            ->assert('path', '.*');
+
     }
 
 }
