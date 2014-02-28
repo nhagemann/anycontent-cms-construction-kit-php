@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\WorkspacesLanguages;
+namespace AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;

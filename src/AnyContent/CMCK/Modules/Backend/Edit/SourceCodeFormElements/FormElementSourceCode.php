@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\SourceCodeFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements;
 
 class FormElementSourceCode extends \AnyContent\CMCK\Modules\Backend\Edit\TextFormElements\FormElementTextarea
 {

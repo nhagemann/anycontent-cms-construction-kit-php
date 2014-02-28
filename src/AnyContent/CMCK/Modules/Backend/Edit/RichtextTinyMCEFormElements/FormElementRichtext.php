@@ -1,8 +1,8 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements;
 
-use Anycontent\CMCK\Modules\Backend\Core\Edit\FormElementDefault;
+use AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault;
 use CMDL\FormElementDefinition;
 
 class FormElementRichtext extends \AnyContent\CMCK\Modules\Backend\Edit\TextFormElements\FormElementTextarea

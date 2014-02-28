@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Layout;
+namespace AnyContent\CMCK\Modules\Backend\Core\Layout;
 
 class LayoutManager
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\SelectionFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements;
 
 class FormElementSelection extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {

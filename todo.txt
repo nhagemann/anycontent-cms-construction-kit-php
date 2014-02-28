@@ -24,3 +24,5 @@ Filter:
 
 Sequences:
 - must work for configtypes and contenttypes equally
+- must have clipping name in editsequence route
+- must be able to acess form element definitions of elements of sequences within inserts

@@ -32,8 +32,14 @@ class Controller
 
         if ($repository)
         {
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+
             /** @var ContentTypeDefinition $contentTypeDefinition */
             $contentTypeDefinition = $repository->getContentTypeDefinition();
+
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
             $vars['definition'] = $contentTypeDefinition;
 
@@ -44,6 +50,7 @@ class Controller
 
             if ($clippingDefinition->hasProperty($property))
             {
+
                 /** @var FormElementDefinition $formElementDefinition */
                 $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
 
@@ -118,6 +125,9 @@ class Controller
 
         if ($repository)
         {
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+
             /** @var ContentTypeDefinition $contentTypeDefinition */
             $contentTypeDefinition = $repository->getContentTypeDefinition();
 
@@ -176,6 +186,9 @@ class Controller
 
         if ($repository)
         {
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+
             /** @var ContentTypeDefinition $contentTypeDefinition */
             $contentTypeDefinition = $repository->getContentTypeDefinition();
 

@@ -34,6 +34,7 @@ class Controller
             $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
 
             $app['layout']->addCssFile('listing.css');
+            $app['layout']->addJsFile('editrecord.js');
 
             $vars['record'] = false;
 
@@ -45,7 +46,6 @@ class Controller
             if ($contentTypeDefinition->hasInsertOperation())
             {
                 /* @var ClippingDefinition */
-
 
                 $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
 
@@ -124,8 +124,8 @@ class Controller
                 $buttons      = array();
                 $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 'glyphicon' => 'glyphicon-list' );
                 $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
-                $buttons[] = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
-                $buttons[] = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
+                $buttons[]    = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
+                $buttons[]    = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
                 $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 
                 $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
@@ -210,17 +210,22 @@ class Controller
 
             }
 
-
-
             if ($record)
             {
                 /** @var ContentTypeDefinition $contentTypeDefinition */
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
                 /* @var ClippingDefinition */
-                $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+                if ($recordId)
+                {
+                    $clippingDefinition = $contentTypeDefinition->getEditClippingDefinition();
+                }
+                else
+                {
+                    $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
+                }
 
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(),$record->getProperties());
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
 
                 foreach ($values as $property => $value)
                 {
@@ -239,6 +244,7 @@ class Controller
                     else
                     {
                         $app['context']->addErrorMessage('Could not save record.');
+
                         return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
                     }
                 }

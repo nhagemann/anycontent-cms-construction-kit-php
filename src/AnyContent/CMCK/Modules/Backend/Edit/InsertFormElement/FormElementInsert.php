@@ -1,6 +1,8 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\InsertFormElement;
+namespace AnyContent\CMCK\Modules\Backend\Edit\InsertFormElement;
+
+use CMDL\DataTypeDefinition;
 
 class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {
@@ -18,6 +20,12 @@ class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
     }
 
 
+    /**
+     * @param DataTypeDefinition      $dataTypeDefinition
+     * @param array                   $values
+     *
+     * @return mixed
+     */
     public function getInsertionDefinition($dataTypeDefinition, $values = array())
     {
 
@@ -35,8 +43,15 @@ class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
             $insertionName = $this->definition->getInsertionName();
         }
 
-        $insertionDefinition = $dataTypeDefinition->getInsertionDefinition($insertionName);
+        if ($dataTypeDefinition->hasInsertionDefinition($insertionName))
+        {
+            $insertionDefinition = $dataTypeDefinition->getInsertionDefinition($insertionName);
 
-        return $insertionDefinition;
+            return $insertionDefinition;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

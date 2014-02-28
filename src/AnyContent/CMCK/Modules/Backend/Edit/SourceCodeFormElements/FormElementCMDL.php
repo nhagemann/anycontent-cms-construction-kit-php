@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\SourceCodeFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements;
 
 class FormElementCMDL extends \AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementSourceCode
 {

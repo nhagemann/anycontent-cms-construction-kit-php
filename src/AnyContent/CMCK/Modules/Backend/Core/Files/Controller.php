@@ -6,6 +6,7 @@ use AnyContent\Client\ContentFilter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
@@ -127,7 +128,7 @@ class Controller
                 if ($binary !== false)
                 {
 
-                    $headers = array( 'Content-Type' => 'application/unknown' );
+                    $headers = array( 'Content-Type' => 'application/unknown', 'Content-Disposition' => 'inline' );
 
                     if ($file->isImage())
                     {
@@ -146,6 +147,7 @@ class Controller
                         }
 
                     }
+
 
                     return new Response($binary, 200, $headers);
 
@@ -180,7 +182,7 @@ class Controller
                 if ($binary !== false)
                 {
 
-                    $headers = array( 'Content-Type' => 'application/download', 'Content-Disposition' => 'attachment;filename="'.$file->getName().'"' );
+                    $headers = array( 'Content-Type' => 'application/octet-stream', 'Content-Disposition' => 'attachment;filename="' . $file->getName() . '"' );
 
                     return new Response($binary, 200, $headers);
 
@@ -219,8 +221,7 @@ class Controller
 
         }
 
-
-        $path = pathinfo($id,PATHINFO_DIRNAME);
+        $path = pathinfo($id, PATHINFO_DIRNAME);
 
         $url = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
 
@@ -228,44 +229,80 @@ class Controller
 
     }
 
+
     public static function post(Application $app, Request $request, $repositoryAccessHash, $path = '')
     {
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
 
-        if ($request->request->has('create_folder_path'))
+        if ($repository)
         {
-            $newPath = $request->get('create_folder_path');
-            $app['context']->addSuccessMessage('Folder ' . $newPath . ' created.');
-
-        }
-
-        if ($request->request->has('delete_folder'))
-        {
-            $app['context']->addSuccessMessage('Folder ' . $path . ' deleted.');
-        }
-
-
-        if ($request->request->has('delete_file'))
-        {
-            $app['context']->addSuccessMessage('File ' . $request->request->get('delete_file') . ' deleted.');
-        }
-
-
-        if ($request->request->has('file_original'))
-        {
-            $app['context']->addSuccessMessage('File '.$request->request->get('file_original').' renamed to ' . $request->request->get('file_rename') . '.');
-        }
-
-        if ($request->files->count() > 0)
-        {
-            if ($request->files->get('upload_file'))
+            if ($request->request->has('create_folder_path'))
             {
-                $app['context']->addSuccessMessage('File upload complete.');
-            }
-            else
-            {
-                $app['context']->addAlertMessage('No file selected.');
+                $path = trim($request->get('create_folder_path'), '/');
+                $repository->createFolder($path);
+                $app['context']->addSuccessMessage('Folder /' . $path . ' created.');
+
             }
 
+            if ($request->request->has('delete_folder'))
+            {
+                $repository->deleteFolder($path, true);
+                $app['context']->addSuccessMessage('Folder ' . $path . ' deleted.');
+            }
+
+            if ($request->request->has('delete_file'))
+            {
+                $repository->deleteFile($path.'/'.$request->get('delete_file'), true);
+                $app['context']->addSuccessMessage('File ' . $request->request->get('delete_file') . ' deleted.');
+            }
+
+            if ($request->request->has('file_original'))
+            {
+                $file = $repository->getFile($request->request->get('file_original'));
+                if ($file)
+                {
+                    $binary = $repository->getBinary($file);
+                    if ($binary!==false)
+                    {
+                        $repository->saveFile($request->request->get('file_rename'),$binary);
+                        $path = trim(pathinfo($request->request->get('file_rename'),PATHINFO_DIRNAME),'/');
+                        $app['context']->addSuccessMessage('File ' . $request->request->get('file_original') . ' renamed to ' . $request->request->get('file_rename') . '.');
+
+                        $repository->deleteFile($request->request->get('file_original'));
+                    }
+
+                }
+
+            }
+
+            if ($request->files->count() > 0)
+            {
+                if ($request->files->get('upload_file'))
+                {
+                    /** @var UploadedFile $file */
+                    $file = $request->files->get('upload_file');
+                    $id   = trim($path . '/' . $file->getClientOriginalName(), '/');
+
+                    $binary = file_get_contents($file->getRealPath());
+
+                    $result = $repository->saveFile($id, $binary);
+
+                    if ($result)
+                    {
+                        $app['context']->addSuccessMessage('File upload complete.');
+                    }
+                    else
+                    {
+                        $app['context']->addErrorMessage('File upload failed.');
+                    }
+                }
+                else
+                {
+                    $app['context']->addAlertMessage('No file selected.');
+                }
+
+            }
         }
 
         $url = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));

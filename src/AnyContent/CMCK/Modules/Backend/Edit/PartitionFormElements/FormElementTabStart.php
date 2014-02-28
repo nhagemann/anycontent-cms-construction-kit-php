@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\PartitionFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements;
 
 class FormElementTabStart extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {

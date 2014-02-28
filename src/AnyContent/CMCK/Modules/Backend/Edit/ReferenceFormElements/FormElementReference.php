@@ -1,7 +1,7 @@
 <?php
-namespace Anycontent\CMCK\Modules\Backend\Edit\ReferenceFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements;
 
-use Anycontent\Client\Repository;
+use AnyContent\Client\Repository;
 
 class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements\FormElementSelection
 {

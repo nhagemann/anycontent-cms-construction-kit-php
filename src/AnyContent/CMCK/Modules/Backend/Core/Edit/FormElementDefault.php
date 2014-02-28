@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Edit;
+namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
 use CMDL\FormElementDefinition;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Repositories;
+namespace AnyContent\CMCK\Modules\Backend\Core\Repositories;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;

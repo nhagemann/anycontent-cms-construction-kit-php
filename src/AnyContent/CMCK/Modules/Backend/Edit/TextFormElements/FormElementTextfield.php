@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\TextFormElements;
+namespace AnyContent\CMCK\Modules\Backend\Edit\TextFormElements;
 
 class FormElementTextfield extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {

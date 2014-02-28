@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Pager;
+namespace AnyContent\CMCK\Modules\Backend\Core\Pager;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use AnyContent\CMCK\Modules\Backend\Core\Pager\PagingHelper;

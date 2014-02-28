@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\GeoLocationFormElement;
+namespace AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement;
 
 class FormElementGeoLocation extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {

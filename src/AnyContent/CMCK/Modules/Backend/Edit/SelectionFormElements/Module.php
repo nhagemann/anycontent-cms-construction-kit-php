@@ -18,7 +18,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     {
         $app['form']->registerFormElement('checkbox', 'AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements\FormElementCheckbox');
         $app['form']->registerFormElement('selection', 'AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements\FormElementSelection');
-
+        $app['form']->registerFormElement('multiselection', 'AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements\FormElementMultiSelection');
     }
 
 }

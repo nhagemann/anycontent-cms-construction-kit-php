@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\SequenceFormElement;
+namespace AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement;
 
 class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {

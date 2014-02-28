@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Edit\NumberFormElement;
+namespace AnyContent\CMCK\Modules\Backend\Edit\NumberFormElement;
 
 class FormElementNumber extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Repositories;
+namespace AnyContent\CMCK\Modules\Backend\Core\Repositories;
 
 use CMDL\Parser;
 
 use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
-use Anycontent\Client\Repository;
+use AnyContent\Client\Repository;
 
 class RepositoryManager
 {

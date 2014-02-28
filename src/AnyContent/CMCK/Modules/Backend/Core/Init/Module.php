@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Init;
+namespace AnyContent\CMCK\Modules\Backend\Core\Init;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Edit;
+namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
 use CMDL\FormElementDefinition;
 
@@ -139,8 +139,12 @@ class FormManager
         {
             if ($formElementDefinition->getFormElementType() == 'insert' AND array_key_exists('insert', $this->formElements))
             {
+
+
                 $class       = $this->formElements['insert']['class'];
                 $formElement = new $class(null, null, $formElementDefinition, $this->app, null, $this->formElements['insert']['options']);
+
+
 
                 $insertionDefinition = $formElement->getInsertionDefinition($this->getDataTypeDefinition(), $values);
 

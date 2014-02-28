@@ -1,6 +1,6 @@
 <?php
 
-namespace Anycontent\CMCK\Modules\Backend\Core\Context;
+namespace AnyContent\CMCK\Modules\Backend\Core\Context;
 
 use AnyContent\Client\Repository;
 use CMDL\DataTypeDefinition;

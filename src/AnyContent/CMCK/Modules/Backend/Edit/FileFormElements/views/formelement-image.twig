@@ -1,0 +1,29 @@
+{% extends "formelement-default.twig" %}
+
+{% block input %}
+    <div class="col-xs-6">
+        <div class="input-group">
+
+            <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
+
+            <input type="text" class="form-control" id="{{ id }}" name="{{ name }}"
+                   placeholder="{{ definition.placeholder }}" value="{{ value }}">
+
+        </div>
+
+
+
+    </div>
+    <div class="col-xs-4">
+
+
+        <a data-input="#{{ id }}" href="{{ url_modal }}" name="{{ name }}"
+           class="btn btn-default formelement-geolocation-modal-button"><span
+                    class="glyphicon glyphicon-folder-open"></span> &nbsp;Select</a>
+
+        <div class="modal fade bs-modal-lg" id="modal_{{ id }}" tabindex="-1" role="dialog"
+             aria-hidden="true"></div>
+
+
+    </div>
+{% endblock %}
