@@ -29,7 +29,6 @@ class FormElementDefault
 
     protected $options = array();
 
-
     public function __construct($id, $name, $formElementDefinition, $app, $value = '', $options = array())
     {
         $this->id         = $id;

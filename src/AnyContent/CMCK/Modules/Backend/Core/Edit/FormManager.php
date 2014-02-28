@@ -153,6 +153,7 @@ class FormManager
                     foreach ($insertionDefinition->getFormElementDefinitions() as $insertionFormElementDefinition)
                     {
 
+                        $insertionFormElementDefinition->setInsertedByInsert($insertionDefinition->getName());
                         $integratedFormElementsDefinition[] = $insertionFormElementDefinition;
 
                     }

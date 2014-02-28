@@ -14,8 +14,6 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
 
     public function render($layout)
     {
-
-
         $contentTypeAccessHash = $this->app['repos']->getAccessHash($this->app['context']->getCurrentRepository(), $this->app['context']->getCurrentContentType());
         $record                = $this->app['context']->getCurrentRecord();
         $recordId              = 0;
@@ -23,7 +21,16 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
         {
             $recordId = $record->getId();
         }
-        $url               = $this->app['url_generator']->generate('editSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'property' => $this->definition->getName() ));
+
+        // the sequence rendering form must know, if the sequence form element has be inserted via a insert to find it's definition
+        $insertName = '-';
+        if ($this->definition->isInsertedByInsert())
+        {
+            $insertName = $this->definition->getInsertedByInsertName();
+        }
+
+        $url = $this->app['url_generator']->generate('editSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName'=> $insertName, 'recordId' => $recordId, 'property' => $this->definition->getName() ));
+
         $this->vars['src'] = $url;
 
         $this->app['layout']->addCssFile('formelement-sequence.css');

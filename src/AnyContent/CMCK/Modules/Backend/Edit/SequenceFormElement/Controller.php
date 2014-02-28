@@ -20,12 +20,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Controller
 {
 
-    public static function editSequence(Application $app, $contentTypeAccessHash, $recordId, $property)
+    public static function editSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $clippingName, $insertName, $property)
     {
         $vars                     = array();
-        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'property' => $property ));
-        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'property' => $property ));
-        $vars['property']         = $property;
+        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
+        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName' => $insertName, 'property' => $property ));
+
+        $vars['property'] = $property;
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
@@ -45,14 +46,10 @@ class Controller
 
             $app['context']->setCurrentContentType($contentTypeDefinition);
 
-            /* @var ClippingDefinition */
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+            $formElementDefinition = self::getFormElementDefinition($request, $contentTypeDefinition, $insertName, $property);
 
-            if ($clippingDefinition->hasProperty($property))
+            if ($formElementDefinition)
             {
-
-                /** @var FormElementDefinition $formElementDefinition */
-                $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
 
                 if ($formElementDefinition->getFormElementType() == 'sequence')
                 {
@@ -75,7 +72,8 @@ class Controller
                     $vars['count'] = count($sequence);
                     $vars['items'] = array();
 
-                    $inserts         = $formElementDefinition->getInserts();
+                    $inserts = $formElementDefinition->getInserts();
+
                     $vars['inserts'] = $inserts;
 
                     // silently render all potential inserts to add their Javascript-Files to the Layout
@@ -89,17 +87,22 @@ class Controller
                     $i = 0;
                     foreach ($sequence as $item)
                     {
-                        $i++;
                         $insert     = key($item);
                         $properties = array_shift($item);
-                        /** @var InsertionDefinition $insertionDefinition */
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
-                        $item                = array();
-                        $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, 'item_' . $i);
-                        $item['type']        = $insert;
-                        $item['title']       = $inserts[$insert];
-                        $item['sequence']    = $i;
-                        $vars['items'][]     = $item;
+
+                        if ($contentTypeDefinition->hasInsertionDefinition($insert)) // ignore eventually junk data after cmdl changes
+                        {
+                            $i++;
+
+                            /** @var InsertionDefinition $insertionDefinition */
+                            $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+                            $item                = array();
+                            $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, 'item_' . $i);
+                            $item['type']        = $insert;
+                            $item['title']       = $inserts[$insert];
+                            $item['sequence']    = $i;
+                            $vars['items'][]     = $item;
+                        }
 
                     }
 
@@ -158,15 +161,15 @@ class Controller
                 $i     = 0;
                 foreach ($request->get('sequence') as $nr)
                 {
-                    $item       = $items[$nr];
-                    $type       = $types[$i];
+                    $item = $items[$nr];
+                    $type = $types[$i];
 
                     $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($type);
 
                     $bag = new ParameterBag();
                     $bag->add($item);
 
-                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $insertionDefinition->getFormElementDefinitions(),array());
+                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $insertionDefinition->getFormElementDefinitions(), array());
 
                     $sequence[] = array( $type => $item );
                     $i++;
@@ -179,7 +182,7 @@ class Controller
     }
 
 
-    public static function addSequenceItem(Application $app, Request $request, $contentTypeAccessHash, $property)
+    public static function addSequenceItem(Application $app, Request $request, $contentTypeAccessHash, $insertName, $property)
     {
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
@@ -194,14 +197,10 @@ class Controller
 
             $app['context']->setCurrentContentType($contentTypeDefinition);
 
-            /* @var ClippingDefinition */
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+            $formElementDefinition = self::getFormElementDefinition($request, $contentTypeDefinition, $insertName, $property);
 
-            if ($clippingDefinition->hasProperty($property))
+            if ($formElementDefinition)
             {
-                /** @var FormElementDefinition $formElementDefinition */
-                $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
-
                 if ($formElementDefinition->getFormElementType() == 'sequence')
                 {
                     if ($request->query->has('insert') AND $request->query->has('count'))
@@ -229,4 +228,29 @@ class Controller
         return '';
     }
 
+
+    protected static function getFormElementDefinition(Request $request, $contentTypeDefinition, $insertName, $property)
+    {
+        $formElementDefinition = null;
+        if ($insertName != '-')
+        {
+            $insertionDefinition   = $contentTypeDefinition->getInsertionDefinition($insertName);
+            $formElementDefinition = $insertionDefinition->getFormElementDefinition($property);
+            $formElementDefinition->setInsertedByInsert($insertName);
+
+        }
+        else
+        {
+            /* @var ClippingDefinition */
+            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+            if ($clippingDefinition->hasProperty($property))
+            {
+
+                /** @var FormElementDefinition $formElementDefinition */
+                $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
+            }
+        }
+
+        return $formElementDefinition;
+    }
 }
