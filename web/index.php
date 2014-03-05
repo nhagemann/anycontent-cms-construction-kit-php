@@ -1,4 +1,8 @@
 <?php
+if (!defined('APPLICATION_PATH'))
+{
+    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/..'));
+}
 
 // web/index.php
 

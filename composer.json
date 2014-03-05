@@ -18,7 +18,8 @@
         "nitra/php-min": "dev-master",
         "nhagemann/cmdl-parser-php": "dev-master",
         "nhagemann/anycontent-client-php": "dev-master",
-        "phpoffice/phpexcel": "1.7.9"
+        "phpoffice/phpexcel": "1.7.9",
+        "symfony/filesystem": "v2.4.2"
 
     },
 

@@ -54,7 +54,7 @@ class Application extends SilexApplication
             'twig.path' => array_reverse($this->templatesFolder)
         ));
 
-        $this['twig']->setCache('../twig-cache');
+        $this['twig']->setCache(APPLICATION_PATH.'/twig-cache');
     }
 
 
