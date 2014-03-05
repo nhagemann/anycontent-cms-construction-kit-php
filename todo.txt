@@ -26,3 +26,7 @@ Sequences:
 - must work for configtypes and contenttypes equally
 - must have clipping name in editsequence route
 - must be able to acess form element definitions of elements of sequences within inserts
+
+Tables:
+- tables must disable minus button if only one row is left
+- autosize on focus aktivieren danach deaktiveren
