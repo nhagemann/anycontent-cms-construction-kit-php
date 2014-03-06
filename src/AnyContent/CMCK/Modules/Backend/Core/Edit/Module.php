@@ -23,6 +23,10 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->bind('addRecord');
 
         $app
+        ->get('/content/add/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::addRecord')
+        ->bind('addRecordVersion');
+
+        $app
             ->get('/content/delete/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::deleteRecord')
             ->bind('deleteRecord');
 

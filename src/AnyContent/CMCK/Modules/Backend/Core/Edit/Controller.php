@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Controller
 {
 
-    public static function addRecord(Application $app, $contentTypeAccessHash)
+    public static function addRecord(Application $app, $contentTypeAccessHash, $recordId = null)
     {
         $vars = array();
 
@@ -71,15 +71,12 @@ class Controller
                 $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageAddRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
                 return $app->renderPage('editrecord.twig', $vars);
-
             }
             else
             {
                 return $app->renderPage('forbidden.twig', $vars);
-
             }
         }
-
     }
 
 
@@ -89,6 +86,9 @@ class Controller
 
         $vars['menu_mainmenu']   = $app['menus']->renderMainMenu();
         $vars['links']['search'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+
+        $vars['workspace'] = $app['context']->getCurrentWorkspace();
+        $vars['language']  = $app['context']->getCurrentLanguage();
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
@@ -106,6 +106,27 @@ class Controller
             $app['layout']->addCssFile('listing.css');
             $app['layout']->addJsFile('editrecord.js');
 
+            $buttons      = array();
+            $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 'glyphicon' => 'glyphicon-list' );
+            $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
+            $buttons[]    = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
+            $buttons[]    = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
+            $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
+
+            $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
+
+            $saveoperation = $app['context']->getCurrentSaveOperation();
+
+            $vars['save_operation']       = key($saveoperation);
+            $vars['save_operation_title'] = array_shift($saveoperation);
+
+            $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+            $vars['links']['delete']           = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['timeshift']        = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['workspaces']       = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['languages']        = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['addrecordversion'] = $app['url_generator']->generate('addRecordVersion', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+
             if ($record)
             {
                 $app['context']->setCurrentRecord($record);
@@ -121,33 +142,15 @@ class Controller
 
                 $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
 
-                $buttons      = array();
-                $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 'glyphicon' => 'glyphicon-list' );
-                $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
-                $buttons[]    = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
-                $buttons[]    = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
-                $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
-
-                $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
-
-                $saveoperation = $app['context']->getCurrentSaveOperation();
-
-                $vars['save_operation']       = key($saveoperation);
-                $vars['save_operation_title'] = array_shift($saveoperation);
-
-                $vars['links']['search']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
-                $vars['links']['delete']     = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-                $vars['links']['timeshift']  = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-                $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-                $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-
                 return $app->renderPage('editrecord.twig', $vars);
-
+            }
+            else
+            {
+                return $app->renderPage('record-not-found.twig', $vars);
             }
         }
 
-        return $app->renderPage('record-not-found.twig', $vars);
-
+        return $app->renderPage('forbidden.twig', $vars);
     }
 
 
@@ -207,7 +210,6 @@ class Controller
             else
             {
                 $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
-
             }
 
             if ($record)
@@ -266,7 +268,6 @@ class Controller
                 }
 
                 return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
-
             }
             else
             {
@@ -303,5 +304,4 @@ class Controller
             return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
         }
     }
-
 }

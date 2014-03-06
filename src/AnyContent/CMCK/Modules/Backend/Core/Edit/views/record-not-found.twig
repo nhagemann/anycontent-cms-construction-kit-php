@@ -1,0 +1,25 @@
+{% extends "layout-12.twig" %}
+
+{% block content %}
+
+    <div class="row">
+
+
+        <h3>Record #1 not found!</h3>
+
+        <br/>
+        There's no version of this record in workspace <strong>{{ workspace }}</strong> and language <strong>{{ language }}</strong>.
+        <br/>
+        <br/>
+
+
+        <a href="{{ links.addrecordversion }}" class="btn btn-primary">Create now</a>
+
+
+        <hr/>
+        {{ buttons | raw }}
+
+    </div>
+    <div class="modal fade bs-modal-lg" id="modal_edit" tabindex="-1" role="dialog"
+         aria-hidden="true"></div>
+{% endblock %}
