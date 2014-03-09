@@ -26,17 +26,33 @@ class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
      *
      * @return mixed
      */
-    public function getInsertionDefinition($dataTypeDefinition, $values = array())
+    public function getInsertionDefinition($dataTypeDefinition, $values = array(),$attributes = array())
     {
 
-        if ($this->definition->getPropertyName())
+        if ($this->definition->getPropertyName()) // insert is based on a property (or attribute)
         {
             $value = null;
-            if (array_key_exists($this->definition->getPropertyName(), $values))
+            if (strpos($this->definition->getPropertyName(),'.')!==false)
             {
-                $value = $values[$this->definition->getPropertyName()];
+                $attribute = array_pop(explode('.',$this->definition->getPropertyName()));
+
+                if (array_key_exists($attribute, $attributes))
+                {
+                    $value = $attributes[$attribute];
+                }
             }
+            else
+            {
+
+                if (array_key_exists($this->definition->getPropertyName(), $values))
+                {
+                    $value = $values[$this->definition->getPropertyName()];
+                }
+
+            }
+
             $insertionName = $this->definition->getInsertionName($value);
+
         }
         else
         {

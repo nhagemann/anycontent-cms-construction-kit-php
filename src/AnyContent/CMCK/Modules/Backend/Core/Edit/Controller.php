@@ -49,7 +49,7 @@ class Controller
 
                 $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions());
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(),array(),array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()));
 
                 $buttons   = array();
                 $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
@@ -140,7 +140,7 @@ class Controller
                 /* @var ClippingDefinition */
                 $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record->getProperties(),$record->getAttributes());
 
                 return $app->renderPage('editrecord.twig', $vars);
             }
@@ -206,6 +206,12 @@ class Controller
             {
                 /** @var Record $record */
                 $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+
+                if(!$record) // if we don't have a record with the given id (there never was one, or it has been deleted), create a new one with the given id.
+                {
+                    $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+                    $record->setId($recordId);
+                }
             }
             else
             {
@@ -227,7 +233,7 @@ class Controller
                     $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
                 }
 
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(), $record->getProperties(),$record->getAttributes());
 
                 foreach ($values as $property => $value)
                 {

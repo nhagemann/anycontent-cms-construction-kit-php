@@ -81,7 +81,7 @@ class Controller
                     {
 
                         $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($k);
-                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), null);
+                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),null);
                     }
 
                     $i = 0;
@@ -97,7 +97,7 @@ class Controller
                             /** @var InsertionDefinition $insertionDefinition */
                             $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
                             $item                = array();
-                            $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, 'item_' . $i);
+                            $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $i);
                             $item['type']        = $insert;
                             $item['title']       = $inserts[$insert];
                             $item['sequence']    = $i;
@@ -211,7 +211,7 @@ class Controller
 
                         $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
                         $item                = array();
-                        $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), 'item_' . $count);
+                        $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $count);
                         $item['type']        = $insert;
                         $item['sequence']    = $count;
                         $item['title']       = $inserts[$insert];

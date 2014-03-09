@@ -37,12 +37,12 @@ class FormManager
     }
 
 
-    public function renderFormElements($formId, $formElementsDefinition, $values = array(), $prefix = '')
+    public function renderFormElements($formId, $formElementsDefinition, $values = array(), $attributes = array(), $prefix = '')
     {
         $this->clearFormVars();
 
         // first check for insertions and add form elements of those
-        $formElementsDefinition       = $this->integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition,$values);
+        $formElementsDefinition       = $this->integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition,$values,$attributes);
         $this->formElementsDefinition = $formElementsDefinition;
 
         $html = '';
@@ -98,10 +98,10 @@ class FormManager
     }
 
 
-    public function extractFormElementValuesFromPostRequest($request, $formElementsDefinition,$values=array())
+    public function extractFormElementValuesFromPostRequest($request, $formElementsDefinition,$values=array(),$attributes=array())
     {
         // first check for insertions and add form elements of those
-        $formElementsDefinition       = $this->integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition,$values);
+        $formElementsDefinition       = $this->integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition,$values,$attributes);
         $this->formElementsDefinition = $formElementsDefinition;
 
         $values = array();
@@ -132,7 +132,7 @@ class FormManager
     }
 
 
-    public function integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition, $values)
+    public function integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition, $values,$attributes)
     {
         $integratedFormElementsDefinition = array();
         foreach ($formElementsDefinition as $formElementDefinition)
@@ -146,7 +146,7 @@ class FormManager
 
 
 
-                $insertionDefinition = $formElement->getInsertionDefinition($this->getDataTypeDefinition(), $values);
+                $insertionDefinition = $formElement->getInsertionDefinition($this->getDataTypeDefinition(), $values,$attributes);
 
                 if ($insertionDefinition)
                 {
