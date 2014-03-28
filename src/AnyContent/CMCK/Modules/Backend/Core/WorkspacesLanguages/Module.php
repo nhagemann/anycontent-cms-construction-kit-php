@@ -73,8 +73,11 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         }
 
         $workspaces['current'] = $app['context']->getCurrentWorkspace();
+        $workspaces['currentName'] = $app['context']->getCurrentWorkspaceName();
 
         $app['layout']->addVar('workspaces', $workspaces);
+
+
 
         // do the same for current language
 
@@ -99,7 +102,12 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         }
 
         $languages['current'] = $app['context']->getCurrentLanguage();
+        $languages['currentName'] = $app['context']->getCurrentLanguageName();
 
         $app['layout']->addVar('languages', $languages);
+
+
+
+
     }
 }

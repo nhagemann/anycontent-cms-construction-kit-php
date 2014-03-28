@@ -20,6 +20,15 @@ $(document).ready(function () {
     });
 
 
+    $('#form_edit_button_transfer').click(function () {
+
+
+        parent.cmck_modal($(this).attr('href'));
+        return false;
+    });
+
+
+
     $(document).on("cmck", function (e, params) {
 
 

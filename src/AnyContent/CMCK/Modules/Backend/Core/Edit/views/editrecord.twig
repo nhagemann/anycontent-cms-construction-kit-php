@@ -4,7 +4,8 @@
     <div class="row">
         {% if record %}
 
-            <h3><span class="label label-info">#{{ record.id }}.{{ record.revision }}</span> {{ record.name }}{% if definition.hasSubtypes() %} <span
+            <h3><span class="label label-info">#{{ record.id }}
+                    .{{ record.revision }}</span> {{ record.name }}{% if definition.hasSubtypes() %} <span
                         class="badge primary subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
                     <span class="badge primary status">{{ record.statusLabel }}</span>{% endif %}</h3>
         {% else %}
@@ -46,6 +47,10 @@
                     {% if record %}
                         <span class="btn-group">
                         <a href="{{ links.delete }}" class="btn btn-danger button_delete">Delete</a>
+                    </span>
+
+                        <span class="btn-group">
+                        <a href="{{ links.transfer }}" class="btn btn-warning" role="button" id="form_edit_button_transfer">Transfer</a>
                     </span>
                     {% endif %}
 

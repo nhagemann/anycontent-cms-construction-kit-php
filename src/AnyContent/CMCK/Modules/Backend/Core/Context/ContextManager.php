@@ -154,6 +154,23 @@ class ContextManager
     }
 
 
+    /**
+     * @return DataTypeDefinition
+     */
+    public function getCurrentDataTypeDefinition()
+    {
+        if ($this->isContentContext())
+        {
+            return $this->getCurrentContentType();
+        }
+        else
+        {
+            return $this->getCurrentConfigType();
+        }
+
+    }
+
+
     public function setCurrentRecord(Record $record)
     {
         $this->record = $record;
@@ -229,9 +246,44 @@ class ContextManager
     }
 
 
+    public function getCurrentLanguageName()
+    {
+        $dataTypeDefinition = $this->getCurrentDataTypeDefinition();
+
+        if ($dataTypeDefinition)
+        {
+            $languages = $dataTypeDefinition->getLanguages();
+
+            if (array_key_exists($this->getCurrentLanguage(), $languages))
+            {
+                return $languages[$this->getCurrentLanguage()];
+            }
+        }
+
+        return false;
+    }
+
+
     public function getCurrentWorkspace()
     {
         return $this->session->get($this->prefix . 'workspace');
+    }
+
+
+    public function getCurrentWorkspaceName()
+    {
+        $dataTypeDefinition = $this->getCurrentDataTypeDefinition();
+
+        if ($dataTypeDefinition)
+        {
+            $workspaces = $dataTypeDefinition->getWorkspaces();
+            if (array_key_exists($this->getCurrentWorkspace(), $workspaces))
+            {
+                return $workspaces[$this->getCurrentWorkspace()];
+            }
+        }
+
+        return false;
     }
 
 

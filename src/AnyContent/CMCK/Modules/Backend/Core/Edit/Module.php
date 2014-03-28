@@ -30,6 +30,13 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->get('/content/delete/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::deleteRecord')
             ->bind('deleteRecord');
 
+        $app
+            ->get('/content/transfer/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::transferRecordModal')
+            ->bind('transferRecordModal');
+        $app
+            ->post('/content/transfer/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::transferRecord')
+            ->bind('transferRecord');
+
         $app->post('/content/edit/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
         $app->post('/content/add/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
         $app->post('/content/add/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
@@ -45,7 +52,6 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     public function run(Application $app)
     {
         $app['form']->registerFormElement('default', 'AnyContent\CMCK\Modules\Backend\Core\Edit\FormElementDefault');
-        //$app['form']->registerFormElement('textfield', 'AnyContent\CMCK\Modules\Backend\Edit\Edit\FormElementTextfield');
     }
 
 }
