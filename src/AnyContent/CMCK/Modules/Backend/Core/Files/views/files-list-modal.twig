@@ -1,12 +1,7 @@
-{% extends "layout-12.twig" %}
+{% extends "layout-plain.twig" %}
 
 {% block content %}
-    <div class="row">
-
-        <h3><a href="{{ links.files }}">Files</a></h3>
-
-        <br/>
-    </div>
+    <div class="container">
 
     {% for folder in folders %}
         <div class="row">
@@ -29,25 +24,12 @@
     <div class="row">
         <br/>
         {% for file in files %}
-            {% include "files-item.twig" %}
+            {% include "files-list-modal-item.twig" %}
         {% endfor %}
     </div>
 
+           </div>
 
-    <div class="row">
-
-        <hr/>
-
-        {{ buttons | raw }}
-
-    </div>
-
-    {% include "files-modal-create-folder.twig" %}
-    {% include "files-modal-upload-file.twig" %}
-    {% include "files-modal-delete-folder.twig" %}
-    {% include "files-modal-delete-file.twig" %}
-    {% include "files-modal-file-zoom.twig" %}
-    {% include "files-modal-file-edit.twig" %}
 {% endblock %}
 
 

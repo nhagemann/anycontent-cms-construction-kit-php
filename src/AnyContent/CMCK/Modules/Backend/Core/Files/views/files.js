@@ -62,6 +62,9 @@ $(document).ready(function () {
     });
 
 
+    $('.file-select-item').click(function () {
+        alert ($(this).attr('data-src'));
+    });
 });
 
 

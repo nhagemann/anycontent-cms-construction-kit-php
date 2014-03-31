@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement;
+namespace AnyContent\CMCK\Modules\Backend\Edit\FileFormElements;
 
 use AnyContent\Client\ContentFilter;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 use AnyContent\Client\UserInfo;
 
-use AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Module;
+use AnyContent\CMCK\Modules\Backend\Edit\FileFormElements\Module;
 
 class Controller
 {
@@ -22,6 +22,8 @@ class Controller
     {
 
         $vars = array('name'=>$name);
+
+        $vars['url_file_select'] = $app['url_generator']->generate('listFileSelect', array( 'repositoryAccessHash'=>'9f0643ce90dc98be213bf49f40c9e7ad','path' => '/'));
 
         return $app['twig']->render('formelement-image-modal.twig', $vars);
 

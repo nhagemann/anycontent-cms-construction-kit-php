@@ -18,14 +18,26 @@ use AnyContent\Client\UserInfo;
 class Controller
 {
 
-    public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '')
+    public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode='page')
     {
         $app['layout']->addCssFile('files');
         $app['layout']->addJsFile('files');
 
         $vars                   = array();
         $vars['root']           = false;
-        $vars['links']['files'] = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => '' ));
+
+        if ($mode=='modal')
+        {
+            $listFilesRouteName = 'listFileSelect';
+            $listFilesTemplateName = 'files-list-modal.twig';
+        }
+        else
+        {
+            $listFilesRouteName = 'listFiles';
+            $listFilesTemplateName = 'files-list-page.twig';
+        }
+
+        $vars['links']['files'] = $app['url_generator']->generate($listFilesRouteName, array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => '' ));
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
@@ -61,7 +73,7 @@ class Controller
                     foreach ($folder->listSubFolders() as $id => $name)
                     {
                         $id   = trim($id, '/');
-                        $item = array( 'name' => $name, 'class' => '', 'url' => $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $id )) );
+                        $item = array( 'name' => $name, 'class' => '', 'url' => $app['url_generator']->generate($listFilesRouteName, array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $id )) );
                         if (strstr($path, $id))
                         {
                             $item['class'] = 'active';
@@ -104,7 +116,7 @@ class Controller
 
         $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
-        return $app->renderPage('files.twig', $vars);
+        return $app->renderPage($listFilesTemplateName, $vars);
     }
 
 

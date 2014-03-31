@@ -13,6 +13,7 @@
 
                 var options = {lat: lat, long: long};
 
+                console.log (options);
 
                 var onShown = function () {
                     parent.cmck_modal_shown(options);

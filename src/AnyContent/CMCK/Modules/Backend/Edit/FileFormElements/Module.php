@@ -12,7 +12,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app->addTemplatesFolders(__DIR__ . '/views/');
         $app
             ->get('/edit/modal/image/{name}', 'AnyContent\CMCK\Modules\Backend\Edit\FileFormElements\Controller::modal')
-            ->value('module',$this);
+            ->value('module',$this)->bind('formElementFileModal');
+
+
     }
 
 
