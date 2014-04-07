@@ -116,7 +116,7 @@ class Controller
     }
 
 
-    protected function getRecords($app, Repository $repository, $contentTypeAccessHash, $orderBy = null, $clippingName = 'default', $itemsPerPage = null, $page = 1, $filter = null, $subset = null)
+    protected function getRecords($app, Repository $repository, $contentTypeAccessHash, $orderBy = null, $viewName = 'default', $itemsPerPage = null, $page = 1, $filter = null, $subset = null)
     {
         $records = array();
 
@@ -127,7 +127,7 @@ class Controller
 
 
         /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $subset, $app['context']->getCurrentTimeShift()) AS $record)
+        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $viewName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $subset, $app['context']->getCurrentTimeShift()) AS $record)
         {
             $item                     = array();
             $item['record']           = $record;

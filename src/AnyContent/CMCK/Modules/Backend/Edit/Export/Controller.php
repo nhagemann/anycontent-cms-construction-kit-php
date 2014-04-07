@@ -30,7 +30,7 @@ class Controller
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($contentTypeDefinition);
 
-            $clippingName = $contentTypeDefinition->getExchangeClippingDefinition()->getName();
+            $viewName = $contentTypeDefinition->getExchangeViewDefinition()->getName();
 
             // Create new PHPExcel object
             $objPHPExcel = new \PHPExcel();
@@ -55,7 +55,7 @@ class Controller
 
             $row    = 1;
             $column = 2;
-            foreach ($contentTypeDefinition->getProperties($clippingName) as $property)
+            foreach ($contentTypeDefinition->getProperties($viewName) as $property)
             {
                 $worksheet->setCellValueByColumnAndRow($column, $row, $property);
                 $worksheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
@@ -72,7 +72,7 @@ class Controller
             //$this->workbook->getActiveSheet()->getStyle($cell)->getNumberFormat()->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
 
             /** @var Record $record */
-            foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $clippingName, $app['context']->getCurrentLanguage(), 'id', array(), null, 1, null, null, $app['context']->getCurrentTimeShift()) AS $record)
+            foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $viewName, $app['context']->getCurrentLanguage(), 'id', array(), null, 1, null, null, $app['context']->getCurrentTimeShift()) AS $record)
             {
                 /** @var UserInfo $userInfo */
                 $userInfo = $record->getLastChangeUserInfo();
@@ -86,7 +86,7 @@ class Controller
                     ->setFormatCode($module->getOption('FormatCode.DateTime'));
 
                 $column = 2;
-                foreach ($contentTypeDefinition->getProperties($clippingName) as $property)
+                foreach ($contentTypeDefinition->getProperties($viewName) as $property)
                 {
                     $worksheet->setCellValueByColumnAndRow($column, $row, $record->getProperty($property));
                     //$worksheet->getStyleByColumnAndRow($column, $row)->getNumberFormat()

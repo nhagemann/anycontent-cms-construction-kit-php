@@ -19,12 +19,12 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
         $contentTypeDefinition = $repository->getContentTypeDefinition();
 
         $workspace    = $this->definition->getWorkspace();
-        $clippingName = $contentTypeDefinition->getListClippingDefinition()->getName();
+        $viewName = $contentTypeDefinition->getListViewDefinition()->getName();
         $language     = $this->definition->getLanguage();
         $order        = $this->definition->getOrder();
         $timeshift    = $this->definition->getTimeShift();
 
-        $records = $repository->getRecords($workspace, $clippingName, $language, $order, $timeshift);
+        $records = $repository->getRecords($workspace, $viewName, $language, $order, $timeshift);
 
         $options = array();
         foreach ($records as $record)

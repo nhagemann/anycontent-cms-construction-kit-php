@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
-use CMDL\ClippingDefinition;
+use CMDL\ViewDefinition;
 
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
@@ -45,11 +45,11 @@ class Controller
 
             if ($contentTypeDefinition->hasInsertOperation())
             {
-                /* @var ClippingDefinition */
+                /* @var ViewDefinition */
 
-                $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
+                $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), array(), array( 'language' => $app['context']->getCurrentLanguage(), 'workspace' => $app['context']->getCurrentWorkspace() ));
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), array(), array( 'language' => $app['context']->getCurrentLanguage(), 'workspace' => $app['context']->getCurrentWorkspace() ));
 
                 $buttons   = array();
                 $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
@@ -135,10 +135,10 @@ class Controller
 
                 $vars['definition'] = $contentTypeDefinition;
 
-                /* @var ClippingDefinition */
-                $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
+                /* @var ViewDefinition */
+                $viewDefinition = $contentTypeDefinition->getViewDefinition('default');
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
 
                 return $app->renderPage('editrecord.twig', $vars);
             }
@@ -221,17 +221,17 @@ class Controller
                 /** @var ContentTypeDefinition $contentTypeDefinition */
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
-                /* @var ClippingDefinition */
+                /* @var ViewDefinition */
                 if ($recordId)
                 {
-                    $clippingDefinition = $contentTypeDefinition->getEditClippingDefinition();
+                    $viewDefinition = $contentTypeDefinition->getEditViewDefinition();
                 }
                 else
                 {
-                    $clippingDefinition = $contentTypeDefinition->getInsertClippingDefinition();
+                    $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
                 }
 
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
 
                 foreach ($values as $property => $value)
                 {
@@ -376,7 +376,7 @@ class Controller
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
                 /** @var Record $record */
-                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), $contentTypeDefinition->getExchangeClippingDefinition()
+                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), $contentTypeDefinition->getExchangeViewDefinition()
                                                                                                                           ->getName(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
                 if ($record)
@@ -395,7 +395,7 @@ class Controller
                         $app['context']->setCurrentLanguage($language);
                     }
 
-                    $recordId = $repository->saveRecord($record, $workspace, $contentTypeDefinition->getExchangeClippingDefinition()
+                    $recordId = $repository->saveRecord($record, $workspace, $contentTypeDefinition->getExchangeViewDefinition()
                                                                                                    ->getName(), $language);
                     $app['context']->resetTimeShift();
 

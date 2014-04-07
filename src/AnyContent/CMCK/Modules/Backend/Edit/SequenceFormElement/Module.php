@@ -13,15 +13,15 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         // additional query parameter insertedby
         $app
-            ->get('/sequence/edit/{contentTypeAccessHash}/{clippingName}/{insertName}/{recordId}/{property}', 'AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement\Controller::editSequence')
+            ->get('/sequence/edit/{contentTypeAccessHash}/{viewName}/{insertName}/{recordId}/{property}', 'AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement\Controller::editSequence')
             ->bind('editSequence');
         $app
-            ->post('/sequence/edit/{contentTypeAccessHash}/{clippingName}/{insertName}/{recordId}/{property}', 'AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement\Controller::postSequence')
+            ->post('/sequence/edit/{contentTypeAccessHash}/{viewName}/{insertName}/{recordId}/{property}', 'AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement\Controller::postSequence')
             ->bind('postSequence');
 
         // additional query parameter insert and count
         $app
-            ->get('/sequence/add/{contentTypeAccessHash}/{clippingName}/{insertName}/{property}', 'AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement\Controller::addSequenceItem')
+            ->get('/sequence/add/{contentTypeAccessHash}/{viewName}/{insertName}/{property}', 'AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement\Controller::addSequenceItem')
             ->bind('addSequenceItem');
     }
 

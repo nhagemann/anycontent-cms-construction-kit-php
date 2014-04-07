@@ -70,8 +70,11 @@ $app['repos']->addAllConfigTypesOfRepository(('http://anycontent.dev/1/nhagemann
 #$app['repos']->addAllConfigTypesOfRepository(('http://anycontent.dev/1/demo'));
 
 
-$app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/hahnair'));
-$app['repos']->addAllConfigTypesOfRepository(('http://anycontent.dev/1/hahnair'));
+//$app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/hahnair'));
+//$app['repos']->addAllConfigTypesOfRepository(('http://anycontent.dev/1/hahnair'));
+$app['repos']->addAllContentTypesOfRepository(('http://acrs.hahnair.dev/1/portal'));
+$app['repos']->addAllConfigTypesOfRepository(('http://acrs.hahnair.dev/1/portal'));
+
 
 $app['repos']->addAllContentTypesOfRepository(('http://anycontent.dev/1/telecolumbus'));
 $app['repos']->addAllConfigTypesOfRepository(('http://anycontent.dev/1/telecolumbus'));

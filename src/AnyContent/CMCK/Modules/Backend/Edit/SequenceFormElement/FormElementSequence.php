@@ -29,7 +29,7 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
             $insertName = $this->definition->getInsertedByInsertName();
         }
 
-        $url = $this->app['url_generator']->generate('editSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName'=> $insertName, 'recordId' => $recordId, 'property' => $this->definition->getName() ));
+        $url = $this->app['url_generator']->generate('editSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName'=> $insertName, 'recordId' => $recordId, 'property' => $this->definition->getName() ));
 
         $this->vars['src'] = $url;
 

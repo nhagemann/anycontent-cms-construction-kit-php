@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
-use CMDL\ClippingDefinition;
+use CMDL\ViewDefinition;
 use CMDL\FormElementDefinition;
 use CMDL\InsertionDefinition;
 
@@ -20,11 +20,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Controller
 {
 
-    public static function editSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $clippingName, $insertName, $property)
+    public static function editSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $viewName, $insertName, $property)
     {
         $vars                     = array();
-        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
-        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName' => $insertName, 'property' => $property ));
+        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
+        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'property' => $property ));
 
         $vars['property'] = $property;
 
@@ -241,13 +241,13 @@ class Controller
         }
         else
         {
-            /* @var ClippingDefinition */
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
-            if ($clippingDefinition->hasProperty($property))
+            /* @var ViewDefinition */
+            $viewDefinition = $contentTypeDefinition->getViewDefinition('default');
+            if ($viewDefinition->hasProperty($property))
             {
 
                 /** @var FormElementDefinition $formElementDefinition */
-                $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
+                $formElementDefinition = $viewDefinition->getFormElementDefinition($property);
             }
         }
 

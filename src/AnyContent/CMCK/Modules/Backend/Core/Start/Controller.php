@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Start;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
-use CMDL\ClippingDefinition;
+use CMDL\ViewDefinition;
 
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
