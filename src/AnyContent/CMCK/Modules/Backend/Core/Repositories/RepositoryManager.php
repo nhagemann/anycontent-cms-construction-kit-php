@@ -7,11 +7,15 @@ use CMDL\Parser;
 use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
 use AnyContent\Client\Repository;
+use AnyContent\CMCK\Modules\Backend\Core\Context;
 
 class RepositoryManager
 {
 
     protected $cache = null;
+
+    /** @var  ContextManager */
+    protected $context;
 
     protected $requestedRepositories = array();
 
@@ -23,9 +27,10 @@ class RepositoryManager
     protected $userInfo = null;
 
 
-    public function __construct($cache)
+    public function __construct($cache, $context)
     {
-        $this->cache = $cache;
+        $this->cache   = $cache;
+        $this->context = $context;
     }
 
 
@@ -148,18 +153,21 @@ class RepositoryManager
 
             $contentTypes = array();
 
-            $repository = $this->repositoryObjects[$repositoryInfo['url']];
-
-            foreach ($repository->getContentTypes() as $contentTypeName => $contentTypeTitle)
+            if (array_key_exists($repositoryInfo['url'], $this->repositoryObjects))
             {
-                if (array_key_exists('*', $repositoryInfo['contentTypes']) OR array_key_exists($contentTypeName, $repositoryInfo['contentTypes']))
+                $repository = $this->repositoryObjects[$repositoryInfo['url']];
+
+                foreach ($repository->getContentTypes() as $contentTypeName => $contentTypeTitle)
                 {
-                    if (!$contentTypeTitle)
+                    if (array_key_exists('*', $repositoryInfo['contentTypes']) OR array_key_exists($contentTypeName, $repositoryInfo['contentTypes']))
                     {
-                        $contentTypeTitle = $contentTypeName;
+                        if (!$contentTypeTitle)
+                        {
+                            $contentTypeTitle = $contentTypeName;
+                        }
+                        $hash                           = md5($url . '-contentType-' . $contentTypeName);
+                        $contentTypes[$contentTypeName] = array( 'title' => $contentTypeTitle, 'accessHash' => $hash );
                     }
-                    $hash                           = md5($url . '-contentType-' . $contentTypeName);
-                    $contentTypes[$contentTypeName] = array( 'title' => $contentTypeTitle, 'accessHash' => $hash );
                 }
             }
 
@@ -183,18 +191,21 @@ class RepositoryManager
 
             $configTypes = array();
 
-            $repository = $this->repositoryObjects[$repositoryInfo['url']];
-
-            foreach ($repository->getConfigTypes() as $configTypeName => $configTypeTitle)
+            if (array_key_exists($repositoryInfo['url'], $this->repositoryObjects))
             {
-                if (array_key_exists('*', $repositoryInfo['configTypes']) OR array_key_exists($configTypeName, $repositoryInfo['configTypes']))
+                $repository = $this->repositoryObjects[$repositoryInfo['url']];
+
+                foreach ($repository->getConfigTypes() as $configTypeName => $configTypeTitle)
                 {
-                    if (!$configTypeTitle)
+                    if (array_key_exists('*', $repositoryInfo['configTypes']) OR array_key_exists($configTypeName, $repositoryInfo['configTypes']))
                     {
-                        $configTypeTitle = $configTypeName;
+                        if (!$configTypeTitle)
+                        {
+                            $configTypeTitle = $configTypeName;
+                        }
+                        $hash                         = md5($url . '-configType-' . $configTypeName);
+                        $configTypes[$configTypeName] = array( 'title' => $configTypeTitle, 'accessHash' => $hash );
                     }
-                    $hash                         = md5($url . '-configType-' . $configTypeName);
-                    $configTypes[$configTypeName] = array( 'title' => $configTypeTitle, 'accessHash' => $hash );
                 }
             }
 
@@ -321,17 +332,24 @@ class RepositoryManager
         $this->repositoryObjects = array();
         foreach ($this->requestedRepositories as $repositoryInfo)
         {
-
-            $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache);
-
-            if ($this->userInfo)
+            try
             {
-                $client->setUserInfo($this->userInfo);
+
+                $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache);
+                if ($this->userInfo)
+                {
+                    $client->setUserInfo($this->userInfo);
+                }
+
+                $repository = $client->getRepository();
+
+                $this->repositoryObjects[$repositoryInfo['url']] = $repository;
+            }
+            catch (\Exception $e)
+            {
+                $this->context->addErrorMessage('Could not connect to repository ' . $repositoryInfo['url'].'.');
             }
 
-            $repository = $client->getRepository();
-
-            $this->repositoryObjects[$repositoryInfo['url']] = $repository;
         }
 
     }
