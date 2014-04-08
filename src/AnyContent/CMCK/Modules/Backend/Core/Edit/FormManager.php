@@ -41,8 +41,8 @@ class FormManager
     {
         $this->clearFormVars();
 
-        // first check for insertions and add form elements of those
-        $formElementsDefinition       = $this->integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition,$values,$attributes);
+        // first check for form elements added through insert annotations
+        $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition,$values,$attributes);
         $this->formElementsDefinition = $formElementsDefinition;
 
         $html = '';
@@ -101,7 +101,7 @@ class FormManager
     public function extractFormElementValuesFromPostRequest($request, $formElementsDefinition,$values=array(),$attributes=array())
     {
         // first check for insertions and add form elements of those
-        $formElementsDefinition       = $this->integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition,$values,$attributes);
+        $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition,$values,$attributes);
         $this->formElementsDefinition = $formElementsDefinition;
 
         $values = array();
@@ -132,7 +132,7 @@ class FormManager
     }
 
 
-    public function integrationEventuallyInsertionFormElementsIntoFormElementsDefinition($formElementsDefinition, $values,$attributes)
+    public function getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values,$attributes)
     {
         $integratedFormElementsDefinition = array();
         foreach ($formElementsDefinition as $formElementDefinition)
@@ -146,15 +146,15 @@ class FormManager
 
 
 
-                $insertionDefinition = $formElement->getInsertionDefinition($this->getDataTypeDefinition(), $values,$attributes);
+                $clippingDefinition = $formElement->getClippingDefinition($this->getDataTypeDefinition(), $values,$attributes);
 
-                if ($insertionDefinition)
+                if ($clippingDefinition)
                 {
-                    foreach ($insertionDefinition->getFormElementDefinitions() as $insertionFormElementDefinition)
+                    foreach ($clippingDefinition->getFormElementDefinitions() as $formElementDefinitionOfClipping)
                     {
 
-                        $insertionFormElementDefinition->setInsertedByInsert($insertionDefinition->getName());
-                        $integratedFormElementsDefinition[] = $insertionFormElementDefinition;
+                        $formElementDefinitionOfClipping->setInsertedByInsert($clippingDefinition->getName());
+                        $integratedFormElementsDefinition[] = $formElementDefinitionOfClipping;
 
                     }
                 }

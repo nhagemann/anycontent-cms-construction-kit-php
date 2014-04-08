@@ -7,7 +7,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use CMDL\ContentTypeDefinition;
 use CMDL\ViewDefinition;
 use CMDL\FormElementDefinition;
-use CMDL\InsertionDefinition;
+use CMDL\ClippingDefinition;
 
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
@@ -80,8 +80,8 @@ class Controller
                     foreach ($inserts as $k => $v)
                     {
 
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($k);
-                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),null);
+                        $clippingDefinition = $contentTypeDefinition->getClippingDefinition($k);
+                        $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),null);
                     }
 
                     $i = 0;
@@ -90,14 +90,14 @@ class Controller
                         $insert     = key($item);
                         $properties = array_shift($item);
 
-                        if ($contentTypeDefinition->hasInsertionDefinition($insert)) // ignore eventually junk data after cmdl changes
+                        if ($contentTypeDefinition->hasClippingDefinition($insert)) // ignore eventually junk data after cmdl changes
                         {
                             $i++;
 
-                            /** @var InsertionDefinition $insertionDefinition */
-                            $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+                            /** @var ClippingDefinition $clippingDefinition */
+                            $clippingDefinition = $contentTypeDefinition->getClippingDefinition($insert);
                             $item                = array();
-                            $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $i);
+                            $item['form']        = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), $properties, array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $i);
                             $item['type']        = $insert;
                             $item['title']       = $inserts[$insert];
                             $item['sequence']    = $i;
@@ -164,12 +164,12 @@ class Controller
                     $item = $items[$nr];
                     $type = $types[$i];
 
-                    $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($type);
+                    $clippingDefinition = $contentTypeDefinition->getClippingDefinition($type);
 
                     $bag = new ParameterBag();
                     $bag->add($item);
 
-                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $insertionDefinition->getFormElementDefinitions(), array());
+                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $clippingDefinition->getFormElementDefinitions(), array());
 
                     $sequence[] = array( $type => $item );
                     $i++;
@@ -209,9 +209,9 @@ class Controller
                         $insert  = $request->query->get('insert');
                         $count   = $request->query->get('count');
 
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+                        $clippingDefinition = $contentTypeDefinition->getClippingDefinition($insert);
                         $item                = array();
-                        $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $count);
+                        $item['form']        = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $count);
                         $item['type']        = $insert;
                         $item['sequence']    = $count;
                         $item['title']       = $inserts[$insert];
@@ -234,8 +234,8 @@ class Controller
         $formElementDefinition = null;
         if ($insertName != '-')
         {
-            $insertionDefinition   = $contentTypeDefinition->getInsertionDefinition($insertName);
-            $formElementDefinition = $insertionDefinition->getFormElementDefinition($property);
+            $clippingDefinition   = $contentTypeDefinition->getClippingDefinition($insertName);
+            $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
             $formElementDefinition->setInsertedByInsert($insertName);
 
         }

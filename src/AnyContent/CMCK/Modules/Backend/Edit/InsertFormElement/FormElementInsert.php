@@ -26,7 +26,7 @@ class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
      *
      * @return mixed
      */
-    public function getInsertionDefinition($dataTypeDefinition, $values = array(),$attributes = array())
+    public function getClippingDefinition($dataTypeDefinition, $values = array(),$attributes = array())
     {
 
         if ($this->definition->getPropertyName()) // insert is based on a property (or attribute)
@@ -51,19 +51,19 @@ class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
 
             }
 
-            $insertionName = $this->definition->getInsertionName($value);
+            $clippingName = $this->definition->getClippingName($value);
 
         }
         else
         {
-            $insertionName = $this->definition->getInsertionName();
+            $clippingName = $this->definition->getClippingName();
         }
 
-        if ($dataTypeDefinition->hasInsertionDefinition($insertionName))
+        if ($dataTypeDefinition->hasClippingDefinition($clippingName))
         {
-            $insertionDefinition = $dataTypeDefinition->getInsertionDefinition($insertionName);
+            $clippingDefinition = $dataTypeDefinition->getClippingDefinition($clippingName);
 
-            return $insertionDefinition;
+            return $clippingDefinition;
         }
         else
         {
