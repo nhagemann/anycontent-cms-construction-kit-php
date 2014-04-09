@@ -33,12 +33,16 @@
 
         $(document).on("cmck", function (e, params) {
 
+            console.log ('Iframe: '+params.type);
+
             switch (params.type) {
 
 
-                case 'editForm.init':
 
-                    if (params.refresh) {
+                case 'sequenceForm.init':
+                case 'sequenceForm.refresh':
+
+                    if (params.type=='sequenceForm.refresh') {
 
                         $('.sequence-accordion').accordion('destroy');
                         $('.sequence-add-item li a').off('click');
@@ -59,7 +63,7 @@
                     });
 
 
-                    if (!params.refresh) {
+                    if (params.type=='sequenceForm.init') {
                         $(".sequence-accordion").sortable({
                             axis: "y",
                             handle: "h3",
@@ -115,7 +119,8 @@
                             $('#form_sequence').attr('data-active-item', n);
                         }
 
-                        $.event.trigger('cmck', {type: 'editForm.init', refresh: true});
+                        //$.event.trigger('cmck', {type: 'editForm.init', refresh: true});
+                        $.event.trigger('cmck', {type: 'sequenceForm.refresh'});
 
                     });
 
@@ -144,8 +149,8 @@
 
         });
 
-
-        $.event.trigger('cmck', {type: 'editForm.init'});
+        $.event.trigger('cmck', {type: 'sequenceForm.init'});
+        //$.event.trigger('cmck', {type: 'editForm.init'});
     };
 
 

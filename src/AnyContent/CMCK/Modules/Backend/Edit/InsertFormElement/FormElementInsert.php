@@ -28,7 +28,6 @@ class FormElementInsert extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
      */
     public function getClippingDefinition($dataTypeDefinition, $values = array(),$attributes = array())
     {
-
         if ($this->definition->getPropertyName()) // insert is based on a property (or attribute)
         {
             $value = null;

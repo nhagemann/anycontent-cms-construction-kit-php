@@ -1,8 +1,50 @@
+$(document).on("cmck", function (e, params) {
+
+    console.log('soruce.js: ' + params.type);
+
+    switch (params.type) {
+        case 'editForm.init':
+        //TODO: Find out, why the code mirror textarea replacement doesn't work within sequences (i.e. bootstrap accordions?)
+        //case 'sequenceForm.init':
+        //case 'sequenceForm.refresh':
+            $('.textarea-codemirror').each(function () {
+
+                var options = {lineNumbers: true, lineWrapping: true};
+
+                var mode = ($(this).attr('data-mode'));
+                if (mode) {
+                    options.mode = mode;
+                }
+                var moreoptions = $(this).attr('data-options');
+
+                if (moreoptions) {
+                    try {
+                        moreoptions = JSON.parse(moreoptions);
+                        $().extend(options, moreoptions);
+                        console.log(moreoptions);
+                    } catch (e) {
+
+                    }
+                }
+
+
+                var myCodeMirror = CodeMirror.fromTextArea(this, options);
+
+                width = $(this).width();
+                rows = $(this).attr('rows');
+                height = 5 + rows * 14;
+                myCodeMirror.setSize(width, height);
+                myCodeMirror.refresh();
+            });
+            break;
+    }
+    ;
+});
+
 $(document).ready(function () {
 
 
-
-    CodeMirror.defineMode("cmdl", function() {
+    CodeMirror.defineMode("cmdl", function () {
 
         var TOKEN_NAMES = {
             '#': 'comment',
@@ -16,20 +58,19 @@ $(document).ready(function () {
 
         return {
 
-            startState: function() {
+            startState: function () {
                 return {};
             },
 
-            token: function(stream,state) {
+            token: function (stream, state) {
                 var tw_pos = stream.string.search(/[\t ]+?$/);
                 //console.log (tw_pos);
                 if (!stream.sol() || tw_pos === 0) {
                     //console.log("NEXT"+stream.peek());
-                    token_name='def'; // Never used ???
+                    token_name = 'def'; // Never used ???
 
-                    if (stream.peek('='))
-                    {
-                        token_name='operator';
+                    if (stream.peek('=')) {
+                        token_name = 'operator';
                         stream.next();
                         return token_name;
                         //return 'astring';
@@ -45,13 +86,11 @@ $(document).ready(function () {
 
                 var token_name = TOKEN_NAMES[stream.peek()];
 
-                if (token_name == undefined)
-                {
-                    token_name='variable-2';
+                if (token_name == undefined) {
+                    token_name = 'variable-2';
                 }
 
-                if (stream.skipTo('='))
-                {
+                if (stream.skipTo('=')) {
                     return token_name;
                 }
                 //console.log(stream.peek());
@@ -71,40 +110,6 @@ $(document).ready(function () {
     });
 
     CodeMirror.defineMIME("text/x-cmdl", "cmdl");
-
-
-
-    $('.textarea-codemirror').each(function () {
-
-        var options = {lineNumbers: true,lineWrapping:true};
-
-        var mode = ($(this).attr('data-mode'));
-        if (mode) {
-            options.mode = mode;
-        }
-        var moreoptions = $(this).attr('data-options');
-
-        if (moreoptions) {
-            try {
-                moreoptions = JSON.parse(moreoptions);
-                $().extend(options, moreoptions);
-                console.log(moreoptions);
-            } catch (e) {
-
-            }
-        }
-
-
-
-
-        var myCodeMirror = CodeMirror.fromTextArea(this, options);
-
-        width = $(this).width();
-        rows = $(this).attr('rows');
-        height = 5+rows*14;
-        myCodeMirror.setSize(width,height);
-
-    });
 
 
 });

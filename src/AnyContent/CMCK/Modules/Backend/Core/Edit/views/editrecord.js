@@ -1,3 +1,4 @@
+// included, when editing a content or a config record, not included in the iframe editing a sequence
 $(document).ready(function () {
 
     $('#form_edit_button_save_options a').click(function () {
@@ -30,6 +31,7 @@ $(document).ready(function () {
 
     $(document).on("cmck", function (e, params) {
 
+        console.log (params.type);
 
         switch (params.type) {
             case 'editform.setProperty':
@@ -45,7 +47,10 @@ $(document).ready(function () {
 
     });
 
+
+
     //$.event.trigger('cmck', {type: 'editForm.init', refresh: false});
+    $.event.trigger('cmck', {type: 'editForm.init'});
 
 
 });

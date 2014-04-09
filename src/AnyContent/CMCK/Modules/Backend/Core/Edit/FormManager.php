@@ -134,6 +134,7 @@ class FormManager
 
     public function getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values,$attributes)
     {
+
         $integratedFormElementsDefinition = array();
         foreach ($formElementsDefinition as $formElementDefinition)
         {

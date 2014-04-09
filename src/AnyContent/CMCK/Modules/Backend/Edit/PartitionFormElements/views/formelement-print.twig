@@ -1,0 +1,9 @@
+<div class="form-group formelement-{{ definition.FormElementType }}">
+    <div class="row">
+        {% block label %}
+        <div class="col-xs-8">
+            {{ display | raw }}
+        </div>
+        {% endblock %}
+    </div>
+</div>

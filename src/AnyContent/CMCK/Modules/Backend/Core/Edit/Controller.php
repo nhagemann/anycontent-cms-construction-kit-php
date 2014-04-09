@@ -34,6 +34,7 @@ class Controller
             $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
 
             $app['layout']->addCssFile('listing.css');
+            $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
             $vars['record'] = false;
@@ -101,6 +102,7 @@ class Controller
             $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
             $app['layout']->addCssFile('listing.css');
+            $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
             $buttons      = array();
