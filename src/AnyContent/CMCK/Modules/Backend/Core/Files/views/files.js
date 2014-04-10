@@ -63,7 +63,7 @@ $(document).ready(function () {
 
 
     $('.file-select-item').click(function () {
-        alert ($(this).attr('data-src'));
+        parent.cmck_fe_files_modal_select($(this).attr('data-src'));
     });
 });
 

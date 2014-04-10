@@ -14,7 +14,7 @@
                 $('.formelement-geolocation-modal-button').click(function () {
 
 
-                    // get the input field, which shall contain latitude and longitude upon seleciton
+                    // get the input field, which shall contain latitude and longitude upon selection
                     var lat = $($(this).attr('data-input') + '_lat');
                     var long = $($(this).attr('data-input') + '_long');
 
