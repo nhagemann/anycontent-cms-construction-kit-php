@@ -9,6 +9,8 @@ Excel auf Basis von Core/Listing bei Initialisierung Export-Typ angeben
 
 
 Locale management for date and numbers
+- https://github.com/KevinSheedy/jquery.alphanum
+
 
 Files: 
 - Cachhing noch rein, dazu Timestamp-Ermittlung für alle Files auf Server (sollte über die knp-API) gehen.

@@ -37,7 +37,7 @@
     </div>
     <script>
 
-        var cmck_modal_shown = function (options) {
+        var cmck_fe_geolocation_modal_shown = function (options) {
 
             var lat = options.lat.val();
             var long = options.long.val();
@@ -76,8 +76,8 @@
             });
 
             $('#modal_button_select').click(function () {
-                options.lat.val(marker.getPosition().d);
-                options.long.val(marker.getPosition().e);
+                options.lat.val(marker.getPosition().lat());
+                options.long.val(marker.getPosition().lng());
                 $('#modal_edit').modal('hide');
             });
 

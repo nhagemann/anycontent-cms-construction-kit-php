@@ -1,48 +1,39 @@
 (function ($) {
 
 
-    $.fn.cmck_fe_geolocation = function () {
+    $(document).on("cmck", function (e, params) {
 
 
-        var init = function () {
-            $('.formelement-geolocation-modal-button').click(function () {
+        switch (params.type) {
 
 
-                var lat = $($(this).attr('data-input') + '_lat');
-                var long = $($(this).attr('data-input') + '_long');
+            case 'editForm.init':
+            case 'sequenceForm.init':
+            case 'sequenceForm.refresh':
 
-                var options = {lat: lat, long: long};
-
-                console.log (options);
-
-                var onShown = function () {
-                    parent.cmck_modal_shown(options);
-
-                };
-                parent.cmck_modal($(this).attr('href'), onShown, options);
-                return false;
-            });
-        };
-
-        $(document).on("cmck", function (e, params) {
+                $('.formelement-geolocation-modal-button').click(function () {
 
 
-            switch (params.type) {
+                    // get the input field, which shall contain latitude and longitude upon seleciton
+                    var lat = $($(this).attr('data-input') + '_lat');
+                    var long = $($(this).attr('data-input') + '_long');
+
+                    var options = {lat: lat, long: long};
 
 
-                case 'editForm.init':
+                    // when showing the modal, call the function within the just loaded modal and provide pointer to the input fields
+                    var onShown = function () {
+                        parent.cmck_fe_geolocation_modal_shown(options);
+                    };
 
-                    init();
-                    break;
-            }
-        });
-        init();
-
-    }
-
-    $(document).ready(function () {
-        $(document).cmck_fe_geolocation();
+                    // start modal on top level
+                    parent.cmck_modal($(this).attr('href'), onShown);
+                    return false;
+                });
+                break;
+        }
     });
+
 
     /* ---------------------------------------- */
 })(jQuery);
