@@ -19,7 +19,8 @@
         "nhagemann/cmdl-parser-php": "0.2.*@dev",
         "nhagemann/anycontent-client-php": "0.2.*@dev",
         "phpoffice/phpexcel": "1.7.9",
-        "symfony/filesystem": "v2.4.2"
+        "symfony/filesystem": "v2.4.2",
+        "knplabs/console-service-provider": "dev-master"
 
     },
 

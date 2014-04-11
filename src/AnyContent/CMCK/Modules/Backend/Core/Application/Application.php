@@ -3,6 +3,7 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Application;
 
 use Silex\Application as SilexApplication;
+use Knp\Provider\ConsoleServiceProvider;
 
 class Application extends SilexApplication
 {
@@ -40,6 +41,11 @@ class Application extends SilexApplication
 
     public function initModules()
     {
+        $this->register(new ConsoleServiceProvider(), array(
+            'console.name'              => 'AnyContent CMCK Console',
+            'console.version'           => '1.0.0',
+            'console.project_directory' => APPLICATION_PATH
+        ));
 
         foreach ($this->modules as $module)
         {

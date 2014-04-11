@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\Edit\Export;
+namespace AnyContent\CMCK\Modules\Backend\Edit\Exchange;
 
 use AnyContent\Client\ContentFilter;
 use Symfony\Component\HttpFoundation\Response;

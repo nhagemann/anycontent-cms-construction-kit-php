@@ -1,8 +1,9 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\Edit\Export;
+namespace AnyContent\CMCK\Modules\Backend\Edit\Exchange;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
+
 
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
@@ -30,6 +31,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app
             ->get('/content/export/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Edit\Export\Controller::importRecords')
             ->bind('importRecords');
+
+        $app['console']->add(new Command());
     }
 
 
