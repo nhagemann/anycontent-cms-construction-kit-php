@@ -3,7 +3,8 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Repositories;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
-use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
+
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\ListRepositoriesCommand;
 
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
@@ -16,6 +17,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         {
             return new RepositoryManager($app['cache'],$app['context']);
         });
+
+        $app['console']->add(new ListRepositoriesCommand());
 
     }
 

@@ -222,6 +222,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return bool|Repository
+     */
     public function getRepositoryByContentTypeAccessHash($hash)
     {
         if (!$this->contentTypeAccessHashes)
@@ -241,6 +246,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return bool|Repository
+     */
     public function getRepositoryByConfigTypeAccessHash($hash)
     {
         if (!$this->configTypeAccessHashes)
@@ -278,6 +288,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return bool|Repository
+     */
     public function getRepositoryByRepositoryAccessHash($hash)
     {
         if (!$this->repositoryObjects)
