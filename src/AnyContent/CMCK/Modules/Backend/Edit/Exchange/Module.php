@@ -32,7 +32,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->get('/content/export/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Edit\Export\Controller::importRecords')
             ->bind('importRecords');
 
-        $app['console']->add(new Command());
+        $app['console']->add(new ExportCommand());
+        $app['console']->add(new ImportCommand());
     }
 
 
