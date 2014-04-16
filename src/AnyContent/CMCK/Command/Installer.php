@@ -9,29 +9,28 @@ class Installer
 
     public static function postInstallUpdate()
     {
-        // TODO: Copy .htaccess, index.php css-Folder
-        // abweichende index.php mit mehr Anmerkungen
-
-      /*  echo "...\n";
-        echo "Creating Default CMDL Folder.\n";
-        echo "Creating Default Files Folder.\n";
-        echo "Creating Config Folder with default config.\n";
-        echo "Creating Web Folder.\n";
-        echo "...\n";
-        echo "Done.\n";
 
         $filesystem = new Filesystem();
-        $baseDir = realpath(__DIR__.'/../../../../../../../');
+        $baseDir    = realpath(__DIR__ . '/../../../../../../../');
+        $packageDir = realpath(__DIR__ . '/../../../../');
 
-        $filesystem->mkdir($baseDir.'/cmdl');
-        $filesystem->mkdir($baseDir.'/config');
-        $filesystem->mkdir($baseDir.'/web');
+        echo "...\n";
 
-        $filesystem->copy(__DIR__.'/resources/config.example.yml',$baseDir.'/config/config.yml');
+        echo "Creating Web Folder\n";
 
-        $filesystem->copy(__DIR__.'/../../../../web/index.php',$baseDir.'/web/index.php');
-        $filesystem->copy(__DIR__.'/../../../../web/.htaccess',$baseDir.'/web/.htaccess');
-      */
+        $filesystem->mkdir($baseDir . '/web');
+        $filesystem->mirror($packageDir . '/web', $baseDir . '/web');
 
+        echo "Creating Config Folder with example config.\n";
+
+        $filesystem->mkdir($baseDir . '/config');
+        $filesystem->mirror($packageDir . '/config', $baseDir . '/config');
+
+        echo "Creating TWIG cache folder, deleting current cache files.\n";
+        $filesystem->remove($baseDir . '/twig-cache');
+        $filesystem->mkdir($baseDir . '/twig-cache');
+
+        echo "...\n";
+        echo "Done.\n";
     }
 }
