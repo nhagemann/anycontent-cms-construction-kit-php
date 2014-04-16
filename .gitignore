@@ -1,4 +1,7 @@
 /config/config.yml
+
+/twig-cache/*
+
 # php storm files
 .idea/
 
