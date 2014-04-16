@@ -1,0 +1,8 @@
+repositories:
+  - http://anycontent.dev/1/example
+
+userinfo:
+  username:   john@example.org
+  firstname:  John
+  lastname:   Doe
+

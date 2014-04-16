@@ -15,6 +15,18 @@ class Application extends SilexApplication
     protected $repositories = array();
 
 
+    public function __construct(array $values = array())
+    {
+
+        parent::__construct($values);
+
+        $this['config'] = $this->share(function ($this)
+        {
+            return new ConfigService($this);
+        });
+    }
+
+
     public function registerModule($class, $options = array())
     {
         $this->modules[$class] = array( 'class' => $class, 'options' => $options );
@@ -52,7 +64,7 @@ class Application extends SilexApplication
             $class = $module['class'] . '\Module';
             $o     = new $class;
             $o->init($this, $module['options']);
-            $module['module']      = $o;
+            $module['module']                = $o;
             $this->modules[$module['class']] = $module;
         }
 
@@ -60,18 +72,27 @@ class Application extends SilexApplication
             'twig.path' => array_reverse($this->templatesFolder)
         ));
 
-        $this['twig']->setCache(APPLICATION_PATH.'/twig-cache');
+        $this['twig']->setCache(APPLICATION_PATH . '/twig-cache');
     }
 
 
     public function run($request = null)
     {
+        // Now add the repositories
+
+        foreach ($this['config']->getRepositoryURLs() as $url)
+        {
+            $this['repos']->addAllContentTypesOfRepository($url);
+            $this['repos']->addAllConfigTypesOfRepository($url);
+        }
 
         foreach ($this->modules as $module)
         {
             $module['module']->run($this);
 
         }
+
+        $this['repos']->setUserInfo($this['config']->getClientUserInfo());
 
         parent::run($request);
     }
