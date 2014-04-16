@@ -1,11 +1,20 @@
 anycontent-cms-construction-kit-php
 ===================================
+^
 
-XXXX->X->Y
------
-Config->X->
------
-Logout
+## Installation
 
-    // taken from http://codemirror.net/demo/mustache.html
-    // taken from http://codemirror.net/addon/mode/overlay.js
+Just create a composer.json file with following content
+
+    {
+        "require": {
+            "php": ">=5.3",
+            "nhagemann/anycontent-cms-construction-kit-php": "0.2.*@dev"
+        },
+        "scripts": {
+            "post-update-cmd": "AnyContent\\CMCK\\Command\\Installer::postInstallUpdate",
+            "post-install-cmd": "AnyContent\\CMCK\\Command\\Installer::postInstallUpdate"
+        },
+        "minimum-stability": "dev",
+        "prefer-stable": true
+    }
