@@ -1,6 +1,6 @@
 anycontent-cms-construction-kit-php
 ===================================
-^
+
 
 ## Installation
 
