@@ -1,9 +1,10 @@
-<div class="form-group formelement-{{ definition.FormElementType }}">
-    <div class="row">
-        {% block label %}
-        <div class="col-xs-8">
+<div class="row formelement-{{ definition.FormElementType }}">
+    <div class="col-xs-11">
+        {% if display =='' %}
+            &nbsp;
+        {% else %}
             {{ display | raw }}
-        </div>
-        {% endblock %}
+        {% endif %}
+
     </div>
 </div>

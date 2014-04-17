@@ -18,12 +18,10 @@ use AnyContent\CMCK\Modules\Backend\Edit\FileFormElements\Module;
 class Controller
 {
 
-    public static function modal(Application $app, Request $request, Module $module = null, $name)
+    public static function modal(Application $app, Request $request, Module $module = null, $repositoryAccessHash, $path ='/')
     {
 
-        $vars = array('name'=>$name);
-
-        $vars['url_file_select'] = $app['url_generator']->generate('listFileSelect', array( 'repositoryAccessHash'=>'9f0643ce90dc98be213bf49f40c9e7ad','path' => '/'));
+        $vars['url_file_select'] = $app['url_generator']->generate('listFileSelect', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
 
         return $app['twig']->render('formelement-image-modal.twig', $vars);
 

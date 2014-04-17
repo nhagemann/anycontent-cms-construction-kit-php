@@ -27,6 +27,7 @@ class FormManager
         $this->app    = $app;
         $this->twig   = $app['twig'];
         $this->layout = $app['layout'];
+
     }
 
 
@@ -75,14 +76,14 @@ class FormManager
 
             $class = $this->formElements[$type]['class'];
 
-            $formelement = new $class($id, $name, $formElementDefinition, $this->app, $value, $this->formElements[$type]['options']);
+            $formElement = new $class($id, $name, $formElementDefinition, $this->app, $value, $this->formElements[$type]['options']);
 
             if ($i == 1)
             {
-                $formelement->setIsFirstElement(true);
+                $formElement->setIsFirstElement(true);
             }
 
-            $htmlFormElement = $formelement->render($this->layout);
+            $htmlFormElement = $formElement->render($this->layout);
             if ($this->buffering)
             {
                 $this->buffer .= $htmlFormElement;
@@ -221,5 +222,7 @@ class FormManager
 
         return $buffer;
     }
+
+
 
 }

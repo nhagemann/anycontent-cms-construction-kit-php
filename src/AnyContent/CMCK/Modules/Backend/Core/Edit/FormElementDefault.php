@@ -4,6 +4,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
 use CMDL\FormElementDefinition;
 
+use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use AnyContent\CMCK\Modules\Backend\Core\Edit\FormManager;
 
 class FormElementDefault
@@ -19,6 +20,8 @@ class FormElementDefault
 
     protected $app;
     protected $twig;
+    /** @var  ContextManager */
+    protected $context;
 
     /** @var  FormManager */
     protected $form;
@@ -29,6 +32,7 @@ class FormElementDefault
 
     protected $options = array();
 
+
     public function __construct($id, $name, $formElementDefinition, $app, $value = '', $options = array())
     {
         $this->id         = $id;
@@ -37,6 +41,8 @@ class FormElementDefault
         $this->app        = $app;
         $this->twig       = $app['twig'];
         $this->form       = $app['form'];
+        $this->context    = $app['context'];
+        $this->repos      = $app['repos'];
         $this->value      = $value;
         $this->options    = $options;
 
@@ -97,4 +103,11 @@ class FormElementDefault
         return $input;
     }
 
+
+    public function getCurrentRepositoryAccessHash()
+    {
+        $repository = $this->context->getCurrentRepository();
+
+        return $this->repos->getAccessHash($repository);
+    }
 }

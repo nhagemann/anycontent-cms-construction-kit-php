@@ -6,7 +6,7 @@ use CMDL\Parser;
 
 use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
-use AnyContent\Client\Repository;
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\Repository;
 use AnyContent\CMCK\Modules\Backend\Core\Context;
 
 class RepositoryManager
@@ -362,7 +362,7 @@ class RepositoryManager
             }
             catch (\Exception $e)
             {
-                $this->context->addErrorMessage('Could not connect to repository ' . $repositoryInfo['url'].'.');
+                $this->context->addErrorMessage('Could not connect to repository ' . $repositoryInfo['url'] . '.');
             }
 
         }
@@ -376,7 +376,14 @@ class RepositoryManager
         {
             if ($repository == $repositoryObject)
             {
-                return md5($repositoryUrl . '-contentType-' . $contentTypeDefinition->getName());
+                if ($contentTypeDefinition != null)
+                {
+                    return md5($repositoryUrl . '-contentType-' . $contentTypeDefinition->getName());
+                }
+                else
+                {
+                    return md5($repositoryUrl);
+                }
             }
         }
 
