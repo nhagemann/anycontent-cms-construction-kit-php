@@ -61,6 +61,12 @@ class ConfigService
             return $this->yml;
         }
 
+
+        if (!file_exists(APPLICATION_PATH . '/config/config.yml'))
+        {
+            throw new \Exception ('Missing configuration file /config/config.yml');
+        }
+
         $configFile = file_get_contents(APPLICATION_PATH . '/config/config.yml');
 
         $yamlParser = new Parser();
