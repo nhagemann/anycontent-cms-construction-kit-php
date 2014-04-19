@@ -15,7 +15,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
 
-        $app->get('/', 'AnyContent\CMCK\Modules\Backend\Core\Start\Controller::index');
+        $app->get('/', 'AnyContent\CMCK\Modules\Backend\Core\Start\Controller::index')->bind('index');
+        $app->get('/index/{repositoryAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\Start\Controller::indexRepository')->bind('indexRepository');
     }
 
 

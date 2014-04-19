@@ -27,7 +27,7 @@ class MenuManager
         foreach ($this->repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
         {
 
-            $url     = '/content/repository/' . $repositoryItem['accessHash'];
+            $url     =  $this->urlGenerator->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
             $items[] = array( 'type' => 'header', 'text' => $repositoryItem['title'], 'url' => $url );
 
             foreach ($this->repositoryManager->listContentTypes($repositoryUrl) as $contentTypName => $contentTypeItem)

@@ -6,7 +6,7 @@ use CMDL\Parser;
 
 use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
-use AnyContent\CMCK\Modules\Backend\Core\Repositories\Repository;
+use AnyContent\Client\Repository;
 use AnyContent\CMCK\Modules\Backend\Core\Context;
 
 class RepositoryManager

@@ -1,0 +1,83 @@
+{% extends "layout-12.twig" %}
+
+{% block title %}Start{% endblock %}
+
+{% block content %}
+
+
+    {% for repository in repositories %}
+        <div class="row">
+            <h3>
+                <a href="{{ repository.link }}">{{ repository.title }}</a>
+                <a href="{{ repository.url }}">
+                    <small>{{ repository.url }}</small>
+                </a>
+            </h3>
+            <br/>
+            {% if repository.content_types %}
+                <div class="col-xs-5">
+
+
+                    <table class="table table-curved">
+                        <thead>
+                        <tr>
+                            <th>Content Type Name</th>
+                            <th class="col-xs-1"></th>
+                        <tr/>
+                        </thead>
+                        <tbody>
+                        {% for contenttype in repository.content_types %}
+                            <tr>
+                                <td><a href="{{ contenttype.link }}">{{ contenttype.name }}</a></td>
+                                <td><a href="{{ contenttype.link }}" class="btn btn-default"
+                                       role="button"><span class="glyphicon glyphicon-list"></span> List Records</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+
+                </div>       {% endif %}
+            {% if repository.config_types %}
+                <div class="col-xs-4">
+
+
+                    <table class="table table-curved">
+                        <thead>
+                        <tr>
+                            <th>Config Type Name</th>
+                            <th class="col-xs-1"></th>
+                        <tr/>
+                        </thead>
+                        <tbody>
+                        {% for configtype in repository.config_types %}
+                            <tr>
+                                <td><a href="{{ configtype.link }}">{{ configtype.name }}</a></td>
+                                <td><a href="{{ configtype.link }}" class="btn btn-primary"
+                                       role="button"><span class="glyphicon glyphicon-wrench"></span> Edit</a></td>
+
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            {% endif %}
+            {% if repository.files %}
+                <div class="col-xs-2">
+
+                    <a href="{{ repository.files }}" class="btn btn-default"
+                       role="button"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;List Files</a>
+
+                </div>
+            {% endif %}
+        </div>
+        <br/>
+        <br/>
+    {% endfor %}
+
+
+{% endblock %}
