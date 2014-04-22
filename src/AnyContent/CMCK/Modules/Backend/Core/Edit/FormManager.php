@@ -32,11 +32,6 @@ class FormManager
 
     public function registerFormElement($type, $class, $options = array())
     {
-
-        if ($type == 'custom')
-        {
-            return $this->registerCustomFormElement($type,$class,$options);
-        }
         $this->formElements[$type] = array( 'class' => $class, 'options' => $options );
     }
 
