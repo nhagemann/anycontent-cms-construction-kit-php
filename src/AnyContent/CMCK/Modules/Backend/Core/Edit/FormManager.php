@@ -70,7 +70,6 @@ class FormManager
                     if (array_key_exists($type,$this->formElements['custom']))
                     {
                         $class              = $this->formElements['custom'][$type]['class'];
-                        var_dump ($class);
                         $formElementOptions = $this->formElements['custom'][$type]['options'];
                     }
                     else
