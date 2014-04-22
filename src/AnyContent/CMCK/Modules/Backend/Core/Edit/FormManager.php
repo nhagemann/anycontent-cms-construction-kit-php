@@ -27,14 +27,22 @@ class FormManager
         $this->app    = $app;
         $this->twig   = $app['twig'];
         $this->layout = $app['layout'];
-
     }
 
 
     public function registerFormElement($type, $class, $options = array())
     {
 
+        if ($type == 'custom')
+        {
+            return $this->registerCustomFormElement($type,$class,$options);
+        }
         $this->formElements[$type] = array( 'class' => $class, 'options' => $options );
+    }
+
+    public function registerCustomFormElement($type,$class,$options=array())
+    {
+        $this->formElements['custom'][$type] = array( 'class' => $class, 'options' => $options );
     }
 
 
@@ -43,7 +51,7 @@ class FormManager
         $this->clearFormVars();
 
         // first check for form elements added through insert annotations
-        $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition,$values,$attributes);
+        $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values, $attributes);
         $this->formElementsDefinition = $formElementsDefinition;
 
         $html = '';
@@ -58,7 +66,34 @@ class FormManager
             if (!array_key_exists($type, $this->formElements))
             {
                 $type = 'default';
+            }
+            else
+            {
+                if ($type == 'custom')
+                {
+                    $type = $formElementDefinition->getType();
+                    if (array_key_exists($type,$this->formElements['custom']))
+                    {
+                        $class              = $this->formElements['custom'][$type]['class'];
+                        var_dump ($class);
+                        $formElementOptions = $this->formElements['custom'][$type]['options'];
+                    }
+                    else
+                    {
+                        $type = 'default';
+                    }
+                }
+                else
+                {
+                    $class              = $this->formElements[$type]['class'];
+                    $formElementOptions = $this->formElements[$type]['options'];
+                }
+            }
 
+            if ($type == 'default')
+            {
+                $class              = $this->formElements['default']['class'];
+                $formElementOptions = $this->formElements['default']['options'];
             }
 
             if (array_key_exists($formElementDefinition->getName(), $values))
@@ -72,11 +107,9 @@ class FormManager
             {
                 $name = trim($prefix, '_') . '_' . $name;
             }
-            $id = $formId . '_' . $formElementDefinition->getFormElementType() . '_' . $name;
+            $id = $formId . '_' . $type . '_' . $name;
 
-            $class = $this->formElements[$type]['class'];
-
-            $formElement = new $class($id, $name, $formElementDefinition, $this->app, $value, $this->formElements[$type]['options']);
+            $formElement = new $class($id, $name, $formElementDefinition, $this->app, $value, $formElementOptions);
 
             if ($i == 1)
             {
@@ -99,10 +132,10 @@ class FormManager
     }
 
 
-    public function extractFormElementValuesFromPostRequest($request, $formElementsDefinition,$values=array(),$attributes=array())
+    public function extractFormElementValuesFromPostRequest($request, $formElementsDefinition, $values = array(), $attributes = array())
     {
         // first check for insertions and add form elements of those
-        $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition,$values,$attributes);
+        $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values, $attributes);
         $this->formElementsDefinition = $formElementsDefinition;
 
         $values = array();
@@ -115,7 +148,6 @@ class FormManager
             if (!array_key_exists($type, $this->formElements))
             {
                 $type = 'default';
-
             }
             $class = $this->formElements[$type]['class'];
 
@@ -129,11 +161,12 @@ class FormManager
         }
 
         $this->formElementsDefinition = null;
+
         return $values;
     }
 
 
-    public function getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values,$attributes)
+    public function getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values, $attributes)
     {
 
         $integratedFormElementsDefinition = array();
@@ -142,13 +175,10 @@ class FormManager
             if ($formElementDefinition->getFormElementType() == 'insert' AND array_key_exists('insert', $this->formElements))
             {
 
-
                 $class       = $this->formElements['insert']['class'];
                 $formElement = new $class(null, null, $formElementDefinition, $this->app, null, $this->formElements['insert']['options']);
 
-
-
-                $clippingDefinition = $formElement->getClippingDefinition($this->getDataTypeDefinition(), $values,$attributes);
+                $clippingDefinition = $formElement->getClippingDefinition($this->getDataTypeDefinition(), $values, $attributes);
 
                 if ($clippingDefinition)
                 {
@@ -157,10 +187,8 @@ class FormManager
 
                         $formElementDefinitionOfClipping->setInsertedByInsert($clippingDefinition->getName());
                         $integratedFormElementsDefinition[] = $formElementDefinitionOfClipping;
-
                     }
                 }
-
             }
             else
             {
@@ -222,7 +250,4 @@ class FormManager
 
         return $buffer;
     }
-
-
-
 }
