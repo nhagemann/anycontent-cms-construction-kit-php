@@ -35,7 +35,8 @@ class FormManager
         $this->formElements[$type] = array( 'class' => $class, 'options' => $options );
     }
 
-    public function registerCustomFormElement($type,$class,$options=array())
+
+    public function registerCustomFormElement($type, $class, $options = array())
     {
         $this->formElements['custom'][$type] = array( 'class' => $class, 'options' => $options );
     }
@@ -58,37 +59,9 @@ class FormManager
             $value = '';
             $type  = $formElementDefinition->getFormElementType();
 
-            if (!array_key_exists($type, $this->formElements))
-            {
-                $type = 'default';
-            }
-            else
-            {
-                if ($type == 'custom')
-                {
-                    $type = $formElementDefinition->getType();
-                    if (array_key_exists($type,$this->formElements['custom']))
-                    {
-                        $class              = $this->formElements['custom'][$type]['class'];
-                        $formElementOptions = $this->formElements['custom'][$type]['options'];
-                    }
-                    else
-                    {
-                        $type = 'default';
-                    }
-                }
-                else
-                {
-                    $class              = $this->formElements[$type]['class'];
-                    $formElementOptions = $this->formElements[$type]['options'];
-                }
-            }
-
-            if ($type == 'default')
-            {
-                $class              = $this->formElements['default']['class'];
-                $formElementOptions = $this->formElements['default']['options'];
-            }
+            $concrete = $this->getConcreteClassAndOptionsForFormElementDefinition($formElementDefinition);
+            $class    = $concrete['class'];
+            $options  = $concrete['options'];
 
             if (array_key_exists($formElementDefinition->getName(), $values))
             {
@@ -103,7 +76,7 @@ class FormManager
             }
             $id = $formId . '_' . $type . '_' . $name;
 
-            $formElement = new $class($id, $name, $formElementDefinition, $this->app, $value, $formElementOptions);
+            $formElement = new $class($id, $name, $formElementDefinition, $this->app, $value, $options);
 
             if ($i == 1)
             {
@@ -126,6 +99,47 @@ class FormManager
     }
 
 
+    protected function getConcreteClassAndOptionsForFormElementDefinition($formElementDefinition)
+    {
+        $type = $formElementDefinition->getFormElementType();
+
+        if (!array_key_exists($type, $this->formElements))
+        {
+            $type = 'default';
+        }
+        else
+        {
+            if ($type == 'custom')
+            {
+                $type = $formElementDefinition->getType();
+
+                if (array_key_exists($type, $this->formElements['custom']))
+                {
+                    $class   = $this->formElements['custom'][$type]['class'];
+                    $options = $this->formElements['custom'][$type]['options'];
+                }
+                else
+                {
+                    $type = 'default';
+                }
+            }
+            else
+            {
+                $class   = $this->formElements[$type]['class'];
+                $options = $this->formElements[$type]['options'];
+            }
+        }
+
+        if ($type == 'default')
+        {
+            $class   = $this->formElements['default']['class'];
+            $options = $this->formElements['default']['options'];
+        }
+
+        return array( 'class' => $class, 'options' => $options );
+    }
+
+
     public function extractFormElementValuesFromPostRequest($request, $formElementsDefinition, $values = array(), $attributes = array())
     {
         // first check for insertions and add form elements of those
@@ -137,20 +151,17 @@ class FormManager
         foreach ($formElementsDefinition as $formElementDefinition)
         {
             $name = $formElementDefinition->getName();
-            $type = $formElementDefinition->getFormElementType();
 
-            if (!array_key_exists($type, $this->formElements))
-            {
-                $type = 'default';
-            }
-            $class = $this->formElements[$type]['class'];
+            $concrete = $this->getConcreteClassAndOptionsForFormElementDefinition($formElementDefinition);
+            $class    = $concrete['class'];
+            $options  = $concrete['options'];
 
-            $formelement = new $class(null, $name, $formElementDefinition, $this->app, null, $this->formElements[$type]['options']);
+            $formElement = new $class(null, $name, $formElementDefinition, $this->app, null, $options);
 
             $property = $formElementDefinition->getName();
             if ($property)
             {
-                $values[$property] = $formelement->parseFormInput($request->get($property));
+                $values[$property] = $formElement->parseFormInput($request->get($property));
             }
         }
 
