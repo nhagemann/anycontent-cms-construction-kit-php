@@ -2,85 +2,86 @@
 
     <a class="navbar-brand" href="/">AnyContent CMCK</a>
 
-    {% if app.context.canDoSearch %}
-        <div class="collapse navbar-collapse navbar-right">
+    {% if links is defined %}
+        {% if app.context.canDoSearch %}
+            <div class="collapse navbar-collapse navbar-right">
 
-            <ul class="nav navbar-nav ">
-                <li>
-                    <form class="navbar-form navbar-left" role="search" action="{{ links.search }}">
+                <ul class="nav navbar-nav ">
+                    <li>
+                        <form class="navbar-form navbar-left" role="search" action="{{ links.search }}">
 
-                        <div class="input-group" style="width:350px">
-                            <input type="text" class="form-control" name="q"
-                                   placeholder="Enter search term or record id ...">
+                            <div class="input-group" style="width:350px">
+                                <input type="text" class="form-control" name="q"
+                                       placeholder="Enter search term or record id ...">
                           <span class="input-group-btn">
 
                         <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span>
                             Search
                         </button>
                               </span>
-                        </div>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    {% endif %}
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
 
-    <div class="collapse navbar-collapse navbar-right" style="padding-top:8px;opacity: 0.7">
+        <div class="collapse navbar-collapse navbar-right" style="padding-top:8px;opacity: 0.7">
 
-        <ul class="nav navbar-nav" style="padding-left:50px;">
-            {% if app.context.canChangeWorkspace %}
-                <li style="padding-right: 10px">
-                    <form class="form-inline" action="{{ links.workspaces }}" method="post"
-                          style="padding-right:10px;padding-left:10px">
-
-                        <div class="form-group">
-                            <em>Workspace:</em>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" onchange="this.form.submit()" name="workspace">
-                                {% for key,value in workspaces.list %}
-                                    <option value="{{ key }}"{% if key == workspaces.current %} selected="selected"{% endif %}>{{ value }}</option>
-                                {% endfor %}
-
-                            </select>
-
-
-                        </div>
-                    </form>
-                </li>
-            {% endif %}
-            {% if app.context.canChangeLanguage %}
-                <li style="padding-right: 10px">
-                    <form class="form-inline" action="{{ links.languages }}" method='post'
-                          style="padding-right:10px;padding-left:10px">
-
-                        <div class="form-group">
-                            <em>Language:</em>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" onchange="this.form.submit()" name="language">
-                                {% for key,value in languages.list %}
-                                    <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
-                                {% endfor %}
-                            </select>
-
-
-                        </div>
-                    </form>
-                </li>
-            {% endif %}
-            {% if app.context.canDoTimeshift %}
-                {% if timeshift.active %}
+            <ul class="nav navbar-nav" style="padding-left:50px;">
+                {% if app.context.canChangeWorkspace %}
                     <li style="padding-right: 10px">
-                        <form class="form-inline" action="{{ links.languages }}" method='post'
-                              style="padding-right:0px;padding-left:0px;padding-top:7px">
-                            <em>TimeShift: {{ timeshift.date }} {{ timeshift.time }}</em>
+                        <form class="form-inline" action="{{ links.workspaces }}" method="post"
+                              style="padding-right:10px;padding-left:10px">
+
+                            <div class="form-group">
+                                <em>Workspace:</em>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" onchange="this.form.submit()" name="workspace">
+                                    {% for key,value in workspaces.list %}
+                                        <option value="{{ key }}"{% if key == workspaces.current %} selected="selected"{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+
+                                </select>
+
+
+                            </div>
                         </form>
                     </li>
                 {% endif %}
-            {% endif %}
-        </ul>
-    </div>
+                {% if app.context.canChangeLanguage %}
+                    <li style="padding-right: 10px">
+                        <form class="form-inline" action="{{ links.languages }}" method='post'
+                              style="padding-right:10px;padding-left:10px">
+
+                            <div class="form-group">
+                                <em>Language:</em>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" onchange="this.form.submit()" name="language">
+                                    {% for key,value in languages.list %}
+                                        <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+                                </select>
 
 
+                            </div>
+                        </form>
+                    </li>
+                {% endif %}
+                {% if app.context.canDoTimeshift %}
+                    {% if timeshift.active %}
+                        <li style="padding-right: 10px">
+                            <form class="form-inline" action="{{ links.languages }}" method='post'
+                                  style="padding-right:0px;padding-left:0px;padding-top:7px">
+                                <em>TimeShift: {{ timeshift.date }} {{ timeshift.time }}</em>
+                            </form>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+
+    {% endif %}
 </nav>

@@ -7,53 +7,55 @@
         </li>
     </ul>
 
-    {% if app.context.canDoTimeshift %}
-        <div class="collapse navbar-collapse navbar-right">
-            <ul class="nav navbar-nav " style="padding-top:8px;padding-right: 8px;opacity:0.7 ">
+    {% if links is defined %}
+        {% if app.context.canDoTimeshift %}
+            <div class="collapse navbar-collapse navbar-right">
+                <ul class="nav navbar-nav " style="padding-top:8px;padding-right: 8px;opacity:0.7 ">
 
-                {% if links.timeshift %}
-                    <li style="padding-right: 10px">
-                        <form class="form-inline" action="{{ links.timeshift }}" method="post">
-                            <div class="form-group">
+                    {% if links.timeshift %}
+                        <li style="padding-right: 10px">
+                            <form class="form-inline" action="{{ links.timeshift }}" method="post">
+                                <div class="form-group">
 
-                                <div class="pull-left" style="width:145px">
-                                    <div class="bfh-datepicker" data-name="date" data-max="today"
-                                         data-date="{{ timeshift.date }}" data-format='d.m.y'>
+                                    <div class="pull-left" style="width:145px">
+                                        <div class="bfh-datepicker" data-name="date" data-max="today"
+                                             data-date="{{ timeshift.date }}" data-format='d.m.y'>
+
+                                        </div>
+                                    </div>
+                                    <div class="pull-left" style="width:105px">
+                                        <div class="bfh-timepicker" data-name="time" data-time="{{ timeshift.time }}">
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="pull-left">
+
+                                        <button type="submit" name="pause" alt="TimeShift" title="TimeShift"
+                                                class="btn btn-default">
+
+                                            <span class="glyphicon glyphicon-repeat"></span>
+
+
+                                        </button>
+                                    </div>
+                                    <div class="pull-left">
+                                        <button type="submit" name="reset" alt="Play" title="Play"
+                                                class="btn btn-default{% if not timeshift.active %} disabled{% endif %}">
+                                            <span class="glyphicon glyphicon-play"></span>
+
+                                        </button>
 
                                     </div>
                                 </div>
-                                <div class="pull-left" style="width:105px">
-                                    <div class="bfh-timepicker" data-name="time" data-time="{{ timeshift.time }}">
 
-
-                                    </div>
-                                </div>
-
-                                <div class="pull-left">
-
-                                    <button type="submit" name="pause" alt="TimeShift" title="TimeShift"
-                                            class="btn btn-default">
-
-                                        <span class="glyphicon glyphicon-repeat"></span>
-
-
-                                    </button>
-                                </div>
-                                <div class="pull-left">
-                                    <button type="submit" name="reset" alt="Play" title="Play"
-                                            class="btn btn-default{% if not timeshift.active %} disabled{% endif %}">
-                                        <span class="glyphicon glyphicon-play"></span>
-
-                                    </button>
-
-                                </div>
-                            </div>
-
-                        </form>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+                            </form>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
     {% endif %}
 
     <style>
