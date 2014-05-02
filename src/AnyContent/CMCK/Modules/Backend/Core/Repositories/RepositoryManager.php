@@ -34,7 +34,7 @@ class RepositoryManager
     }
 
 
-    public function addAllContentTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
+    public function addAllContentTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $shortcut = null, $repositoryTitle = null)
     {
 
         if (array_key_exists($url, $this->requestedRepositories))
@@ -48,8 +48,9 @@ class RepositoryManager
             $repository['apiUser']     = $apiUser;
             $repository['apiPassword'] = $apiPassword;
             $repository['authType']    = $authType;
+            $repository['shortcut']    = $shortcut;
             $repository['title']       = $url;
-            if ($repositoryTitle)
+            if ($repositoryTitle != null)
             {
                 $repository['title'] = $repositoryTitle;
             }
@@ -132,7 +133,7 @@ class RepositoryManager
         foreach ($this->requestedRepositories as $repositoryInfo)
         {
             $hash                                 = md5($repositoryInfo['url']);
-            $repositories[$repositoryInfo['url']] = array( 'title' => $repositoryInfo['title'], 'accessHash' => $hash );
+            $repositories[$repositoryInfo['url']] = array( 'title' => $repositoryInfo['title'], 'accessHash' => $hash, 'shortcut' => $repositoryInfo['shortcut'] );
         }
 
         return $repositories;
@@ -247,6 +248,36 @@ class RepositoryManager
 
 
     /**
+     * @param $shortcut
+     *
+     * @return Repository|bool
+     */
+    public function getRepositoryByContentTypeShortcut($shortcut)
+    {
+        $tokens = explode('.', $shortcut);
+
+        if (count($tokens) != 2)
+        {
+            return false;
+        }
+        $repository = $this->getRepositoryByShortcut($tokens[0]);
+
+        if ($repository)
+        {
+            if ($repository->hasContentType($tokens[1]))
+            {
+                $repository->selectContentType($tokens[1]);
+
+                return $repository;
+            }
+
+        }
+
+        return false;
+    }
+
+
+    /**
      * @param $hash
      *
      * @return bool|Repository
@@ -263,6 +294,34 @@ class RepositoryManager
             $repository = $this->configTypeAccessHashes[$hash]['repository'];
 
             return $repository;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param $shortcut
+     *
+     * @return Repository|bool
+     */
+    public function getRepositoryByConfigTypeShortcut($shortcut)
+    {
+        $tokens = explode('.', $shortcut);
+
+        if (count($tokens) != 3 OR $tokens[1] != 'config')
+        {
+            return false;
+        }
+        $repository = $this->getRepositoryByShortcut($tokens[0]);
+
+        if ($repository)
+        {
+            if ($repository->hasConfigType($tokens[2]))
+            {
+                return $repository;
+            }
+
         }
 
         return false;
@@ -303,6 +362,33 @@ class RepositoryManager
         foreach ($this->listRepositories() AS $url => $item)
         {
             if ($item['accessHash'] == $hash)
+            {
+                if (array_key_exists($url, $this->repositoryObjects))
+                {
+                    return $this->repositoryObjects[$url];
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param $shortcut
+     *
+     * @return bool|Repository
+     */
+    public function getRepositoryByShortcut($shortcut)
+    {
+        if (!$this->repositoryObjects)
+        {
+            $this->initRepositoryObjects();
+        }
+
+        foreach ($this->listRepositories() AS $url => $item)
+        {
+            if ($item['shortcut'] == $shortcut)
             {
                 if (array_key_exists($url, $this->repositoryObjects))
                 {

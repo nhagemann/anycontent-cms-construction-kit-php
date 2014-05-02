@@ -22,7 +22,7 @@ class ConfigService
     }
 
 
-    public function getRepositoryURLs()
+    public function getToBeConnectedRepositories()
     {
         $yml = $this->getYML();
 
@@ -31,7 +31,14 @@ class ConfigService
             throw new \Exception ('Missing or incomplete repositories configuration.');
         }
 
-        return $yml['repositories'];
+        $repositories = array();
+        foreach ($yml['repositories'] as $shortcut => $repository)
+        {
+            $repositories[$shortcut]['url']      = $repository;
+            $repositories[$shortcut]['shortcut'] = (string)$shortcut;
+        }
+
+        return $repositories;
     }
 
 
@@ -60,7 +67,6 @@ class ConfigService
         {
             return $this->yml;
         }
-
 
         if (!file_exists(APPLICATION_PATH . '/config/config.yml'))
         {

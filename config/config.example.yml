@@ -1,5 +1,19 @@
+# Either simple list all your repositories, e.g.:
+#
+# repositories:
+#   - http://anycontent.dev/1/example1
+#   - http://anycontent.dev/1/example2
+#
+# or give them shortcuts, so you can add additional options, e.g.:
+#
+# repositories:
+#   shortcut1: http://anycontent.dev/1/example1
+#   shortcut2: http://anycontent.dev/1/example2
+#
+
 repositories:
   - http://anycontent.dev/1/example
+
 
 userinfo:
   username:   john@example.org

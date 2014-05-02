@@ -64,36 +64,6 @@ class Controller
             }
         }
 
-        // Now add additional info about workspaces and languages
-        $repository = $repositoryManager->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
-
-        //$items = $item['content_types'];
-        //$item['content_types'] = array();
-        /* foreach ($item['content_types'] as &$contentTypeItem)
-         {
-             $definition = $repository->getContentTypeDefinition($contentTypeItem['name']);
-             $contentTypeItem['name']='horst';
-             var_dump ($definition->getWorkspaces());
-             //$item['content_types'] = $contentTypeItem;
-         }*/
-
-//        $item          = array();
-//        $item['title'] = 'xxx';
-//        $item['url']   = 'xxx';
-//        $item['link']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
-//        $item['files'] = false;
-//
-//        $item['content_types'] = array();
-//
-//        foreach ($repository->getContentTypes() as $contentTypeName)
-//        {
-//            $definition = $repository->getContentTypeDefinition($contentTypeName);
-//            $url                     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'], 'page' => 1 ));
-//            $item['content_types'][] = array( 'name' => $contentTypeName, 'link' => $url );
-//        }
-//        $item['config_types'] = array();
-//
-
         return $app->renderPage('index-repository.twig', $vars);
     }
 

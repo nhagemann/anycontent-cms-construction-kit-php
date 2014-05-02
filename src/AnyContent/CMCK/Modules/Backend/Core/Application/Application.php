@@ -80,10 +80,10 @@ class Application extends SilexApplication
     {
         // Now add the repositories
 
-        foreach ($this['config']->getRepositoryURLs() as $url)
+        foreach ($this['config']->getToBeConnectedRepositories() as $repository)
         {
-            $this['repos']->addAllContentTypesOfRepository($url);
-            $this['repos']->addAllConfigTypesOfRepository($url);
+            $this['repos']->addAllContentTypesOfRepository($repository['url'],null,null,'Basic',$repository['shortcut'],null);
+            $this['repos']->addAllConfigTypesOfRepository($repository['url']);
         }
 
         foreach ($this->modules as $module)
