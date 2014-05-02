@@ -61,6 +61,28 @@ class ConfigService
     }
 
 
+    public function getConfiguredApps($repositoryShortcut)
+    {
+        $yml = $this->getYML();
+
+        $apps = array();
+        if (isset($yml['apps']))
+        {
+
+            foreach ($yml['apps'] as $app)
+            {
+                $repositories = explode(',',$app['repositories']);
+                if (in_array($repositoryShortcut,$repositories))
+                {
+                    $apps[]=$app;
+                }
+            }
+        }
+
+        return $apps;
+    }
+
+
     protected function getYML()
     {
         if ($this->yml)

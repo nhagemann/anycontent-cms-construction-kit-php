@@ -27,7 +27,7 @@ class MenuManager
         foreach ($this->repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
         {
 
-            $url     =  $this->urlGenerator->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
+            $url     = $this->urlGenerator->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
             $items[] = array( 'type' => 'header', 'text' => $repositoryItem['title'], 'url' => $url );
 
             foreach ($this->repositoryManager->listContentTypes($repositoryUrl) as $contentTypName => $contentTypeItem)
@@ -37,13 +37,19 @@ class MenuManager
             }
             foreach ($this->repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
             {
-                $url     = $this->urlGenerator->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash']));
+                $url     = $this->urlGenerator->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] ));
                 $items[] = array( 'type' => 'link', 'text' => $configTypeName, 'url' => $url, 'glyphicon' => 'glyphicon-wrench' );
             }
             if ($this->repositoryManager->hasFiles($repositoryUrl))
             {
                 $url     = $this->urlGenerator->generate('listFiles', array( 'repositoryAccessHash' => $repositoryItem['accessHash'], 'path' => '' ));
                 $items[] = array( 'type' => 'link', 'text' => 'Files', 'url' => $url, 'glyphicon' => 'glyphicon-folder-open' );
+            }
+            foreach ($this->repositoryManager->listApps($repositoryUrl) as $appName => $appItem)
+            {
+
+                $url     = rtrim($appItem['url'], '/') . '/' . $repositoryItem['accessHash'];
+                $items[] = array( 'type' => 'link', 'text' => $appName, 'url' => $url, 'glyphicon' => 'glyphicon-dashboard' );
             }
             $items[] = array( 'type' => 'divider' );
         }

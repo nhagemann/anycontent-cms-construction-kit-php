@@ -34,60 +34,62 @@ class RepositoryManager
     }
 
 
-    public function addAllContentTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $shortcut = null, $repositoryTitle = null)
+    public function addAllContentTypesOfRepository($repositoryUrl, $apiUser = null, $apiPassword = null, $authType = 'Basic', $shortcut = null, $repositoryTitle = null)
     {
 
-        if (array_key_exists($url, $this->requestedRepositories))
+        if (array_key_exists($repositoryUrl, $this->requestedRepositories))
         {
-            $repository = $this->requestedRepositories[$url];
+            $repositoryInfo = $this->requestedRepositories[$repositoryUrl];
         }
         else
         {
-            $repository                = array();
-            $repository['url']         = $url;
-            $repository['apiUser']     = $apiUser;
-            $repository['apiPassword'] = $apiPassword;
-            $repository['authType']    = $authType;
-            $repository['shortcut']    = $shortcut;
-            $repository['title']       = $url;
+            $repositoryInfo                = array();
+            $repositoryInfo['url']         = $repositoryUrl;
+            $repositoryInfo['apiUser']     = $apiUser;
+            $repositoryInfo['apiPassword'] = $apiPassword;
+            $repositoryInfo['authType']    = $authType;
+            $repositoryInfo['shortcut']    = $shortcut;
+            $repositoryInfo['title']       = $repositoryUrl;
             if ($repositoryTitle != null)
             {
-                $repository['title'] = $repositoryTitle;
+                $repositoryInfo['title'] = $repositoryTitle;
             }
-            $repository['configTypes'] = array();
+            $repositoryInfo['configTypes'] = array();
+            $repositoryInfo['apps']        = array();
 
         }
 
-        $repository['contentTypes'] = array( '*' => '*' );
+        $repositoryInfo['contentTypes'] = array( '*' => '*' );
 
-        $this->requestedRepositories[$url] = $repository;
+        $this->requestedRepositories[$repositoryUrl] = $repositoryInfo;
 
     }
 
 
-    public function addAllConfigTypesOfRepository($url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
+    public function addAllConfigTypesOfRepository($repositoryUrl, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null)
     {
-        if (array_key_exists($url, $this->requestedRepositories))
+        if (array_key_exists($repositoryUrl, $this->requestedRepositories))
         {
-            $repository = $this->requestedRepositories[$url];
+            $repositoryInfo = $this->requestedRepositories[$repositoryUrl];
         }
         else
         {
-            $repository                = array();
-            $repository['url']         = $url;
-            $repository['apiUser']     = $apiUser;
-            $repository['apiPassword'] = $apiPassword;
-            $repository['authType']    = $authType;
-            $repository['title']       = $url;
+            $repositoryInfo                = array();
+            $repositoryInfo['url']         = $repositoryUrl;
+            $repositoryInfo['apiUser']     = $apiUser;
+            $repositoryInfo['apiPassword'] = $apiPassword;
+            $repositoryInfo['authType']    = $authType;
+            $repositoryInfo['title']       = $repositoryUrl;
             if ($repositoryTitle)
             {
-                $repository['title'] = $repositoryTitle;
+                $repositoryInfo['title'] = $repositoryTitle;
             }
-            $repository['contentTypes'] = array();
+            $repositoryInfo['contentTypes'] = array();
+            $repositoryInfo['apps']         = array();
         }
-        $repository['configTypes'] = array( '*' => '*' );
+        $repositoryInfo['configTypes'] = array( '*' => '*' );
 
-        $this->requestedRepositories[$url] = $repository;
+        $this->requestedRepositories[$repositoryUrl] = $repositoryInfo;
 
     }
 
@@ -111,11 +113,25 @@ class RepositoryManager
                 $repositoryInfo['title'] = $repositoryTitle;
             }
             $repositoryInfo['contentTypes'] = array();
+            $repositoryInfo['apps']         = array();
         }
 
         $repositoryInfo['contentTypes'][$contentTypeName] = $contentTypeTitle;
 
         $this->requestedRepositories[$url] = $repositoryInfo;
+
+    }
+
+
+    public function addAppToRepository($repositoryUrl, $name, $settings = array())
+    {
+        if (array_key_exists($repositoryUrl, $this->requestedRepositories))
+        {
+            $repositoryInfo = $this->requestedRepositories[$repositoryUrl];
+
+            $repositoryInfo['apps'][$name]               = $settings;
+            $this->requestedRepositories[$repositoryUrl] = $repositoryInfo;
+        }
 
     }
 
@@ -214,6 +230,26 @@ class RepositoryManager
         }
 
         return false;
+    }
+
+
+    public function listApps($url)
+    {
+        if (!$this->repositoryObjects)
+        {
+            $this->initRepositoryObjects();
+        }
+
+        if (array_key_exists($url, $this->requestedRepositories))
+        {
+            $repositoryInfo = $this->requestedRepositories[$url];
+
+            return $repositoryInfo['apps'];
+
+        }
+
+        return false;
+
     }
 
 

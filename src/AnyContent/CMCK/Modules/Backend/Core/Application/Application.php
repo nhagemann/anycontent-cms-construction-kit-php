@@ -82,8 +82,22 @@ class Application extends SilexApplication
 
         foreach ($this['config']->getToBeConnectedRepositories() as $repository)
         {
-            $this['repos']->addAllContentTypesOfRepository($repository['url'],null,null,'Basic',$repository['shortcut'],null);
+            $this['repos']->addAllContentTypesOfRepository($repository['url'], null, null, 'Basic', $repository['shortcut'], null);
             $this['repos']->addAllConfigTypesOfRepository($repository['url']);
+
+            foreach ($this['config']->getConfiguredApps($repository['shortcut']) as $app)
+            {
+                if (array_key_exists('url', $app))
+                {
+                    $name = 'Content App';
+                    if (array_key_exists('name', $app))
+                    {
+                        $name = $app['name'];
+                        unset($app['name']);
+                    }
+                    $this['repos']->addAppToRepository($repository['url'], $name, $app);
+                }
+            }
         }
 
         foreach ($this->modules as $module)
