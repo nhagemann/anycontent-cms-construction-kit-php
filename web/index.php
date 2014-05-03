@@ -7,7 +7,7 @@ if (!defined('APPLICATION_PATH'))
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app          = new \AnyContent\CMCK\Modules\Backend\Core\Application\Application();
-$app['debug'] = true;
+$app['debug'] = false;
 
 // Detect environment (default: prod) by checking for the existence of $app_env
 if (isset($app_env) && in_array($app_env, array('prod','dev','test','console'))) { $app['env'] = $app_env; }else{$app['env'] = 'prod';}
@@ -35,14 +35,6 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 require_once (APPLICATION_PATH .'/config/modules.php');
 
 $app->initModules();
-
-/*
-$memcache = new \Memcached();
-$memcache->addServer('localhost', 11211);
-$cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
-$cacheDriver->setMemcached($memcache);
-$app->setCacheDriver($cacheDriver);
-  */
 
 if ($app['env']=='test' || $app['env']=='console')
 {

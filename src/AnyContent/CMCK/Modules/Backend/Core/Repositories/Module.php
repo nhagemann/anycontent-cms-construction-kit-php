@@ -15,7 +15,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['repos'] = $app->share(function ($app)
         {
-            return new RepositoryManager($app['cache'],$app['context']);
+            return new RepositoryManager($app['cache'],$app['context'],$app['config']);
         });
 
         $app['console']->add(new ListRepositoriesCommand());

@@ -9,19 +9,33 @@ class MenuManager
     protected $twig;
     protected $layout;
     protected $urlGenerator;
+    protected $cache;
+    protected $cacheSeconds = 0;
 
 
-    public function __construct($repositoryManager, $twig, $layout, $urlGenerator)
+    public function __construct($repositoryManager, $twig, $layout, $urlGenerator, $cache, $config)
     {
         $this->repositoryManager = $repositoryManager;
         $this->twig              = $twig;
         $this->layout            = $layout;
         $this->urlGenerator      = $urlGenerator;
+        $this->cache             = $cache;
+        $cacheConfiguration      = $config->getCacheConfiguration();
+        $this->cacheSeconds      = $cacheConfiguration['menu'];
     }
 
 
     public function renderMainMenu()
     {
+        $this->layout->addCssFile('menu.css');
+
+        $cacheToken = 'cmck_menu_main';
+
+        if ($this->cache->contains($cacheToken))
+        {
+            return $this->cache->fetch($cacheToken);
+        }
+
         $items = array();
 
         foreach ($this->repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
@@ -56,9 +70,11 @@ class MenuManager
 
         $items[] = array( 'type' => 'link', 'text' => 'Logout', 'url' => '#', 'glyphicon' => 'glyphicon-user' );
 
-        $this->layout->addCssFile('menu.css');
+        $html = $this->renderDropDown($items);
 
-        return $this->renderDropDown($items);
+        $this->cache->save($cacheToken, $html, $this->cacheSeconds);
+
+        return $html;
     }
 
 

@@ -27,10 +27,11 @@ class RepositoryManager
     protected $userInfo = null;
 
 
-    public function __construct($cache, $context)
+    public function __construct($cache, $context, $config)
     {
         $this->cache   = $cache;
         $this->context = $context;
+        $this->config = $config;
     }
 
 
@@ -471,8 +472,9 @@ class RepositoryManager
         {
             try
             {
+                $cacheConfiguration = $this->config->getCacheConfiguration();
 
-                $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache);
+                $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache, $cacheConfiguration['cmdl'], $cacheConfiguration['concurrent_writes'], $cacheConfiguration['data']);
                 if ($this->userInfo)
                 {
                     $client->setUserInfo($this->userInfo);

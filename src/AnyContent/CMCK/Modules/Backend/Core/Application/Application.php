@@ -78,6 +78,21 @@ class Application extends SilexApplication
 
     public function run($request = null)
     {
+        // Init Cache
+
+        $cacheConfiguration = $this['config']->getCacheConfiguration();
+
+        switch ($cacheConfiguration['driver']['type'])
+        {
+            case 'memcached':
+                $memcached = new \Memcached();
+                $memcached->addServer($cacheConfiguration['driver']['host'], $cacheConfiguration['driver']['port']);
+                $cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
+                $cacheDriver->setMemcached($memcached);
+                $this->setCacheDriver($cacheDriver);
+                break;
+        }
+
         // Now add the repositories
 
         foreach ($this['config']->getToBeConnectedRepositories() as $repository)

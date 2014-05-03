@@ -71,15 +71,42 @@ class ConfigService
 
             foreach ($yml['apps'] as $app)
             {
-                $repositories = explode(',',$app['repositories']);
-                if (in_array($repositoryShortcut,$repositories))
+                $repositories = explode(',', $app['repositories']);
+                if (in_array($repositoryShortcut, $repositories))
                 {
-                    $apps[]=$app;
+                    $apps[] = $app;
                 }
             }
         }
 
         return $apps;
+    }
+
+
+    public function getCacheConfiguration()
+    {
+        $yml = $this->getYML();
+
+        $cache = array( 'driver' => array( 'type' => 'none' ), 'menu' => 0, 'cmdl' => 0, 'data' => 600, 'concurrent_writes' => 60 );
+
+        if (isset($yml['cache']))
+        {
+            $cache = array_merge($cache, $yml['cache']);
+
+            if ($cache['driver']['type'] == 'memcache' || $cache['driver']['type'] == 'memcached')
+            {
+                if (!isset($cache['driver']['host']))
+                {
+                    $cache['driver']['host'] = 'localhost';
+                }
+                if (!isset($cache['driver']['port']))
+                {
+                    $cache['driver']['port'] = '11211';
+                }
+            }
+        }
+
+        return $cache;
     }
 
 
