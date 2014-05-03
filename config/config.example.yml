@@ -4,7 +4,7 @@
 #   - http://anycontent.dev/1/example1
 #   - http://anycontent.dev/1/example2
 #
-# or give them shortcuts, so you can add additional options, e.g.:
+# or give them shortcuts, so you can reference them in your code or in advanced configurations, e.g.:
 #
 # repositories:
 #   shortcut1: http://anycontent.dev/1/example1

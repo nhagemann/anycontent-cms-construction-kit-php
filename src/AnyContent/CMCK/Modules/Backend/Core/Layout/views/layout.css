@@ -1,17 +1,16 @@
 /* add margin to compensate the space used by the permanent navbars and make sure, that all buttons are always visible (at least with scrolling) */
-body{margin-bottom:150px;}
+body {
+    margin-bottom: 150px;
+}
 
 /* smaller margins for h-tags used within the print form element*/
-.formelement-print h1,h2,h3,h4,h5,h6
-{
+.formelement-print h1, h2, h3, h4, h5, h6 {
     margin: 8px 0px 8px 0px;
     padding: 0px;
 }
 
-.formelement-print>div
-{
+.formelement-print > div {
     line-height: 1.8;
 }
-
 
 
