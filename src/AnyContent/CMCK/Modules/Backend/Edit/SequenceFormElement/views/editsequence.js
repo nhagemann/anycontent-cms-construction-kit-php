@@ -33,9 +33,7 @@
 
         $(document).on("cmck", function (e, params) {
 
-            console.log ('Iframe: '+params.type);
-
-            switch (params.type) {
+              switch (params.type) {
 
 
 

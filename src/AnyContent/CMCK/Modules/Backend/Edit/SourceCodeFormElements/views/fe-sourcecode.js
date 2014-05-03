@@ -1,7 +1,5 @@
 $(document).on("cmck", function (e, params) {
 
-    console.log('soruce.js: ' + params.type);
-
     switch (params.type) {
         case 'editForm.init':
         //TODO: Find out, why the code mirror textarea replacement doesn't work within sequences (i.e. bootstrap accordions?)

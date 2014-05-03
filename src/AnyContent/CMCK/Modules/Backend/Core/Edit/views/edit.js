@@ -1,7 +1,5 @@
 $(document).on("cmck", function (e, params) {
 
-    console.log('Edit.js: ' + params.type);
-
     switch (params.type) {
         case 'editForm.init':
         case 'sequenceForm.init':

@@ -21,7 +21,6 @@ function cmck_modal(url, onShown) {
 
 $(document).on("cmck", function (e, params) {
 
-    console.log (params.type);
 
     switch (params.type) {
         case 'editform.setProperty': // Used from sequences upon storing.
@@ -53,8 +52,10 @@ $(document).ready(function () {
     // a json representation for the containing property
     $('#form_edit_button_submit').click(function () {
 
+
         $.event.trigger('cmck', {type: 'editform.Save'});
         countdown = parseInt($('#form_edit').attr('data-event-countdown'));
+
         if (countdown == 0) {
             return true;
         }
