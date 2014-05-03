@@ -20,3 +20,10 @@ userinfo:
   firstname:  John
   lastname:   Doe
 
+
+cache:
+  driver: {type: apc}
+  menu: 60
+  cmdl: 0
+  data: 600
+  concurrent_writes:  600

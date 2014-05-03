@@ -84,6 +84,10 @@ class Application extends SilexApplication
 
         switch ($cacheConfiguration['driver']['type'])
         {
+            case 'apc':
+                $cacheDriver = new  \Doctrine\Common\Cache\ApcCache();
+                $this->setCacheDriver($cacheDriver);
+                break;
             case 'memcached':
                 $memcached = new \Memcached();
                 $memcached->addServer($cacheConfiguration['driver']['host'], $cacheConfiguration['driver']['port']);
@@ -139,3 +143,4 @@ class Application extends SilexApplication
     }
 
 }
+
