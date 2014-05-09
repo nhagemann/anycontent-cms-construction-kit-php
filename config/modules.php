@@ -1,6 +1,7 @@
 <?php
 
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TextFormElements');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\LinkFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements');

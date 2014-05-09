@@ -16,7 +16,7 @@
         "silex/silex": "~1.1",
         "twig/twig": ">=1.8,<2.0-dev",
         "nitra/php-min": "dev-master",
-        "nhagemann/cmdl-parser-php": "0.2.*@dev",
+        "nhagemann/cmdl-parser-php": "0.3.*@dev",
         "nhagemann/anycontent-client-php": "0.2.*@dev",
         "phpoffice/phpexcel": "1.7.9",
         "symfony/filesystem": "v2.4.2",

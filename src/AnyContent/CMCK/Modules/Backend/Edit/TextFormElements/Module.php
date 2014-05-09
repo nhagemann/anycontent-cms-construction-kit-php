@@ -4,7 +4,6 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\TextFormElements;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
-
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
 
@@ -13,8 +12,6 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         parent::init($app, $options);
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
-
-
     }
 
 
