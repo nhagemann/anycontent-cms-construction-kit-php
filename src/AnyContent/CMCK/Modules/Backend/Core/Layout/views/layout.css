@@ -14,3 +14,13 @@ body {
 }
 
 
+
+#form_timeshift .bfh-timepicker-popover {
+    top: -52px;
+    left: -192px;
+}
+
+#form_timeshift .bfh-datepicker-calendar {
+    top: -211px;
+    left: -231px;
+}

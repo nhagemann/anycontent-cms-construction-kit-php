@@ -62,12 +62,13 @@ class Controller
                         $record   = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
                         $sequence = $record->getProperty($property, array());
 
-                        $sequence = json_decode($sequence, true);
+                        $sequence = @json_decode($sequence, true);
                         if (json_last_error() != JSON_ERROR_NONE OR !is_array($sequence))
                         {
                             $sequence = array();
                         }
                     }
+
 
                     $vars['count'] = count($sequence);
                     $vars['items'] = array();

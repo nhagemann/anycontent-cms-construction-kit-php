@@ -14,7 +14,7 @@
 
                     {% if links.timeshift %}
                         <li style="padding-right: 10px">
-                            <form class="form-inline" action="{{ links.timeshift }}" method="post">
+                            <form class="form-inline" id="form_timeshift" name="form_timeshift" action="{{ links.timeshift }}" method="post">
                                 <div class="form-group">
 
                                     <div class="pull-left" style="width:145px">
@@ -57,18 +57,6 @@
             </div>
         {% endif %}
     {% endif %}
-
-    <style>
-        .bfh-timepicker-popover {
-            top: -52px;
-            left: -192px;
-        }
-
-        .bfh-datepicker-calendar {
-            top: -211px;
-            left: -231px;
-        }
-    </style>
 
 </nav>
 

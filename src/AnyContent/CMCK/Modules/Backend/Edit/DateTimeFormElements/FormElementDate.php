@@ -12,130 +12,65 @@ class FormElementDate extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
     {
         $layout->addJsFile('fe-datetime.js');
 
-        $this->vars['month']='';
-        $this->vars['day']='';
+        $value = $this->getValue();
 
-        //var_dump($this->getOption('Format.Long'));
-        //var_dump($this->definition->getType());
-        //var_dump($this->definition->getInit());
-        //var_dump($this->value);
-        //short
-        //long
-        //datetime
-        // ISO 8601
-        // pulldownlösung bei short
+        $this->vars['month']  = '';
+        $this->vars['day']    = '';
+        $this->vars['hour']   = '';
+        $this->vars['minute'] = '';
+        $this->vars['second'] = '';
+        $this->vars['value']  = '';
 
-        if ($this->getValue() != null)
+        if (strpos($value, 'T') !== false)
         {
+            $tokens = explode('T', $this->getValue());
 
-            try
+            if (count($tokens) == 2)
             {
-
-                $date  = null;
-                $value = trim($this->getValue());
-
-                //var_dump($value);
-                if (strlen($value) <= 5)
-                {
-
-                    $value = date('Y') . '-' . $value;
-                }
-                if (strlen($value) <= 10)
-                {
-
-                    $value .= ' 00:00';
-                }
-
-                //var_dump($value);
-                //$date = new \DateTime();
-                //$t    = strtotime($value);
-                //$date->setTimestamp($t);
-
-                $date = \DateTime::createFromFormat('Y-m-d h:i', $value);
-
-                switch ($this->definition->getType())
-                {
-                    case 'short':
-                        $this->vars['day']   = date('d', $date->getTimestamp());
-                        $this->vars['month'] = date('n', $date->getTimestamp());
-
-                        break;
-                    case 'datetime':
-                        $format = $this->getOption('Format.DateTime.Frontend');
-                        break;
-                    case 'full':
-                        $format = $this->getOption('Format.Full.Frontend');
-                        break;
-                    case 'long':
-                    default:
-
-
-                        break;
-                }
-
-                if ($date)
-                {
-
-                    $this->vars['value'] = $date->format($this->getPHPConvertFormat());
-                       //var_dump($this->vars['value']);
-                }
-
+                $this->extractDate($tokens[0]);
+                $this->extractTime($tokens[1]);
             }
-            catch (\Exception $e)
-            {
-                $this->vars['value'] = '';
-            }
-
+        }
+        else
+        {
+            $this->extractDate($value);
         }
 
-        $this->vars['type']   = $this->definition->getType();
-        $this->vars['format'] = $this->getFrontendFormat();
+        $this->vars['type'] = $this->definition->getType();
+
+        if ($this->vars['value'] == '')
+        {
+            echo 'init';
+        }
 
         return $this->twig->render('formelement-datetime.twig', $this->vars);
     }
 
 
-    protected function getFrontendFormat()
+    public function extractDate($value)
     {
-        switch ($this->definition->getType())
+
+        $tokens = explode('-', $value);
+        if (count($tokens) == 2)
         {
-            case 'short':
-                $format = $this->getOption('Format.Short.Frontend');
-                break;
-            case 'datetime':
-                $format = $this->getOption('Format.DateTime.Frontend');
-                break;
-            case 'full':
-                $format = $this->getOption('Format.Full.Frontend');
-                break;
-            case 'long':
-            default:
-                $format = $this->getOption('Format.Long.Frontend');
-                break;
+            $this->vars['month'] = $tokens[0];
+            $this->vars['day']   = $tokens[1];
         }
-        return $format;
+
+        $this->vars['value'] = $value;
     }
 
 
-    protected function getPHPConvertFormat()
+    public function extractTime($value)
     {
-        switch ($this->definition->getType())
+        $tokens               = explode(':', $value);
+        $this->vars['hour']   = $tokens[0];
+        $this->vars['minute'] = $tokens[1];
+        if (isset($tokens[2]))
         {
-            case 'short':
-                $format = $this->getOption('Format.Short.PHPConvert');
-                break;
-            case 'datetime':
-                $format = $this->getOption('Format.DateTime.PHPConvert');
-                break;
-            case 'full':
-                $format = $this->getOption('Format.Full.PHPConvert');
-                break;
-            case 'long':
-            default:
-                $format = $this->getOption('Format.Long.PHPConvert');
-                break;
+            $this->vars['second'] = $tokens[2];
         }
-        return $format;
+
     }
 
 
@@ -143,38 +78,42 @@ class FormElementDate extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
     {
 
         $value = '';
-        try
-        {
-            switch ($this->definition->getType())
-            {
-                case 'short':
-                    if (is_array($input) AND count($input) == 2)
-                    {
-                        $value = $input[1] . '-' . $input[0];
-                    }
-                    break;
-                case 'datetime':
-                    break;
-                case 'full':
 
-                    break;
-                case 'long':
-                default:
-                    $date = \DateTime::createFromFormat($this->getOption('Format.Long.PHPConvert'), $input);
-                    if ($date)
-                    {
-                        $value = $date->format('Y-m-d');
-                    }
-                    break;
-            }
-        }
-        catch (\Exception $e)
+        switch ($this->definition->getType())
         {
-            $value = null;
+            case 'short':
+                if (is_array($input) AND count($input) == 2)
+                {
+                    if ((int)$input[0] != 0 AND (int)$input[1] != 0)
+                    {
+                        $value = str_pad($input[0], 2, '0') . '-' . str_pad($input[1], 2, '0');
+                    }
+                }
+
+                break;
+            case 'long':
+                if (is_array($input) AND count($input) == 1)
+                {
+                    $value = $input[0];
+                }
+
+                break;
+            default:
+
+                if (is_array($input) AND count($input) >= 3)
+                {
+                    $value = $input[0] . 'T' . $input[1] . ':' . $input[2];
+
+                    if (isset($input[3]))
+                    {
+                        $value .= ':' . $input[3];
+                    }
+
+                }
+                break;
         }
 
-        //var_dump($value);
-        //die();
         return $value;
     }
+
 }
