@@ -21,6 +21,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['form']->registerFormElement('timestamp', 'AnyContent\CMCK\Modules\Backend\Edit\DateTimeFormElements\FormElementTimestamp', $this->options);
         $app['form']->registerFormElement('date', 'AnyContent\CMCK\Modules\Backend\Edit\DateTimeFormElements\FormElementDate', $this->options);
+        $app['form']->registerFormElement('time', 'AnyContent\CMCK\Modules\Backend\Edit\DateTimeFormElements\FormElementTime', $this->options);
 
     }
 

@@ -219,12 +219,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "77bd8088c3fe66730a9b35c2a66daa934cbd8040"
+                "reference": "121e7d7a198a8e34a8903efaee03e6c26b9df7f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/77bd8088c3fe66730a9b35c2a66daa934cbd8040",
-                "reference": "77bd8088c3fe66730a9b35c2a66daa934cbd8040",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/121e7d7a198a8e34a8903efaee03e6c26b9df7f6",
+                "reference": "121e7d7a198a8e34a8903efaee03e6c26b9df7f6",
                 "shasum": ""
             },
             "require": {
@@ -254,7 +254,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2014-05-09 11:38:56"
+            "time": "2014-05-10 12:50:05"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
@@ -262,12 +262,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "5588452ec3d56a3ee9f0816e974e3a77321c471a"
+                "reference": "ee671f17d917850cce253a7eab2f3558c23f32e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/5588452ec3d56a3ee9f0816e974e3a77321c471a",
-                "reference": "5588452ec3d56a3ee9f0816e974e3a77321c471a",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/ee671f17d917850cce253a7eab2f3558c23f32e9",
+                "reference": "ee671f17d917850cce253a7eab2f3558c23f32e9",
                 "shasum": ""
             },
             "require": {
@@ -295,7 +295,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2014-05-10 12:38:25"
+            "time": "2014-05-11 06:24:19"
         },
         {
             "name": "nitra/php-min",
