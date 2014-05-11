@@ -14,6 +14,25 @@ class FormElementDate extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
 
         $value = $this->getValue();
 
+        // new record, respect the init param
+        if (!$this->context->getCurrentRecord() AND $value == '')
+        {
+            switch ($this->definition->getInit())
+            {
+                case 'today':
+                    $value = date('Y-m-d');
+                    break;
+                case 'now':
+                    $value = date('Y-m-d') . 'T' . date('H:i:s');
+                    break;
+            }
+
+            if ($this->definition->getType() == 'short')
+            {
+                $value = date('m-d');
+            }
+        }
+
         $this->vars['month']  = '';
         $this->vars['day']    = '';
         $this->vars['hour']   = '';
@@ -23,7 +42,7 @@ class FormElementDate extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
 
         if (strpos($value, 'T') !== false)
         {
-            $tokens = explode('T', $this->getValue());
+            $tokens = explode('T', $value);
 
             if (count($tokens) == 2)
             {
@@ -37,11 +56,6 @@ class FormElementDate extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
         }
 
         $this->vars['type'] = $this->definition->getType();
-
-        if ($this->vars['value'] == '')
-        {
-            //echo 'init';
-        }
 
         return $this->twig->render('formelement-datetime.twig', $this->vars);
     }

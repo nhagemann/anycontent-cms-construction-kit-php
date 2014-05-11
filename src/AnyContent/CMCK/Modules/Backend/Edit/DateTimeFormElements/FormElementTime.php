@@ -15,9 +15,24 @@ class FormElementTime extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
         $this->vars['hour']   = '';
         $this->vars['minute'] = '';
         $this->vars['second'] = '';
-        $this->vars['value']  = '';
 
-        $tokens = explode(':', $this->getValue());
+        $value = $this->getValue();
+
+        // new record, respect the init param
+        if (!$this->context->getCurrentRecord() AND $value == '')
+        {
+            if ($this->definition->getInit() == 'now')
+            {
+                $value = date('H:i');
+
+                if ($this->definition->getType() == 'long')
+                {
+                    $value = date('H:i:s');
+                }
+            }
+        }
+
+        $tokens = explode(':', $value);
 
         if (count($tokens) >= 2)
         {

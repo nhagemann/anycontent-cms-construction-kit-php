@@ -14,6 +14,20 @@ class FormElementTimestamp extends \AnyContent\CMCK\Modules\Backend\Core\Edit\Fo
 
         $value = $this->getValue();
 
+        // new record, respect the init param
+        if (!$this->context->getCurrentRecord() AND $value == '')
+        {
+            switch ($this->definition->getInit())
+            {
+                case 'today':
+                    $value = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+                    break;
+                case 'now':
+                    $value = time();
+                    break;
+            }
+        }
+
         if (is_numeric($value))
         {
             $this->vars['month']  = date('m', $value);
