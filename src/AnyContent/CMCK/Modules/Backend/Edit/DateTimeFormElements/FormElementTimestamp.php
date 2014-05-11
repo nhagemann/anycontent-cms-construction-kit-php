@@ -51,7 +51,6 @@ class FormElementTimestamp extends \AnyContent\CMCK\Modules\Backend\Core\Edit\Fo
             $this->vars['second'] = '';
             $this->vars['value']  = '';
 
-            //echo 'init';
         }
 
         $this->vars['type'] = $this->definition->getType();

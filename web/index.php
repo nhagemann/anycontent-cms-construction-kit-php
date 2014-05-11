@@ -30,7 +30,6 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages')
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\BlockUI');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\BootstrapFormHelpers');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\NestedSortable');
-$app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 
 require_once (APPLICATION_PATH .'/config/modules.php');
 
