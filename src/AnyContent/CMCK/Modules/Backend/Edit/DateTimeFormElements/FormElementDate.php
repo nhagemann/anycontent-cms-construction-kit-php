@@ -40,7 +40,7 @@ class FormElementDate extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
 
         if ($this->vars['value'] == '')
         {
-            echo 'init';
+            //echo 'init';
         }
 
         return $this->twig->render('formelement-datetime.twig', $this->vars);
