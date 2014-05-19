@@ -68,7 +68,8 @@ class MenuManager
             $items[] = array( 'type' => 'divider' );
         }
 
-        $items[] = array( 'type' => 'link', 'text' => 'Logout', 'url' => '#', 'glyphicon' => 'glyphicon-user' );
+        $url     = $this->urlGenerator->generate('logout');
+        $items[] = array( 'type' => 'link', 'text' => 'Logout', 'url' => $url, 'glyphicon' => 'glyphicon-user' );
 
         $html = $this->renderDropDown($items);
 

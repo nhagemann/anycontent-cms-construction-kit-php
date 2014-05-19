@@ -9,7 +9,7 @@ Just create a composer.json file with following content
     {
         "require": {
             "php": ">=5.3",
-            "nhagemann/anycontent-cms-construction-kit-php": "0.2.*@dev"
+            "nhagemann/anycontent-cms-construction-kit-php": "0.3.*@dev"
         },
         "scripts": {
             "post-update-cmd": "AnyContent\\CMCK\\Command\\Installer::postInstallUpdate",

@@ -3,6 +3,11 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Application;
 
 use Silex\Application as SilexApplication;
+
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
 use Knp\Provider\ConsoleServiceProvider;
 
 class Application extends SilexApplication
@@ -13,6 +18,8 @@ class Application extends SilexApplication
     protected $templatesFolder = array();
 
     protected $repositories = array();
+
+    protected $authenticationAdapter = array();
 
 
     public function __construct(array $values = array())
@@ -31,6 +38,32 @@ class Application extends SilexApplication
     {
         $this->modules[$class] = array( 'class' => $class, 'options' => $options );
 
+    }
+
+
+    public function registerAuthenticationAdapter($type, $class, $options = array())
+    {
+        $this->authenticationAdapter[$type] = array( 'class' => $class, 'options' => $options );
+    }
+
+
+    public function getAuthenticationAdapter($config)
+    {
+        if (array_key_exists($config['type'], $this->authenticationAdapter))
+        {
+
+            $class   = $this->authenticationAdapter[$config['type']]['class'];
+            $options = $this->authenticationAdapter[$config['type']]['options'];
+            unset($config['type']);
+
+            $adapter = new $class($config,$this['session'],$options);
+        }
+        else
+        {
+            throw new \Exception ('Unknown authentication adapter type ' . $config['type'] . '.');
+        }
+
+        return $adapter;
     }
 
 
@@ -142,5 +175,35 @@ class Application extends SilexApplication
         return $this['layout']->render($templateFilename, $vars, $displayMessages);
     }
 
+
+    /**
+     * Registers a before filter.
+     *
+     * Before filters are run before any route has been matched. This override additionally provides the application
+     * object to the filter.
+     *
+     * @param mixed   $callback Before filter callback
+     * @param integer $priority The higher this value, the earlier an event
+     *                          listener will be triggered in the chain (defaults to 0)
+     */
+    public function before($callback, $priority = 0)
+    {
+        $app = $this;
+
+        $this->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($callback, $app)
+        {
+            if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType())
+            {
+                return;
+            }
+
+            $ret = call_user_func($app['callback_resolver']->resolveCallback($callback), $event->getRequest(), $app);
+
+            if ($ret instanceof Response)
+            {
+                $event->setResponse($ret);
+            }
+        }, $priority);
+    }
 }
 

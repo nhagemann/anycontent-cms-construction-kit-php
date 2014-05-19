@@ -110,6 +110,19 @@ class ConfigService
     }
 
 
+    public function getAuthenticationAdapterConfig()
+    {
+        $yml = $this->getYML();
+
+        if (isset($yml['authentication']))
+        {
+            return $yml['authentication'];
+        }
+
+        return null;
+    }
+
+
     protected function getYML()
     {
         if ($this->yml)

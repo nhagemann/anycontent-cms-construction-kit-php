@@ -26,6 +26,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Config');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Files');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\TimeShift');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\User');
 
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\BlockUI');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\BootstrapFormHelpers');

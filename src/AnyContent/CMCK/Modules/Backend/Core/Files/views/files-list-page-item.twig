@@ -3,15 +3,15 @@
         <ul class="media-list">
             <li class="media">
                 {% if file.file.isImage %}
-                    <a class="pull-left" href="#">
-                        <img class="media-object" src="{{ file.links.view }}" width="60" alt="...">
+                    <a class="pull-left" href="{{ file.links.src }}" style="width:60px">
+                        <img class="media-object" src="{{ file.links.src }}" width="60" alt="...">
                     </a>
                 {% endif %}
 
                 <div class="media-body">
-                    <h4 class="media-heading"><a href="{{ file.links.view }}">{{ file.file.getName }}</a></h4>
+                    <h4 class="media-heading"><a href="{{ file.links.src }}">{{ file.file.getName }}</a></h4>
                     {{ (file.file.getSize/1024) |number_format(1) }}
-                    Kb {% if file.file.isImage() %}({{ file.file.getWidth }} x {{ file.file.getHeight }}){% endif %}
+                    Kb {% if file.file.getWidth %}({{ file.file.getWidth }} x {{ file.file.getHeight }}){% endif %}
                     <br/>
                     {% if file.file.getTimestampLastChange %}
                         <small>{{ file.file.getTimestampLastChange|date('d.m.Y H:i') }}</small>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="pull-right">
                             <a href="{{ file.links.download }}" alt="Download"><span class="glyphicon glyphicon-cloud-download"></span></a>
-                            &nbsp; <a href="{{ file.links.view }}" alt="Zoom" class="files-file-zoom" data-title="{{ file.file.getName }}"><span class="glyphicon glyphicon-zoom-in"></span></a>
+                            &nbsp; <a href="{{ file.links.src }}" alt="Zoom" class="files-file-zoom" data-title="{{ file.file.getName }}"><span class="glyphicon glyphicon-zoom-in"></span></a>
 
                         </div>
                     </div>

@@ -27,3 +27,10 @@ cache:
   cmdl: 0
   data: 600
   concurrent_writes:  600
+
+
+authentication:
+  #driver: {type: crowd}
+  driver: {type: config}
+  users:
+     - {username: john@example.org, firstname: John, lastname: Doe, password: , encryption: none }

@@ -33,7 +33,6 @@ $(document).ready(function () {
         var options = {keyboard: true};
         $('#modal_files_file_zoom').modal(options);
 
-
         return false;
     });
 
