@@ -158,7 +158,7 @@ class Application extends SilexApplication
 
         }
 
-        $this['repos']->setUserInfo($this['config']->getClientUserInfo());
+        $this['repos']->setUserInfo($this['user']->getClientUserInfo());
 
         parent::run($request);
     }

@@ -30,7 +30,6 @@ cache:
 
 
 authentication:
-  #driver: {type: crowd}
-  driver: {type: config}
+  type: config
   users:
-     - {username: john@example.org, firstname: John, lastname: Doe, password: , encryption: none }
+     - {username: john@example.org, firstname: John, lastname: Doe, password: john@example.org, encryption: none }

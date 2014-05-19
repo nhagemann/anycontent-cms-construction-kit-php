@@ -48,17 +48,7 @@ class ConfigService
     }
 
 
-    public function getClientUserInfo()
-    {
-        $yml = $this->getYML();
 
-        if (!isset($yml['userinfo']['username']) || !isset($yml['userinfo']['firstname']) || !isset($yml['userinfo']['lastname']))
-        {
-            throw new \Exception ('Missing or incomplete user info configuration.');
-        }
-
-        return new \AnyContent\Client\UserInfo($yml['userinfo']['username'], $yml['userinfo']['firstname'], $yml['userinfo']['lastname']);
-    }
 
 
     public function getConfiguredApps($repositoryShortcut)

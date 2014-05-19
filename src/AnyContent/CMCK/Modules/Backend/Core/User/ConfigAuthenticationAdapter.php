@@ -76,7 +76,9 @@ class ConfigAuthenticationAdapter
                     if ($valid)
                     {
                         $this->user = $user;
-                        $this->session->set($this->prefix . 'username', $this->getUsername());
+                        $this->session->set($this->prefix . 'username', @$user['username']);
+                        $this->session->set($this->prefix . 'firstname', @$user['firstname']);
+                        $this->session->set($this->prefix . 'lastname', @$user['lastname']);
 
                         return true;
                     }
@@ -103,19 +105,19 @@ class ConfigAuthenticationAdapter
 
     public function getUserName()
     {
-        return @$this->user['username'];
+        return $this->session->get($this->prefix . 'username');
     }
 
 
     public function getFirstName()
     {
-        return @$this->user['firstname'];
+        return $this->session->get($this->prefix . 'firstname');
     }
 
 
     public function getLastName()
     {
-        return @$this->user['lastname'];
+        return $this->session->get($this->prefix . 'lastname');
     }
 
 

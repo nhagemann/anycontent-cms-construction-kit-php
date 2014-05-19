@@ -46,4 +46,35 @@ class UserManager
 
         $this->adapter->logout();
     }
+
+
+    public function getClientUserInfo()
+    {
+
+        return new \AnyContent\Client\UserInfo($this->getUserName(), $this->getFirstName(), $this->getLastName());
+    }
+
+
+    public function getUserName()
+    {
+        return $this->adapter->getUserName();
+    }
+
+
+    public function getFirstName()
+    {
+        return $this->adapter->getFirstName();
+    }
+
+
+    public function getLastName()
+    {
+        return $this->adapter->getLastName();
+    }
+
+
+    public function getFullName()
+    {
+        return $this->adapter->getFullName();
+    }
 }
