@@ -22,7 +22,7 @@ class ConfigService
     }
 
 
-    public function getToBeConnectedRepositories()
+    public function getRepositoriesConfiguration()
     {
         $yml = $this->getYML();
 
@@ -42,16 +42,8 @@ class ConfigService
     }
 
 
-    public function getCMDLDirectory()
-    {
-        return $this->basepath . 'cmdl';
-    }
 
-
-
-
-
-    public function getConfiguredApps($repositoryShortcut)
+    public function getAppsConfiguration($repositoryShortcut)
     {
         $yml = $this->getYML();
 
@@ -100,7 +92,7 @@ class ConfigService
     }
 
 
-    public function getAuthenticationAdapterConfig()
+    public function getAuthenticationConfiguration()
     {
         $yml = $this->getYML();
 

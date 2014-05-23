@@ -24,7 +24,7 @@ class UserManager
         $this->config  = $config;
         $this->session = $session;
 
-        $this->adapter = $app->getAuthenticationAdapter($config->getAuthenticationAdapterConfig());
+        $this->adapter = $app->getAuthenticationAdapter($config->getAuthenticationConfiguration());
     }
 
 

@@ -31,7 +31,31 @@ class RepositoryManager
     {
         $this->cache   = $cache;
         $this->context = $context;
-        $this->config = $config;
+        $this->config  = $config;
+    }
+
+
+    public function init($config)
+    {
+        foreach ($config->getRepositoriesConfiguration() as $repository)
+        {
+            $this->addAllContentTypesOfRepository($repository['url'], null, null, 'Basic', $repository['shortcut'], null);
+            $this->addAllConfigTypesOfRepository($repository['url']);
+
+            foreach ($config->getAppsConfiguration($repository['shortcut']) as $app)
+            {
+                if (array_key_exists('url', $app))
+                {
+                    $name = 'Content App';
+                    if (array_key_exists('name', $app))
+                    {
+                        $name = $app['name'];
+                        unset($app['name']);
+                    }
+                    $this->addAppToRepository($repository['url'], $name, $app);
+                }
+            }
+        }
     }
 
 
