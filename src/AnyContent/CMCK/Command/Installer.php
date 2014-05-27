@@ -16,17 +16,22 @@ class Installer
 
         echo "...\n";
 
-        echo "Creating Web Folder\n";
-
-        $filesystem->mkdir($baseDir . '/web');
-        $filesystem->mirror($packageDir . '/web', $baseDir . '/web');
+        if (!$filesystem->exists($baseDir . '/web'))
+        {
+            echo "Creating Web Folder\n";
+            $filesystem->mkdir($baseDir . '/web');
+            $filesystem->mirror($packageDir . '/web', $baseDir . '/web');
+        }
 
         echo "Creating Config Folder with example config.\n";
 
         $filesystem->mkdir($baseDir . '/config');
-        $filesystem->mirror($packageDir . '/config', $baseDir . '/config');
 
-        echo "Creating TWIG cache folder, deleting current cache files.\n";
+        $filesystem->copy($packageDir . '/config.example.yml', $baseDir . '/config/config.example.yml');
+        $filesystem->copy($packageDir . '/modules.example.php', $baseDir . '/config/modules.example.php');
+
+        echo "Creating TWIG cache folder, deleting eventually current cache files.\n";
+        
         $filesystem->remove($baseDir . '/twig-cache');
         $filesystem->mkdir($baseDir . '/twig-cache');
 
