@@ -27,11 +27,11 @@ class Installer
 
         $filesystem->mkdir($baseDir . '/config');
 
-        $filesystem->copy($packageDir . '/config.example.yml', $baseDir . '/config/config.example.yml');
-        $filesystem->copy($packageDir . '/modules.example.php', $baseDir . '/config/modules.example.php');
+        $filesystem->copy($packageDir . '/config/config.example.yml', $baseDir . '/config/config.example.yml');
+        $filesystem->copy($packageDir . '/config/modules.example.php', $baseDir . '/config/modules.example.php');
 
         echo "Creating TWIG cache folder, deleting eventually current cache files.\n";
-        
+
         $filesystem->remove($baseDir . '/twig-cache');
         $filesystem->mkdir($baseDir . '/twig-cache');
 
