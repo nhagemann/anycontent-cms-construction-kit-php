@@ -69,6 +69,7 @@ class Controller
 
     public static function saveConfig(Application $app, Request $request, $configTypeAccessHash)
     {
+        $hidden = $request->get('$hidden');
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByConfigTypeAccessHash($configTypeAccessHash);
@@ -81,6 +82,9 @@ class Controller
             $app['context']->setCurrentConfigType($configTypeDefinition);
 
             $app['form']->setDataTypeDefinition($configTypeDefinition);
+
+            $app['context']->setCurrentWorkspace($hidden['workspace']);
+            $app['context']->setCurrentLanguage($hidden['language']);
 
             /** @var Config $record */
             $record = $repository->getConfig($configTypeDefinition->getName(),$app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(),$app['context']->getCurrentTimeShift());

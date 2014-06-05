@@ -50,7 +50,7 @@ class Controller
 
                 $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), array(), array( 'language' => $app['context']->getCurrentLanguage(), 'workspace' => $app['context']->getCurrentWorkspace() ));
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), array(), array( 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
                 $buttons   = array();
                 $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 )), 'glyphicon' => 'glyphicon-list' );
@@ -81,8 +81,9 @@ class Controller
     }
 
 
-    public static function editRecord(Application $app, $contentTypeAccessHash, $recordId)
+    public static function editRecord(Application $app, $contentTypeAccessHash, $recordId, $workspace, $language)
     {
+
         $vars = array();
 
         $vars['menu_mainmenu']   = $app['menus']->renderMainMenu();
@@ -94,9 +95,19 @@ class Controller
         if ($repository)
         {
             $app['context']->setCurrentRepository($repository);
-            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $app['context']->setCurrentContentType($contentTypeDefinition);
+            $app['form']->setDataTypeDefinition($contentTypeDefinition);
+
+            if ($workspace != null && $contentTypeDefinition->hasWorkspace($workspace))
+            {
+                $app['context']->setCurrentWorkspace($workspace);
+            }
+            if ($language != null && $contentTypeDefinition->hasLanguage($language))
+            {
+                $app['context']->setCurrentLanguage($language);
+            }
 
             /** @var Record $record */
             $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
@@ -110,7 +121,7 @@ class Controller
             $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
             //$buttons[]    = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
             //$buttons[]    = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
-            $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
+            $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-plus' );
 
             $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
@@ -120,12 +131,12 @@ class Controller
             $vars['save_operation_title'] = array_shift($saveoperation);
 
             $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
-            $vars['links']['delete']           = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['delete']           = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
             $vars['links']['transfer']         = $app['url_generator']->generate('transferRecordModal', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['timeshift']        = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['workspaces']       = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['languages']        = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
-            $vars['links']['addrecordversion'] = $app['url_generator']->generate('addRecordVersion', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['addrecordversion'] = $app['url_generator']->generate('addRecordVersion', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
             if ($record)
             {
@@ -157,7 +168,7 @@ class Controller
     public static function saveRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId = null)
     {
 
-        $hidden = $request->get('hidden');
+        $hidden = $request->get('$hidden');
 
         $saveOperationTitle = 'Save';
         $saveOperation      = 'save';
@@ -201,6 +212,9 @@ class Controller
             $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
 
             $app['context']->setCurrentSaveOperation($saveOperation, $saveOperationTitle);
+
+            $app['context']->setCurrentWorkspace($hidden['workspace']);
+            $app['context']->setCurrentLanguage($hidden['language']);
 
             if ($recordId)
             {
@@ -283,7 +297,7 @@ class Controller
     }
 
 
-    public function deleteRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId)
+    public function deleteRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId, $workspace, $language)
     {
         $recordId = (int)$recordId;
 
@@ -295,7 +309,17 @@ class Controller
             if ($repository)
             {
                 $app['context']->setCurrentRepository($repository);
-                $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+                $contentTypeDefinition = $repository->getContentTypeDefinition();
+                $app['context']->setCurrentContentType($contentTypeDefinition);
+
+                if ($workspace != null && $contentTypeDefinition->hasWorkspace($workspace))
+                {
+                    $app['context']->setCurrentWorkspace($workspace);
+                }
+                if ($language != null && $contentTypeDefinition->hasLanguage($language))
+                {
+                    $app['context']->setCurrentLanguage($language);
+                }
 
                 if ($repository->deleteRecord($recordId, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage()))
                 {
@@ -351,12 +375,10 @@ class Controller
 
                     $vars['links']['transfer'] = $app['url_generator']->generate('transferRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
                 }
-
             }
         }
 
         return $app->renderPage('transferrecord-modal.twig', $vars);
-
     }
 
 
@@ -378,8 +400,9 @@ class Controller
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
                 /** @var Record $record */
-                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), $contentTypeDefinition->getExchangeViewDefinition()
-                                                                                                                          ->getName(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), $contentTypeDefinition
+                                                                                                    ->getExchangeViewDefinition()
+                                                                                                    ->getName(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
                 if ($record)
                 {
@@ -397,23 +420,20 @@ class Controller
                         $app['context']->setCurrentLanguage($language);
                     }
 
-                    $recordId = $repository->saveRecord($record, $workspace, $contentTypeDefinition->getExchangeViewDefinition()
-                                                                                                   ->getName(), $language);
+                    $recordId = $repository->saveRecord($record, $workspace, $contentTypeDefinition
+                                                                             ->getExchangeViewDefinition()
+                                                                             ->getName(), $language);
                     $app['context']->resetTimeShift();
 
                     $app['context']->addSuccessMessage('Record ' . $recordId . ' transfered.');
 
                     return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
-
                 }
-
             }
-
         }
 
         $app['context']->addErrorMessage('Could not load source record.');
 
         return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
-
     }
 }
