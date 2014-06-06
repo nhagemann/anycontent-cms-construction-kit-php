@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "848237e8de75d7fac0a61db3c0ad9755",
+    "hash": "1e27cf6b6dd88637564aad8b6ebb3e6c",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -262,12 +262,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "ee671f17d917850cce253a7eab2f3558c23f32e9"
+                "reference": "7dfebfd7a2d02b04f26172462cc3d4bc7d5f79f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/ee671f17d917850cce253a7eab2f3558c23f32e9",
-                "reference": "ee671f17d917850cce253a7eab2f3558c23f32e9",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/7dfebfd7a2d02b04f26172462cc3d4bc7d5f79f3",
+                "reference": "7dfebfd7a2d02b04f26172462cc3d4bc7d5f79f3",
                 "shasum": ""
             },
             "require": {
@@ -295,7 +295,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2014-05-11 06:24:19"
+            "time": "2014-06-05 15:29:40"
         },
         {
             "name": "nitra/php-min",
@@ -437,9 +437,7 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",

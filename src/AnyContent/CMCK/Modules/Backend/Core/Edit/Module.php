@@ -32,16 +32,19 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->bind('deleteRecord')->value('workspace',null)->value('language',null);
 
         $app
-            ->get('/content/transfer/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::transferRecordModal')
-            ->bind('transferRecordModal');
-        $app
-            ->post('/content/transfer/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::transferRecord')
-            ->bind('transferRecord');
+            ->get('/content/transfer/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::transferRecordModal')
+            ->bind('transferRecordModal')->value('workspace',null)->value('language',null);
 
-        // The url parts "workspace" and "language" are necessary to mirror the possible get routes, but aren't processed
+        // The url parts "workspace" and "language" within post routes are necessary to mirror the possible get routes, but aren't processed
+
+        $app
+            ->post('/content/transfer/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::transferRecord')
+            ->bind('transferRecord')->value('workspace',null)->value('language',null);
+
+
         $app->post('/content/edit/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord')->value('workspace',null)->value('language',null);
-        $app->post('/content/add/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
-        $app->post('/content/add/{contentTypeAccessHash}/{recordId}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
+        $app->post('/content/add/{contentTypeAccessHash}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
+        $app->post('/content/add/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
 
         $app['form'] = $app->share(function ($app)
         {

@@ -37,8 +37,11 @@
 
 
             <li class="sortable-item" id="list_{{ record.id }}">
-                <div class="btn btn-info"><small>#{{ record.id }}</small>&nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
-                            class="badge subtype">{{ record.record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %} <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span></div>
+                <div class="btn btn-info">
+                    <small>#{{ record.id }}</small>
+                    &nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
+                                class="badge subtype">{{ record.record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                            <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span></div>
 
 
                 {% set level = record.level %}
@@ -87,13 +90,16 @@
                         {% for record in records_right %}
 
 
-                        <li class="sortable-item" id="list_{{ record.id }}">
-                            <div class="btn btn-info"><small>#{{ record.id }}</small>&nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
-                                            class="badge subtype">{{ record.record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %} <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span></div>
+                            <li class="sortable-item" id="list_{{ record.id }}">
+                                <div class="btn btn-info">
+                                    <small>#{{ record.id }}</small>
+                                    &nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
+                                                class="badge subtype">{{ record.record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                                            <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span>
+                                </div>
 
 
-
-                        </li>
+                            </li>
 
                         {% endfor %}
 
@@ -112,6 +118,9 @@
                     <span class="btn-group" id="form_sort_button_save">
                         <input type="submit" class="btn btn-primary" href="#" value="Save"/>
                         </span>
+
+                        <input type="hidden" name="$hidden[workspace]" value="{{ workspaces.current }}">
+                        <input type="hidden" name="$hidden[language]" value="{{ languages.current }}">
                     </form>
                 </div>
             </div>

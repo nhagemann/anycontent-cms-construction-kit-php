@@ -119,7 +119,7 @@ class RepositoryManager
     }
 
 
-    public function addOneContentType($contentTypeName, $url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $contentTypeTitle = null)
+    public function addOneContentType($contentTypeName, $url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $shortcut = null, $contentTypeTitle = null)
     {
         if (array_key_exists($url, $this->requestedRepositories))
         {
@@ -132,12 +132,14 @@ class RepositoryManager
             $repositoryInfo['apiUser']     = $apiUser;
             $repositoryInfo['apiPassword'] = $apiPassword;
             $repositoryInfo['authType']    = $authType;
+            $repositoryInfo['shortcut']    = $shortcut;
             $repositoryInfo['title']       = $url;
             if ($repositoryTitle)
             {
                 $repositoryInfo['title'] = $repositoryTitle;
             }
             $repositoryInfo['contentTypes'] = array();
+            $repositoryInfo['configTypes']  = array();
             $repositoryInfo['apps']         = array();
         }
 

@@ -70,11 +70,16 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
 
     public static function postSortRecords(Application $app, Request $request, $contentTypeAccessHash)
     {
+        $hidden = $request->get('$hidden');
+
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
+
+        $app['context']->setCurrentWorkspace($hidden['workspace']);
+        $app['context']->setCurrentLanguage($hidden['language']);
 
         if ($request->request->has('list'))
         {

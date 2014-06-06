@@ -1,5 +1,7 @@
 ## 0.4
-Small refactoring for better extendability as used from CXIO.
+* Most routes do additionally accept workspace and language, to be able to have different workspaces and languages
+in different tabs.
+* Small refactoring for better extendability as used from CXIO.
 ## 0.3
 * Adding a authentication layer.
 ## 0.2

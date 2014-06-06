@@ -16,7 +16,7 @@ use AnyContent\Client\UserInfo;
 class Controller
 {
 
-    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1)
+    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1, $workspace=null, $language = null)
     {
 
         // reset chained save operations to 'save' only upon listing of a content type
@@ -37,6 +37,15 @@ class Controller
         $app['context']->setCurrentContentType($contentTypeDefinition);
         $app['context']->setCurrentListingPage($page);
         $vars['definition'] = $contentTypeDefinition;
+
+        if ($workspace != null && $contentTypeDefinition->hasWorkspace($workspace))
+        {
+            $app['context']->setCurrentWorkspace($workspace);
+        }
+        if ($language != null && $contentTypeDefinition->hasLanguage($language))
+        {
+            $app['context']->setCurrentLanguage($language);
+        }
 
         // check for sorting/search query parameters
 
@@ -87,7 +96,7 @@ class Controller
         $vars['links']['sortByLastChange'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'change' ));
         $vars['links']['sortByStatus']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'status' ));
         $vars['links']['sortByPosition']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'pos' ));
-        $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ));
+        $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name' ,'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage()));
         $vars['links']['closeSearchBox']   = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'q' => '' ));
 
         // context links
@@ -99,8 +108,8 @@ class Controller
         $app['layout']->addCssFile('listing.css');
 
         $buttons      = array();
-        $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecordsReset', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-list' );
-        $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-move' );
+        $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecordsReset', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-list' );
+        $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-move' );
         //$buttons[] = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
         //$buttons[] = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-transfer' );
         $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-plus' );
