@@ -132,7 +132,7 @@ class Controller
 
             $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name', 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
             $vars['links']['delete']           = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
-            $vars['links']['transfer']         = $app['url_generator']->generate('transferRecordModal', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+            $vars['links']['transfer']         = $app['url_generator']->generate('transferRecordModal', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
             $vars['links']['timeshift']        = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['workspaces']       = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['languages']        = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
@@ -157,6 +157,7 @@ class Controller
             }
             else
             {
+                $vars['id']=$recordId;
                 return $app->renderPage('record-not-found.twig', $vars);
             }
         }
@@ -336,7 +337,19 @@ class Controller
     }
 
 
-    public function transferRecordModal(Application $app, Request $request, $contentTypeAccessHash, $recordId)
+    /**
+     * Displays the transfer record dialog
+     *
+     * @param Application $app
+     * @param Request     $request
+     * @param             $contentTypeAccessHash
+     * @param             $recordId
+     * @param             $workspace
+     * @param             $language
+     *
+     * @return mixed
+     */
+    public function transferRecordModal(Application $app, Request $request, $contentTypeAccessHash, $recordId, $workspace, $language)
     {
         $vars           = array();
         $vars['record'] = false;
@@ -350,8 +363,18 @@ class Controller
 
             if ($repository)
             {
+                $contentTypeDefinition = $repository->getContentTypeDefinition();
                 $app['context']->setCurrentRepository($repository);
-                $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
+                $app['context']->setCurrentContentType($contentTypeDefinition);
+
+                if ($workspace != null && $contentTypeDefinition->hasWorkspace($workspace))
+                {
+                    $app['context']->setCurrentWorkspace($workspace);
+                }
+                if ($language != null && $contentTypeDefinition->hasLanguage($language))
+                {
+                    $app['context']->setCurrentLanguage($language);
+                }
 
                 /** @var Record $record */
                 $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
@@ -373,7 +396,7 @@ class Controller
                     }
                     $vars['records'] = $records;
 
-                    $vars['links']['transfer'] = $app['url_generator']->generate('transferRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+                    $vars['links']['transfer'] = $app['url_generator']->generate('transferRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, "workspace" => $app['context']->getCurrentWorkspace(), "language" => $app['context']->getCurrentLanguage() ));
                 }
             }
         }
@@ -382,7 +405,7 @@ class Controller
     }
 
 
-    public function transferRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId)
+    public function transferRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId, $workspace, $language)
     {
         $recordId = (int)$recordId;
 
@@ -399,6 +422,15 @@ class Controller
                 /** @var ContentTypeDefinition $contentTypeDefinition */
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
+                if ($workspace != null && $contentTypeDefinition->hasWorkspace($workspace))
+                {
+                    $app['context']->setCurrentWorkspace($workspace);
+                }
+                if ($language != null && $contentTypeDefinition->hasLanguage($language))
+                {
+                    $app['context']->setCurrentLanguage($language);
+                }
+
                 /** @var Record $record */
                 $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), $contentTypeDefinition
                     ->getExchangeViewDefinition()
@@ -408,15 +440,15 @@ class Controller
                 {
                     $record->setID((int)$request->get('id'));
                     $workspace = $app['context']->getCurrentWorkspace();
-                    if ($request->request->has('workspace'))
+                    if ($request->request->has('target_workspace'))
                     {
-                        $workspace = $request->get('workspace');
+                        $workspace = $request->get('target_workspace');
                         $app['context']->setCurrentWorkspace($workspace);
                     }
                     $language = $app['context']->getCurrentLanguage();
-                    if ($request->request->has('language'))
+                    if ($request->request->has('target_language'))
                     {
-                        $language = $request->get('language');
+                        $language = $request->get('target_language');
                         $app['context']->setCurrentLanguage($language);
                     }
 
