@@ -149,6 +149,37 @@ class RepositoryManager
 
     }
 
+    public function addOneConfigType($configTypeName, $url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $shortcut = null, $configTypeTitle = null)
+    {
+        if (array_key_exists($url, $this->requestedRepositories))
+        {
+            $repositoryInfo = $this->requestedRepositories[$url];
+        }
+        else
+        {
+            $repositoryInfo                = array();
+            $repositoryInfo['url']         = $url;
+            $repositoryInfo['apiUser']     = $apiUser;
+            $repositoryInfo['apiPassword'] = $apiPassword;
+            $repositoryInfo['authType']    = $authType;
+            $repositoryInfo['shortcut']    = $shortcut;
+            $repositoryInfo['title']       = $url;
+            if ($repositoryTitle)
+            {
+                $repositoryInfo['title'] = $repositoryTitle;
+            }
+            $repositoryInfo['contentTypes'] = array();
+            $repositoryInfo['configTypes']  = array();
+            $repositoryInfo['apps']         = array();
+        }
+
+        $repositoryInfo['configTypes'][$configTypeName] = $configTypeTitle;
+
+        $this->requestedRepositories[$url] = $repositoryInfo;
+
+    }
+
+
 
     public function addAppToRepository($repositoryUrl, $name, $settings = array())
     {
