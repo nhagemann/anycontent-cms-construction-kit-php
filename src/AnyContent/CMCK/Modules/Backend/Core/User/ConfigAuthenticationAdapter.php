@@ -127,16 +127,4 @@ class ConfigAuthenticationAdapter
     }
 
 
-    /**
-     * Allow additionally arbitrary methods on user adapter
-     *
-     * @param $name
-     * @param $arguments
-     *
-     * @return mixed
-     */
-    public function __call($name, $arguments)
-    {
-        return call_user_func_array(array( $this->adapter, $name ), $arguments);
-    }
 }
