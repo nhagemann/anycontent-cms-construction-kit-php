@@ -14,7 +14,21 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
 
     public function render($layout)
     {
-        $contentTypeAccessHash = $this->app['repos']->getAccessHash($this->app['context']->getCurrentRepository(), $this->app['context']->getCurrentContentType());
+        // temporary solution - let's see how long ...
+
+        $routeParams = $this->app['request']->get('_route_params');
+
+        if (array_key_exists('contentTypeAccessHash',$routeParams))
+        {
+            $contentTypeAccessHash = $routeParams['contentTypeAccessHash'];
+        }
+        else{
+            die ("couldn't determine sequence context");
+        }
+
+        //$contentTypeAccessHash = $this->app['repos']->getAccessHash($this->app['context']->getCurrentRepository(), $this->app['context']->getCurrentContentType());
+
+
         $record                = $this->app['context']->getCurrentRecord();
         $recordId              = 0;
         if ($record)
