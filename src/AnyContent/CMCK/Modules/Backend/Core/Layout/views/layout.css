@@ -25,10 +25,4 @@ body {
     left: -231px;
 }
 
-/* make sure container gets centered in IE8 */
-.container{
-    width:92%;
-    margin:0 auto;
-    padding:10px;
-}
 

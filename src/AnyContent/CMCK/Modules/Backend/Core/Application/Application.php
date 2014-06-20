@@ -8,6 +8,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+use Symfony\Component\HttpFoundation\Request;
+
 use Knp\Provider\ConsoleServiceProvider;
 
 class Application extends SilexApplication
@@ -109,7 +111,7 @@ class Application extends SilexApplication
     }
 
 
-    public function run($request = null)
+    public function run(Request $request = null)
     {
         // Init Cache
 
