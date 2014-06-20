@@ -21,7 +21,8 @@
         "phpoffice/phpexcel": "1.7.9",
         "symfony/filesystem": "v2.4.2",
         "symfony/yaml": "2.4.*@dev",
-        "knplabs/console-service-provider": "dev-master"
+        "knplabs/console-service-provider": "dev-master",
+        "monolog/monolog": ">=1.0.0"
 
     },
 

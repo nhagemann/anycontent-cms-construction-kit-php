@@ -1,4 +1,5 @@
 <?php
+$app['debug'] = false;
 
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TextFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\LinkFormElement');
