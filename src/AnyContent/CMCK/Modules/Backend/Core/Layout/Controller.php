@@ -10,8 +10,38 @@ use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 class Controller
 {
 
-    public static function css(Application $app, $files)
+    public static function css(Application $app, Request $request, $files)
     {
+
+        $response = new Response();
+
+        $response->headers->add(array( 'Content-Type' => 'text/css' ));
+
+
+
+        if ($app['debug'] == false)
+        {
+            //$content = \CssMin::minify($content);
+
+            $cacheToken = 'cmck_css_' . md5(serialize($files));
+
+            $response->headers->add(array( 'Cache-Control' => 'public' ));
+            $response->headers->add(array('ETag'=>$cacheToken));
+
+            if (in_array($cacheToken,$request->getETags()))
+            {
+                $response->setStatusCode(304);
+            }
+
+            if ($app['cache']->contains($cacheToken))
+            {
+                $response->setContent($app['cache']->fetch($cacheToken));
+                return $response;
+            }
+
+        }
+
+
         $content = '';
         foreach (explode('/', $files) as $file)
         {
@@ -21,25 +51,49 @@ class Controller
             }
         }
 
+        $response->setContent($content);
+
         if ($app['debug'] == false)
         {
-            $content = \CssMin::minify($content);
+            $app['cache']->save($cacheToken, $content);
         }
-
-        $response = new Response();
-        $response->setContent($content);
-        $response->headers->add(array( 'Content-Type' => 'text/css' ));
-
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('PT1H'));
-        $response->setLastModified($date);
 
         return $response;
     }
 
 
-    public static function js(Application $app, $files)
+    public static function js(Application $app, Request $request, $files)
     {
+        $response = new Response();
+
+        $response->headers->add(array( 'Content-Type' => 'text/javascript' ));
+
+        if ($app['debug'] == false)
+        {
+
+            //$content = \JSMinPlus::minify($content);
+
+            $cacheToken = 'cmck_js_' . md5(serialize($files));
+
+            $response->headers->add(array( 'Cache-Control' => 'public' ));
+            $response->headers->add(array('ETag'=>$cacheToken));
+
+            if (in_array($cacheToken,$request->getETags()))
+            {
+                   $response->setStatusCode(304);
+            }
+
+
+
+            if ($app['cache']->contains($cacheToken))
+            {
+                $response->setContent($app['cache']->fetch($cacheToken));
+
+                return $response;
+            }
+
+        }
+
         $content = '';
         foreach (explode('/', $files) as $file)
         {
@@ -51,16 +105,10 @@ class Controller
 
         if ($app['debug'] == false)
         {
-            $content = \JSMinPlus::minify($content);
+            $app['cache']->save($cacheToken, $content);
         }
 
-        $response = new Response();
         $response->setContent($content);
-        $response->headers->add(array( 'Content-Type' => 'text/javascript' ));
-
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('PT1H'));
-        $response->setLastModified($date);
 
         return $response;
     }

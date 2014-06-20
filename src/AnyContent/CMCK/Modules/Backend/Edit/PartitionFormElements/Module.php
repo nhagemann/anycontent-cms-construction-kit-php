@@ -18,6 +18,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
     public function run(Application $app)
     {
+        $app['form']->registerFormElement('print', 'AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements\FormElementPrint');
         $app['form']->registerFormElement('headline', 'AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements\FormElementHeadline');
         $app['form']->registerFormElement('section-start', 'AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements\FormElementSectionStart');
         $app['form']->registerFormElement('section-end', 'AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements\FormElementSectionEnd');

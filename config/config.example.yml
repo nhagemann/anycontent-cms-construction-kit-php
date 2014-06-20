@@ -1,0 +1,35 @@
+# Either simple list all your repositories, e.g.:
+#
+# repositories:
+#   - http://anycontent.dev/1/example1
+#   - http://anycontent.dev/1/example2
+#
+# or give them shortcuts, so you can reference them in your code or in advanced configurations, e.g.:
+#
+# repositories:
+#   shortcut1: http://anycontent.dev/1/example1
+#   shortcut2: http://anycontent.dev/1/example2
+#
+
+repositories:
+  - http://anycontent.dev/1/example
+
+
+userinfo:
+  username:   john@example.org
+  firstname:  John
+  lastname:   Doe
+
+
+cache:
+  driver: {type: apc}
+  menu: 60
+  cmdl: 0
+  data: 600
+  concurrent_writes:  600
+
+
+authentication:
+  type: config
+  users:
+     - {username: john@example.org, firstname: John, lastname: Doe, password: john@example.org, encryption: none }

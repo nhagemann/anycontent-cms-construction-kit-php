@@ -5,9 +5,9 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
-use CMDL\ClippingDefinition;
+use CMDL\ViewDefinition;
 use CMDL\FormElementDefinition;
-use CMDL\InsertionDefinition;
+use CMDL\ClippingDefinition;
 
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
@@ -20,11 +20,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Controller
 {
 
-    public static function editSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $clippingName, $insertName, $property)
+    public static function editSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $viewName, $insertName, $property)
     {
         $vars                     = array();
-        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
-        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'clippingName' => 'default', 'insertName' => $insertName, 'property' => $property ));
+        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
+        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'property' => $property ));
 
         $vars['property'] = $property;
 
@@ -62,12 +62,13 @@ class Controller
                         $record   = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
                         $sequence = $record->getProperty($property, array());
 
-                        $sequence = json_decode($sequence, true);
+                        $sequence = @json_decode($sequence, true);
                         if (json_last_error() != JSON_ERROR_NONE OR !is_array($sequence))
                         {
                             $sequence = array();
                         }
                     }
+
 
                     $vars['count'] = count($sequence);
                     $vars['items'] = array();
@@ -80,8 +81,8 @@ class Controller
                     foreach ($inserts as $k => $v)
                     {
 
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($k);
-                        $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),null);
+                        $clippingDefinition = $contentTypeDefinition->getClippingDefinition($k);
+                        $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),null);
                     }
 
                     $i = 0;
@@ -90,14 +91,14 @@ class Controller
                         $insert     = key($item);
                         $properties = array_shift($item);
 
-                        if ($contentTypeDefinition->hasInsertionDefinition($insert)) // ignore eventually junk data after cmdl changes
+                        if ($contentTypeDefinition->hasClippingDefinition($insert)) // ignore eventually junk data after cmdl changes
                         {
                             $i++;
 
-                            /** @var InsertionDefinition $insertionDefinition */
-                            $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+                            /** @var ClippingDefinition $clippingDefinition */
+                            $clippingDefinition = $contentTypeDefinition->getClippingDefinition($insert);
                             $item                = array();
-                            $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), $properties, array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $i);
+                            $item['form']        = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), $properties, array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $i);
                             $item['type']        = $insert;
                             $item['title']       = $inserts[$insert];
                             $item['sequence']    = $i;
@@ -106,6 +107,7 @@ class Controller
 
                     }
 
+                    $app['layout']->addJsFile('edit.js');
                     $app['layout']->addJsFile('editsequence.js');
                     $app['layout']->addCssFile('editsequence.css');
 
@@ -164,12 +166,12 @@ class Controller
                     $item = $items[$nr];
                     $type = $types[$i];
 
-                    $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($type);
+                    $clippingDefinition = $contentTypeDefinition->getClippingDefinition($type);
 
                     $bag = new ParameterBag();
                     $bag->add($item);
 
-                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $insertionDefinition->getFormElementDefinitions(), array());
+                    $item = $app['form']->extractFormElementValuesFromPostRequest($bag, $clippingDefinition->getFormElementDefinitions(), array());
 
                     $sequence[] = array( $type => $item );
                     $i++;
@@ -209,9 +211,9 @@ class Controller
                         $insert  = $request->query->get('insert');
                         $count   = $request->query->get('count');
 
-                        $insertionDefinition = $contentTypeDefinition->getInsertionDefinition($insert);
+                        $clippingDefinition = $contentTypeDefinition->getClippingDefinition($insert);
                         $item                = array();
-                        $item['form']        = $app['form']->renderFormElements('form_sequence', $insertionDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $count);
+                        $item['form']        = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $count);
                         $item['type']        = $insert;
                         $item['sequence']    = $count;
                         $item['title']       = $inserts[$insert];
@@ -234,20 +236,20 @@ class Controller
         $formElementDefinition = null;
         if ($insertName != '-')
         {
-            $insertionDefinition   = $contentTypeDefinition->getInsertionDefinition($insertName);
-            $formElementDefinition = $insertionDefinition->getFormElementDefinition($property);
+            $clippingDefinition   = $contentTypeDefinition->getClippingDefinition($insertName);
+            $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
             $formElementDefinition->setInsertedByInsert($insertName);
 
         }
         else
         {
-            /* @var ClippingDefinition */
-            $clippingDefinition = $contentTypeDefinition->getClippingDefinition('default');
-            if ($clippingDefinition->hasProperty($property))
+            /* @var ViewDefinition */
+            $viewDefinition = $contentTypeDefinition->getViewDefinition('default');
+            if ($viewDefinition->hasProperty($property))
             {
 
                 /** @var FormElementDefinition $formElementDefinition */
-                $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
+                $formElementDefinition = $viewDefinition->getFormElementDefinition($property);
             }
         }
 

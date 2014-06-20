@@ -18,22 +18,22 @@ use AnyContent\Client\UserInfo;
 class Controller
 {
 
-    public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode='page')
+    public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode = 'page')
     {
         $app['layout']->addCssFile('files');
         $app['layout']->addJsFile('files');
 
-        $vars                   = array();
-        $vars['root']           = false;
+        $vars         = array();
+        $vars['root'] = false;
 
-        if ($mode=='modal')
+        if ($mode == 'modal')
         {
-            $listFilesRouteName = 'listFileSelect';
+            $listFilesRouteName    = 'listFileSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
         }
         else
         {
-            $listFilesRouteName = 'listFiles';
+            $listFilesRouteName    = 'listFiles';
             $listFilesTemplateName = 'files-list-page.twig';
         }
 
@@ -83,6 +83,7 @@ class Controller
                     $folders[] = $items;
 
                     $files = array();
+                    /* @var $file File */
                     foreach ($folder->getFiles() as $file)
                     {
                         $item                      = array();
@@ -90,6 +91,15 @@ class Controller
                         $item['links']['download'] = $app['url_generator']->generate('downloadFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
                         $item['links']['view']     = $app['url_generator']->generate('viewFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
                         $item['links']['delete']   = $app['url_generator']->generate('deleteFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
+
+                        if ($file->hasPublicUrl())
+                        {
+                            $item['links']['src'] = $file->getUrl('default');
+                        }
+                        else
+                        {
+                            $item['links']['src'] = $item['links']['view'];
+                        }
 
                         $files[] = $item;
                     }
@@ -135,6 +145,11 @@ class Controller
             if ($file)
             {
 
+                if ($file->hasPublicUrl())
+                {
+                    return new RedirectResponse($file->getUrl('default'));
+                };
+
                 $binary = $repository->getBinary($file);
 
                 if ($binary !== false)
@@ -159,7 +174,6 @@ class Controller
                         }
 
                     }
-
 
                     return new Response($binary, 200, $headers);
 
@@ -265,7 +279,7 @@ class Controller
 
             if ($request->request->has('delete_file'))
             {
-                $repository->deleteFile($path.'/'.$request->get('delete_file'), true);
+                $repository->deleteFile($path . '/' . $request->get('delete_file'), true);
                 $app['context']->addSuccessMessage('File ' . $request->request->get('delete_file') . ' deleted.');
             }
 
@@ -275,10 +289,10 @@ class Controller
                 if ($file)
                 {
                     $binary = $repository->getBinary($file);
-                    if ($binary!==false)
+                    if ($binary !== false)
                     {
-                        $repository->saveFile($request->request->get('file_rename'),$binary);
-                        $path = trim(pathinfo($request->request->get('file_rename'),PATHINFO_DIRNAME),'/');
+                        $repository->saveFile($request->request->get('file_rename'), $binary);
+                        $path = trim(pathinfo($request->request->get('file_rename'), PATHINFO_DIRNAME), '/');
                         $app['context']->addSuccessMessage('File ' . $request->request->get('file_original') . ' renamed to ' . $request->request->get('file_rename') . '.');
 
                         $repository->deleteFile($request->request->get('file_original'));

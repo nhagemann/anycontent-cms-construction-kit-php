@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+set_time_limit(0);
+
+
+$app_env      = 'console';
+$app          = require __DIR__ . '/../web/index.php';
+
+$app['console']->run();
+
+/*$app = require_once __DIR__.'/bootstrap.php';
+
+use My\Command\MyCommand;
+
+$application = $app['console'];
+$application->add(new MyCommand());
+$application->run();*/
+
+?>

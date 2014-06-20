@@ -20,11 +20,19 @@ class FormElementHTML extends \AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFo
 
     protected function addCodeMirrorModeJavaScriptFiles($layout)
     {
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.0.3/mode/xml/xml.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.0.3/mode/javascript/javascript.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.0.3/mode/css/css.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.0.3/mode/vbscript/vbscript.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.0.3/mode/htmlmixed/htmlmixed.min.js');
+
+        /*
         $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min.js');
         $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/javascript/javascript.min.js');
         $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/css/css.min.js');
         $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/vbscript/vbscript.min.js');
         $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/htmlmixed/htmlmixed.min.js');
+        */
 
     }
 

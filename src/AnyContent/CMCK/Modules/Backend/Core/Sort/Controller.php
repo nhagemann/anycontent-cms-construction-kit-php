@@ -39,6 +39,7 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
         $vars['links']['timeshift']  = $app['url_generator']->generate('timeShiftSortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 ));
         $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceSortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 ));
         $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageSortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1 ));
+        $vars['links']['reset']      = $app['url_generator']->generate('listRecordsReset', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
         $vars['links']['sort'] = $app['url_generator']->generate('postSortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
@@ -69,11 +70,16 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
 
     public static function postSortRecords(Application $app, Request $request, $contentTypeAccessHash)
     {
+        $hidden = $request->get('$hidden');
+
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
+
+        $app['context']->setCurrentWorkspace($hidden['workspace']);
+        $app['context']->setCurrentLanguage($hidden['language']);
 
         if ($request->request->has('list'))
         {

@@ -9,6 +9,8 @@ Excel auf Basis von Core/Listing bei Initialisierung Export-Typ angeben
 
 
 Locale management for date and numbers
+- https://github.com/KevinSheedy/jquery.alphanum
+
 
 Files: 
 - Cachhing noch rein, dazu Timestamp-Ermittlung für alle Files auf Server (sollte über die knp-API) gehen.
@@ -30,3 +32,72 @@ Sequences:
 Tables:
 - tables must disable minus button if only one row is left
 - autosize on focus aktivieren danach deaktiveren
+
+
+
+class Module
+{
+
+    public function bootstrap($aCms)
+    {
+        $aCms->registerLayout('plain', 'CLASS');
+
+        $aCms->registerBlock('menu_left', 'CLASS');
+
+        $aCms->addMenuItem('logout', $glyphicon, $url);
+
+        $aCms->removeMenuItem('xyz');
+
+        $aCms->registerRoute('horst', '/test/{abc}', 'CLASS::method');
+
+        $aCms->addBlockToRoute('horst', 'menu_left', 'plain');
+
+        $aCms->addBlockToLayout('horst', 'menu_left', 'plain');
+    }
+}
+
+
+class Route
+{
+
+    public function init($aCms,$request,$response)
+    {
+        $aCms->addContentQuery('current_news',ContentQuery $abc);
+
+        //$this->setLayout('plain');
+    }
+
+}
+
+
+class Layout
+{
+
+    public function init($aCms,$request,$response)
+    {
+        $aCms->addContentQuery('current_news',ContentQuery $abc);
+        $this->removeBlock('xyz');
+    }
+
+    public function render()
+    {
+
+    }
+
+}
+
+class Block
+{
+
+    public function init($aCms,$request,$response)
+    {
+        $aCms->addContentQuery('current_news',ContentQuery $abc);
+
+    }
+
+    public function render()
+    {
+
+    }
+
+}

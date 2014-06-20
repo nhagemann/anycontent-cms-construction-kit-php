@@ -27,8 +27,9 @@
                     <span class="btn-group" id="form_edit_button_save">
                         <input type="submit" class="btn btn-primary" href="#" value="{{ save_operation_title }}"
                                id="form_edit_button_submit"/>
-                        <input type="hidden" id="form_edit_button_save_operation" name="hidden[save_operation]"
+                        <input type="hidden" id="form_edit_button_save_operation" name="$hidden[save_operation]"
                                value="{{ save_operation }}">
+
                         <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span
                                     class="caret"></span></a>
                         <ul class="dropdown-menu" id="form_edit_button_save_options">
@@ -53,33 +54,12 @@
                     </span>
                     {% endif %}
 
-                    <!--
-                    <span class="btn-group">
-                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-default" role="button">Add
-                            New</a>
-                    </span>
-                    <span class="btn-group">
-                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-default"
-                           role="button">Duplicate</a>
-                    </span>
-                    <span class="btn-group">
-                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-default"
-                           role="button">Translate</a>
-                    </span>
-                    <span class="btn-group">
-                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-default"
-                           role="button">Publish</a>
-                    </span>
-                    <span class="btn-group">
-                        <a href="/demo_0_test/content/00_test/delete/4" class="btn btn-default"
-                           role="button">Revisions</a>
-                    </span>
-                    -->
                 </div>
 
             </div>
 
-
+            <input type="hidden" name="$hidden[workspace]" value="{{ workspaces.current }}">
+            <input type="hidden" name="$hidden[language]" value="{{ languages.current }}">
         </form>
 
 

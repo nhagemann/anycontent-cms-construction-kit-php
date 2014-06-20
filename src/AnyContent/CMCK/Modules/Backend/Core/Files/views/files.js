@@ -33,7 +33,6 @@ $(document).ready(function () {
         var options = {keyboard: true};
         $('#modal_files_file_zoom').modal(options);
 
-
         return false;
     });
 
@@ -63,7 +62,7 @@ $(document).ready(function () {
 
 
     $('.file-select-item').click(function () {
-        alert ($(this).attr('data-src'));
+        parent.cmck_fe_files_modal_select($(this).attr('data-src'));
     });
 });
 

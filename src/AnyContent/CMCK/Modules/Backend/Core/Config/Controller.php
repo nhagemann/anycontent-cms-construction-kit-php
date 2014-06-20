@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Config;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
-use CMDL\ClippingDefinition;
+use CMDL\ViewDefinition;
 
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
@@ -48,10 +48,10 @@ class Controller
 
                 $vars['definition'] = $configTypeDefinition;
 
-                /* @var ClippingDefinition */
-                $clippingDefinition = $configTypeDefinition->getClippingDefinition('default');
+                /* @var ViewDefinition */
+                $viewDefinition = $configTypeDefinition->getViewDefinition('default');
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties());
 
                 $vars['links']['timeshift']  = $app['url_generator']->generate('timeShiftEditConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
                 $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceEditConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
@@ -69,6 +69,7 @@ class Controller
 
     public static function saveConfig(Application $app, Request $request, $configTypeAccessHash)
     {
+        $hidden = $request->get('$hidden');
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByConfigTypeAccessHash($configTypeAccessHash);
@@ -82,6 +83,9 @@ class Controller
 
             $app['form']->setDataTypeDefinition($configTypeDefinition);
 
+            $app['context']->setCurrentWorkspace($hidden['workspace']);
+            $app['context']->setCurrentLanguage($hidden['language']);
+
             /** @var Config $record */
             $record = $repository->getConfig($configTypeDefinition->getName(),$app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(),$app['context']->getCurrentTimeShift());
 
@@ -89,10 +93,10 @@ class Controller
             if ($record)
             {
                 $app['context']->setCurrentConfig($record);
-                /* @var ClippingDefinition */
-                $clippingDefinition = $configTypeDefinition->getClippingDefinition('default');
+                /* @var ViewDefinition */
+                $viewDefinition = $configTypeDefinition->getViewDefinition('default');
 
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $clippingDefinition->getFormElementDefinitions(), $record->getProperties());
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties());
 
                 foreach ($values as $property => $value)
                 {

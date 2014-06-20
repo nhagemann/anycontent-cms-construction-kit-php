@@ -14,8 +14,12 @@
 
     <link rel="stylesheet" href="/css/{{ cssurl }}">
     {{ jsheadlinks | raw }}
+    {{ cssheadlinks | raw }}
 </head>
 <body style="background-color:#F5F5F5">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery.js"></script>
 
 
     <br/>
@@ -23,8 +27,6 @@
 {% block content %}{% endblock %}
 
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://code.jquery.com/jquery.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <!-- jQueryUI (necessary for Drag & Drop Sorting) -->
@@ -32,6 +34,7 @@
 <link rel="stylesheet" href="/css/jquery-ui-bootstrap/jquery-ui-1.10.3.custom.css">
 <script src="/js/{{ jsurl }}"></script>
 {{ jsbodylinks | raw }}
+{{ cssbodylinks | raw }}
 </body>
 </html>
 

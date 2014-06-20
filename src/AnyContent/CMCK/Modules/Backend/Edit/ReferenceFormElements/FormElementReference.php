@@ -15,21 +15,27 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
         /** @var Repository $repository */
         $repository = $app['context']->getCurrentRepository();
 
-        $repository->selectContentType($this->definition->getContentType());
-        $contentTypeDefinition = $repository->getContentTypeDefinition();
-
-        $workspace    = $this->definition->getWorkspace();
-        $clippingName = $contentTypeDefinition->getListClippingDefinition()->getName();
-        $language     = $this->definition->getLanguage();
-        $order        = $this->definition->getOrder();
-        $timeshift    = $this->definition->getTimeShift();
-
-        $records = $repository->getRecords($workspace, $clippingName, $language, $order, $timeshift);
-
         $options = array();
-        foreach ($records as $record)
+
+        if ($repository->selectContentType($this->definition->getContentType()))
         {
-            $options[$record->getId()]='#'.$record->getId().' '.$record->getName();
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
+
+            $workspace = $this->definition->getWorkspace();
+            $viewName  = $contentTypeDefinition->getListViewDefinition()->getName();
+            $language  = $this->definition->getLanguage();
+            $order     = $this->definition->getOrder();
+            $timeshift = $this->definition->getTimeShift();
+
+            $records = $repository->getRecords($workspace, $viewName, $language, $order, $timeshift);
+
+            foreach ($records as $record)
+            {
+                $options[$record->getId()] = '#' . $record->getId() . ' ' . $record->getName();
+            }
+        }
+        else{
+            $app['context']->addAlertMessage('Could not find referenced content type '.$this->definition->getContentType().'.');
         }
 
         $this->vars['options'] = $options;

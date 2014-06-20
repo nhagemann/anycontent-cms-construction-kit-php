@@ -1,25 +1,5 @@
-{% extends "formelement-default.twig" %}
+{% extends "formelement-file.twig" %}
 
-{% block input %}
-    <div class="col-xs-6">
-        <div class="input-group">
-
-            <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
-
-            <input type="text" class="form-control" id="{{ id }}" name="{{ name }}"
-                   placeholder="{{ definition.placeholder }}" value="{{ value }}">
-
-        </div>
-
-
-
-    </div>
-    <div class="col-xs-4">
-
-
-        <a data-input="#{{ id }}" href="{{ url_modal }}" name="{{ name }}"
-           class="btn btn-default formelement-file-modal-button"><span
-                    class="glyphicon glyphicon-folder-open"></span> &nbsp;Select</a>
-
-    </div>
+{% block icon %}
+    <span class="input-group-addon"><span class="glyphicon glyphicon-picture"></span></span>
 {% endblock %}

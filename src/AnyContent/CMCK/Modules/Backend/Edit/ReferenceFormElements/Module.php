@@ -17,6 +17,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     public function run(Application $app)
     {
         $app['form']->registerFormElement('reference', 'AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements\FormElementReference');
+        $app['form']->registerFormElement('multireference', 'AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements\FormElementMultiReference');
     }
 
 }

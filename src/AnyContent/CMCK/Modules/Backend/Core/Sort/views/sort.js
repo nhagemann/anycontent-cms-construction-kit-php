@@ -31,7 +31,7 @@ $(document).ready(function () {
 
         tree = new Array();
         $.each(nested, function (k, node) {
-            console.log(node.depth);
+
             if (node.depth > 0) {
                 var o = {
                     id: node.item_id,
