@@ -69,7 +69,7 @@ class ConfigService
     {
         $yml = $this->getYML();
 
-        $cache = array( 'driver' => array( 'type' => 'none' ), 'menu' => 0, 'cmdl' => 0, 'data' => 600, 'concurrent_writes' => 60 );
+        $cache = array( 'driver' => array( 'type' => 'none' ), 'seconds_caching_menu' => 0, 'seconds_caching_api_responses' => 600, 'seconds_ignoring_eventually_concurrent_writes' => 0, 'seconds_ignoring_eventually_concurrent_file_updates' => 0 );
 
         if (isset($yml['cache']))
         {

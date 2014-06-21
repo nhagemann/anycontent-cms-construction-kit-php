@@ -20,13 +20,22 @@ userinfo:
   firstname:  John
   lastname:   Doe
 
+#
+# cache settings
+#
+# seconds_caching_api_responses determines how long a api result gets cached. It will get invalid, if you
+# perform a write operation.
+# seconds_ignoring_eventually_concurrent_writes determines how often you request the repositoy info. If set to 0
+# you might perform multiple requests during one operation, so better keep the default of 1 second. If your client
+# is the only client operating with the API, you can raise the value, otherwise keep it low to avoid confusing results.
+#
 
 cache:
   driver: {type: apc}
-  menu: 60
-  cmdl: 0
-  data: 600
-  concurrent_writes:  600
+  seconds_caching_menu: 600
+  seconds_caching_api_responses: 3600
+  seconds_ignoring_eventually_concurrent_writes: 1
+  seconds_ignoring_eventually_concurrent_file_updates: 15
 
 
 authentication:

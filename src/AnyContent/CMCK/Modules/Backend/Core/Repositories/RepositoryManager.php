@@ -329,9 +329,12 @@ class RepositoryManager
             $this->initAccessHashes();
         }
 
+
+
         if (array_key_exists($hash, $this->contentTypeAccessHashes))
         {
             $repository = $this->contentTypeAccessHashes[$hash]['repository'];
+
             $repository->selectContentType($this->contentTypeAccessHashes[$hash]['contentTypeName']);
 
             return $repository;
@@ -531,7 +534,7 @@ class RepositoryManager
             {
                 $cacheConfiguration = $this->config->getCacheConfiguration();
 
-                $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache, $cacheConfiguration['cmdl'], $cacheConfiguration['concurrent_writes'], $cacheConfiguration['data']);
+                $client = new Client($repositoryInfo['url'], $repositoryInfo['apiUser'], $repositoryInfo['apiPassword'], $repositoryInfo['authType'], $this->cache, $cacheConfiguration['seconds_caching_api_responses'], $cacheConfiguration['seconds_ignoring_eventually_concurrent_writes'], $cacheConfiguration['seconds_ignoring_eventually_concurrent_file_updates']);
                 if ($this->userInfo)
                 {
                     $client->setUserInfo($this->userInfo);
