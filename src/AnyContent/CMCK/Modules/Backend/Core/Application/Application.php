@@ -129,7 +129,7 @@ class Application extends SilexApplication
                 $memcached->setOption(\Memcached::OPT_BINARY_PROTOCOL, 1);
                 if (array_key_exists('username', $cacheConfiguration['driver']))
                 {
-                    $memcached->setSaslAuthData($cacheConfiguration['username'], $cacheConfiguration['password']);
+                    $memcached->setSaslAuthData($cacheConfiguration['driver']['username'], $cacheConfiguration['driver']['password']);
                 }
                 $cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
                 $cacheDriver->setMemcached($memcached);
