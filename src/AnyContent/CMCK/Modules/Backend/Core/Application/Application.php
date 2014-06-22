@@ -126,6 +126,11 @@ class Application extends SilexApplication
             case 'memcached':
                 $memcached = new \Memcached();
                 $memcached->addServer($cacheConfiguration['driver']['host'], $cacheConfiguration['driver']['port']);
+                $memcached->setOption(\Memcached::OPT_BINARY_PROTOCOL, 1);
+                if (array_key_exists('username', $cacheConfiguration['driver']))
+                {
+                    $memcached->setSaslAuthData($cacheConfiguration['username'], $cacheConfiguration['password']);
+                }
                 $cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
                 $cacheDriver->setMemcached($memcached);
                 $this->setCacheDriver($cacheDriver);
