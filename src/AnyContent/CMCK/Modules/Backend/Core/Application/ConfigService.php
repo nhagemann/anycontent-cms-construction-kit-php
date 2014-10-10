@@ -21,6 +21,16 @@ class ConfigService
 
     }
 
+    public function getConfigurationSection($sectionName)
+    {
+        $yml = $this->getYML();
+
+        if (!isset($yml[$sectionName])) {
+            throw new \Exception ('Missing configuration section ' . $sectionName . '.');
+        }
+
+        return $yml[$sectionName];
+    }
 
     public function getRepositoriesConfiguration()
     {
