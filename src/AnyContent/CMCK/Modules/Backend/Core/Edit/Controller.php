@@ -10,6 +10,8 @@ use CMDL\ViewDefinition;
 use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 
+use AnyContent\CMCK\Modules\Backend\Core\Edit\FormManager;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +21,9 @@ class Controller
 
     public static function addRecord(Application $app, $contentTypeAccessHash, $recordId = null)
     {
+        /** @var FormManager $formManager */
+        $formManager = $app['form'];
+
         $vars = array();
 
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
@@ -31,7 +36,7 @@ class Controller
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            $app['form']->setDataTypeDefinition($repository->getContentTypeDefinition());
+            $formManager->setDataTypeDefinition($repository->getContentTypeDefinition());
 
             $app['layout']->addCssFile('listing.css');
             $app['layout']->addJsFile('edit.js');
@@ -50,7 +55,13 @@ class Controller
 
                 $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), array(), array( 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
+                $attributes = array();
+                foreach ($viewDefinition->getFormElementDefinitions() as $formElementDefinition)
+                {
+                    $attributes[$formElementDefinition->getName()]=$formElementDefinition->getDefaultValue();
+                }
+
+                $vars['form'] = $formManager->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $attributes, array( 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
                 $buttons   = array();
                 $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-list' );
