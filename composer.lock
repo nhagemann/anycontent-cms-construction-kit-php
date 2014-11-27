@@ -330,12 +330,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "9bb9f19629672441e50a7be9e3d1b357fbbac0ac"
+                "reference": "3f4b7594e7b7000095847c4e538c590592b3afc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/9bb9f19629672441e50a7be9e3d1b357fbbac0ac",
-                "reference": "9bb9f19629672441e50a7be9e3d1b357fbbac0ac",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/3f4b7594e7b7000095847c4e538c590592b3afc7",
+                "reference": "3f4b7594e7b7000095847c4e538c590592b3afc7",
                 "shasum": ""
             },
             "require": {
@@ -363,7 +363,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2014-11-26 16:23:54"
+            "time": "2014-11-27 16:43:52"
         },
         {
             "name": "nitra/php-min",

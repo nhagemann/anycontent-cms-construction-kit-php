@@ -30,7 +30,6 @@
                         url: '/edit/check/link/' + url,
                         success: function (result) {
 
-                            console.log(result);
                             if (result) {
                                 formelement.addClass('alert-success');
                                 formelement.removeClass('alert-danger');
