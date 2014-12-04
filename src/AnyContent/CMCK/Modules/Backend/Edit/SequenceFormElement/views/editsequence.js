@@ -96,7 +96,6 @@
 
                 case 'sequenceForm.add':
 
-
                     count = parseInt($('#form_sequence').attr('data-count')) + 1;
 
                     $('#form_sequence').attr('data-count', count);

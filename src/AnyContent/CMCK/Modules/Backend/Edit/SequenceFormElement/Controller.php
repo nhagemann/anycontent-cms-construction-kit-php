@@ -20,33 +20,25 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Controller
 {
 
-    public static function editSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $viewName, $insertName, $property)
+    public static function editSequence(Application $app, Request $request, $dataType, $dataTypeAccessHash, $recordId, $viewName, $insertName, $property)
     {
+
         $vars                     = array();
-        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
-        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'property' => $property ));
+        $vars['action']['submit'] = $app['url_generator']->generate('postSequence', array( 'dataType' => $dataType, 'dataTypeAccessHash' => $dataTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $property ));
+        $vars['action']['add']    = $app['url_generator']->generate('addSequenceItem', array( 'dataType' => $dataType, 'dataTypeAccessHash' => $dataTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'property' => $property ));
 
         $vars['property'] = $property;
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+        $repository         = self::getRepository($app, $dataType, $dataTypeAccessHash);
+        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType);
 
-        if ($repository)
+        if ($repository && $dataTypeDefinition)
         {
-            $app['context']->setCurrentRepository($repository);
-            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            /** @var ContentTypeDefinition $contentTypeDefinition */
-            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $vars['definition'] = $dataTypeDefinition;
 
-            $app['context']->setCurrentRepository($repository);
-            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
-
-            $vars['definition'] = $contentTypeDefinition;
-
-            $app['context']->setCurrentContentType($contentTypeDefinition);
-
-            $formElementDefinition = self::getFormElementDefinition($request, $contentTypeDefinition, $insertName, $property);
+            $formElementDefinition = self::getFormElementDefinition($request, $dataTypeDefinition, $insertName, $property);
 
             if ($formElementDefinition)
             {
@@ -56,7 +48,7 @@ class Controller
 
                     $sequence = array();
 
-                    if ($recordId)
+                    if ($dataType === 'content' && $recordId)
                     {
                         /** @var Record $record */
                         $record   = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
@@ -69,6 +61,18 @@ class Controller
                         }
                     }
 
+                    if ($dataType === 'config')
+                    {
+                        $config = $repository->getConfig();
+
+                        $sequence = $config->getProperty($property, array());
+
+                        $sequence = @json_decode($sequence, true);
+                        if (json_last_error() != JSON_ERROR_NONE OR !is_array($sequence))
+                        {
+                            $sequence = array();
+                        }
+                    }
 
                     $vars['count'] = count($sequence);
                     $vars['items'] = array();
@@ -81,8 +85,8 @@ class Controller
                     foreach ($inserts as $k => $v)
                     {
 
-                        $clippingDefinition = $contentTypeDefinition->getClippingDefinition($k);
-                        $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),null);
+                        $clippingDefinition = $dataTypeDefinition->getClippingDefinition($k);
+                        $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array( 'language' => $app['context']->getCurrentLanguage(), 'workspace' => $app['context']->getCurrentWorkspace() ), null);
                     }
 
                     $i = 0;
@@ -91,18 +95,18 @@ class Controller
                         $insert     = key($item);
                         $properties = array_shift($item);
 
-                        if ($contentTypeDefinition->hasClippingDefinition($insert)) // ignore eventually junk data after cmdl changes
+                        if ($dataTypeDefinition->hasClippingDefinition($insert)) // ignore eventually junk data after cmdl changes
                         {
                             $i++;
 
                             /** @var ClippingDefinition $clippingDefinition */
-                            $clippingDefinition = $contentTypeDefinition->getClippingDefinition($insert);
-                            $item                = array();
-                            $item['form']        = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), $properties, array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $i);
-                            $item['type']        = $insert;
-                            $item['title']       = $inserts[$insert];
-                            $item['sequence']    = $i;
-                            $vars['items'][]     = $item;
+                            $clippingDefinition = $dataTypeDefinition->getClippingDefinition($insert);
+                            $item               = array();
+                            $item['form']       = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), $properties, array( 'language' => $app['context']->getCurrentLanguage(), 'workspace' => $app['context']->getCurrentWorkspace() ), 'item_' . $i);
+                            $item['type']       = $insert;
+                            $item['title']      = $inserts[$insert];
+                            $item['sequence']   = $i;
+                            $vars['items'][]    = $item;
                         }
 
                     }
@@ -117,24 +121,20 @@ class Controller
 
         }
 
-        return $app->renderPage('record-not-found.twig', $vars);
+        return new Response('Error getting repository from dataTypeAccessHash.');
 
     }
 
 
-    public static function postSequence(Application $app, Request $request, $contentTypeAccessHash, $recordId, $property)
+    public static function postSequence(Application $app, Request $request, $dataType, $dataTypeAccessHash, $recordId, $property)
     {
 
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+        $repository         = self::getRepository($app, $dataType, $dataTypeAccessHash);
+        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType);
 
-        if ($repository)
+        if ($repository && $dataTypeDefinition)
         {
-            $app['context']->setCurrentRepository($repository);
-            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
-
-            /** @var ContentTypeDefinition $contentTypeDefinition */
-            $contentTypeDefinition = $repository->getContentTypeDefinition();
 
             $items = array();
             foreach ($request->request->getIterator() as $key => $value)
@@ -166,7 +166,7 @@ class Controller
                     $item = $items[$nr];
                     $type = $types[$i];
 
-                    $clippingDefinition = $contentTypeDefinition->getClippingDefinition($type);
+                    $clippingDefinition = $dataTypeDefinition->getClippingDefinition($type);
 
                     $bag = new ParameterBag();
                     $bag->add($item);
@@ -184,22 +184,16 @@ class Controller
     }
 
 
-    public static function addSequenceItem(Application $app, Request $request, $contentTypeAccessHash, $insertName, $property)
+    public static function addSequenceItem(Application $app, Request $request, $dataType, $dataTypeAccessHash, $insertName, $property)
     {
         /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+        $repository         = self::getRepository($app, $dataType, $dataTypeAccessHash);
+        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType);
 
-        if ($repository)
+        if ($repository && $dataTypeDefinition)
         {
-            $app['context']->setCurrentRepository($repository);
-            $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
-            /** @var ContentTypeDefinition $contentTypeDefinition */
-            $contentTypeDefinition = $repository->getContentTypeDefinition();
-
-            $app['context']->setCurrentContentType($contentTypeDefinition);
-
-            $formElementDefinition = self::getFormElementDefinition($request, $contentTypeDefinition, $insertName, $property);
+            $formElementDefinition = self::getFormElementDefinition($request, $dataTypeDefinition, $insertName, $property);
 
             if ($formElementDefinition)
             {
@@ -211,13 +205,13 @@ class Controller
                         $insert  = $request->query->get('insert');
                         $count   = $request->query->get('count');
 
-                        $clippingDefinition = $contentTypeDefinition->getClippingDefinition($insert);
-                        $item                = array();
-                        $item['form']        = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array('language'=>$app['context']->getCurrentLanguage(),'workspace'=>$app['context']->getCurrentWorkspace()),'item_' . $count);
-                        $item['type']        = $insert;
-                        $item['sequence']    = $count;
-                        $item['title']       = $inserts[$insert];
-                        $vars['item']        = $item;
+                        $clippingDefinition = $dataTypeDefinition->getClippingDefinition($insert);
+                        $item               = array();
+                        $item['form']       = $app['form']->renderFormElements('form_sequence', $clippingDefinition->getFormElementDefinitions(), array(), array( 'language' => $app['context']->getCurrentLanguage(), 'workspace' => $app['context']->getCurrentWorkspace() ), 'item_' . $count);
+                        $item['type']       = $insert;
+                        $item['sequence']   = $count;
+                        $item['title']      = $inserts[$insert];
+                        $vars['item']       = $item;
 
                         $vars['inserts'] = $formElementDefinition->getInserts();
 
@@ -231,12 +225,58 @@ class Controller
     }
 
 
+    protected static function getRepository(Application $app, $dataType, $dataTypeAccessHash)
+    {
+        if ($dataType == 'content')
+        {
+            $repository = $app['repos']->getRepositoryByContentTypeAccessHash($dataTypeAccessHash);
+        }
+        else
+        {
+            $repository = $app['repos']->getRepositoryByConfigTypeAccessHash($dataTypeAccessHash);
+        }
+
+        if ($repository)
+        {
+            $app['context']->setCurrentRepository($repository);
+        }
+
+        return $repository;
+    }
+
+
+    protected static function getDataTypeDefinition(Application $app, Repository $repository, $dataType)
+    {
+        if ($repository)
+        {
+            if ($dataType == 'content')
+            {
+                /** @var ContentTypeDefinition $dataTypeDefinition */
+                $dataTypeDefinition = $repository->getContentTypeDefinition();
+                $app['context']->setCurrentContentType($dataTypeDefinition);
+
+            }
+            else
+            {
+                /** @var ConfigTypeDefinition $dataTypeDefinition */
+                $dataTypeDefinition = $repository->getConfigTypeDefinition();
+                $app['context']->setCurrentConfigType($dataTypeDefinition);
+            }
+
+            return $dataTypeDefinition;
+        }
+
+        return false;
+
+    }
+
+
     protected static function getFormElementDefinition(Request $request, $contentTypeDefinition, $insertName, $property)
     {
         $formElementDefinition = null;
         if ($insertName != '-')
         {
-            $clippingDefinition   = $contentTypeDefinition->getClippingDefinition($insertName);
+            $clippingDefinition    = $contentTypeDefinition->getClippingDefinition($insertName);
             $formElementDefinition = $clippingDefinition->getFormElementDefinition($property);
             $formElementDefinition->setInsertedByInsert($insertName);
 

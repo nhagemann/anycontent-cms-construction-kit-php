@@ -390,7 +390,13 @@ class RepositoryManager
         {
             $repository = $this->configTypeAccessHashes[$hash]['repository'];
 
-            return $repository;
+
+            if ($repository->hasConfigType($this->configTypeAccessHashes[$hash]['configTypeName'])    )
+            {
+                $repository->selectConfigType($this->configTypeAccessHashes[$hash]['configTypeName']);
+
+                return $repository;
+            }
         }
 
         return false;

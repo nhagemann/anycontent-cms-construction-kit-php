@@ -14,26 +14,30 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
 
     public function render($layout)
     {
-        // temporary solution - let's see how long ...
-
         $routeParams = $this->app['request']->get('_route_params');
 
-        if (array_key_exists('contentTypeAccessHash',$routeParams))
+        if (array_key_exists('contentTypeAccessHash', $routeParams))
         {
-            $contentTypeAccessHash = $routeParams['contentTypeAccessHash'];
+            $dataTypeAccessHash = $routeParams['contentTypeAccessHash'];
+            $dataType           = 'content';
+
+            $record   = $this->app['context']->getCurrentRecord();
+            $recordId = 0;
+            if ($record)
+            {
+                $recordId = $record->getId();
+            }
         }
-        else{
-            die ("couldn't determine sequence context");
-        }
-
-        //$contentTypeAccessHash = $this->app['repos']->getAccessHash($this->app['context']->getCurrentRepository(), $this->app['context']->getCurrentContentType());
-
-
-        $record                = $this->app['context']->getCurrentRecord();
-        $recordId              = 0;
-        if ($record)
+        elseif (array_key_exists('configTypeAccessHash', $routeParams))
         {
-            $recordId = $record->getId();
+            $dataTypeAccessHash = $routeParams['configTypeAccessHash'];
+            $dataType           = 'config';
+            $recordId           = '-';
+        }
+        else
+        {
+            return $this->twig->render('formelement-sequence-not-found.twig', $this->vars);
+
         }
 
         // the sequence rendering form must know, if the sequence form element has be inserted via a insert to find it's definition
@@ -43,7 +47,7 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
             $insertName = $this->definition->getInsertedByInsertName();
         }
 
-        $url = $this->app['url_generator']->generate('editSequence', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'viewName' => 'default', 'insertName'=> $insertName, 'recordId' => $recordId, 'property' => $this->definition->getName() ));
+        $url = $this->app['url_generator']->generate('editSequence', array( 'dataType' => $dataType, 'dataTypeAccessHash' => $dataTypeAccessHash, 'viewName' => 'default', 'insertName' => $insertName, 'recordId' => $recordId, 'property' => $this->definition->getName() ));
 
         $this->vars['src'] = $url;
 
