@@ -24,6 +24,8 @@ $(document).on("cmck", function (e, params) {
 
     switch (params.type) {
         case 'editform.setProperty': // Used from sequences upon storing.
+
+
             $('#form_edit [name=' + params.property + ']').val(params.value);
 
             if (params.save == true) {
