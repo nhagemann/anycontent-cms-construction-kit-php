@@ -1,8 +1,9 @@
 <?php
-$app['debug'] = false;
+$app['debug'] = true;
 
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TextFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\LinkFormElement');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\EmailFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements');
@@ -17,8 +18,8 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TableFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\ColorFormElement');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PasswordFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Exchange', array( 'FormatCode.DateTime' => 'd.m.YYYY hh:mm' ));
-
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
 

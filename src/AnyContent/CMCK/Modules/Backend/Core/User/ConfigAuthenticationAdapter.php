@@ -98,8 +98,7 @@ class ConfigAuthenticationAdapter
 
     public function logout()
     {
-
-        $this->session->set($this->prefix . 'username', '');
+        $this->session->invalidate();
     }
 
 

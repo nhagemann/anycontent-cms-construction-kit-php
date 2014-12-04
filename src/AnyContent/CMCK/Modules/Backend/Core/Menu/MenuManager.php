@@ -11,17 +11,19 @@ class MenuManager
     protected $urlGenerator;
     protected $cache;
     protected $cacheSeconds = 0;
+    protected $session;
 
 
-    public function __construct($repositoryManager, $twig, $layout, $urlGenerator, $cache, $config)
+    public function __construct($app, $repositoryManager, $twig, $layout, $urlGenerator, $cache, $config)
     {
+        $this->session           = $app['session'];
         $this->repositoryManager = $repositoryManager;
         $this->twig              = $twig;
         $this->layout            = $layout;
         $this->urlGenerator      = $urlGenerator;
         $this->cache             = $cache;
         $cacheConfiguration      = $config->getCacheConfiguration();
-        $this->cacheSeconds      = $cacheConfiguration['menu'];
+        $this->cacheSeconds      = $cacheConfiguration['seconds_caching_menu'];
     }
 
 
@@ -29,7 +31,7 @@ class MenuManager
     {
         $this->layout->addCssFile('menu.css');
 
-        $cacheToken = 'cmck_menu_main';
+        $cacheToken = 'cmck_menu_main_' . $this->session->getId();
 
         if ($this->cache->contains($cacheToken))
         {

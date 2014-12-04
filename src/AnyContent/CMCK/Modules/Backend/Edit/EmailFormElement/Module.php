@@ -1,9 +1,8 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\Core\Menu;
+namespace AnyContent\CMCK\Modules\Backend\Edit\EmailFormElement;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
-use AnyContent\CMCK\Modules\Backend\Core\Menu\MenuManager;
 
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
@@ -14,10 +13,12 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
 
-        $app['menus'] = $app->share(function ($app)
-        {
-            return new MenuManager($app,$app['repos'],$app['twig'],$app['layout'],$app['url_generator'],$app['cache'],$app['config']);
-        });
+    }
+
+
+    public function run(Application $app)
+    {
+        $app['form']->registerFormElement('email', 'AnyContent\CMCK\Modules\Backend\Edit\EmailFormElement\FormElementEmail');
 
     }
 

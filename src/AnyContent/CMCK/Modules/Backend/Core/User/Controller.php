@@ -47,6 +47,7 @@ class Controller
     public static function logout(Application $app)
     {
         $app['user']->logout();
+        $app['context']->init();
         $app['context']->addInfoMessage('You have been logged out.');
 
         return new RedirectResponse($app['url_generator']->generate('login'), 303);

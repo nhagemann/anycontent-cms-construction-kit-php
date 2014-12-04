@@ -8,6 +8,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+use Symfony\Component\HttpFoundation\Request;
+
 use Knp\Provider\ConsoleServiceProvider;
 
 class Application extends SilexApplication
@@ -109,7 +111,7 @@ class Application extends SilexApplication
     }
 
 
-    public function run($request = null)
+    public function run(Request $request = null)
     {
         // Init Cache
 
@@ -124,6 +126,11 @@ class Application extends SilexApplication
             case 'memcached':
                 $memcached = new \Memcached();
                 $memcached->addServer($cacheConfiguration['driver']['host'], $cacheConfiguration['driver']['port']);
+                $memcached->setOption(\Memcached::OPT_BINARY_PROTOCOL, 1);
+                if (array_key_exists('username', $cacheConfiguration['driver']))
+                {
+                    $memcached->setSaslAuthData($cacheConfiguration['driver']['username'], $cacheConfiguration['driver']['password']);
+                }
                 $cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
                 $cacheDriver->setMemcached($memcached);
                 $this->setCacheDriver($cacheDriver);

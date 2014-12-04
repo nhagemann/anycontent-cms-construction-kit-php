@@ -1,3 +1,5 @@
+## 0.7
+* realignment of version numbers between repository, parser and client - too many version dependencies
 ## 0.4
 * Most routes do additionally accept workspace and language, to be able to have different workspaces and languages
 in different tabs.

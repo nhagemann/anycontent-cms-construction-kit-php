@@ -32,7 +32,10 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
+
         $contentTypeDefinition = $repository->getContentTypeDefinition();
+
+
         $app['context']->setCurrentRepository($repository);
         $app['context']->setCurrentContentType($contentTypeDefinition);
         $app['context']->setCurrentListingPage($page);
@@ -124,7 +127,7 @@ class Controller
     }
 
 
-    protected function getRecords($app, Repository $repository, $contentTypeAccessHash, $orderBy = null, $viewName = 'default', $itemsPerPage = null, $page = 1, $filter = null, $subset = null)
+    protected static function getRecords($app, Repository $repository, $contentTypeAccessHash, $orderBy = null, $viewName = 'default', $itemsPerPage = null, $page = 1, $filter = null, $subset = null)
     {
         $records = array();
 

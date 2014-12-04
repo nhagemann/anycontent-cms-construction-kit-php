@@ -35,3 +35,12 @@ if (!function_exists('apc_exists'))
         return $result;
     }
 }
+
+// Configure your logging here
+
+$app['monolog'] = $app->share(function ($app) {
+    $log =  new \Monolog\Logger('CMCK');
+    $handler = new \Monolog\Handler\ErrorLogHandler();
+    $log->pushHandler($handler);
+    return $log;
+});

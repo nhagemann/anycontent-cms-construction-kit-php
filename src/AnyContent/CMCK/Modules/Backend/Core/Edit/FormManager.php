@@ -46,6 +46,7 @@ class FormManager
     {
         $this->clearFormVars();
 
+
         // first check for form elements added through insert annotations
         $formElementsDefinition       = $this->getFormElementsEventuallyInsertedThroughInsertAnnotation($formElementsDefinition, $values, $attributes);
         $this->formElementsDefinition = $formElementsDefinition;

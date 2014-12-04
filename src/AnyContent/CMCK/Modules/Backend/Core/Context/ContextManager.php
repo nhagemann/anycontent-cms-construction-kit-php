@@ -30,6 +30,11 @@ class ContextManager
     public function __construct($session)
     {
         $this->session = $session;
+        $this->init();
+    }
+
+    public function init()
+    {
         if (!$this->session->has($this->prefix . 'messages'))
         {
             $this->session->set($this->prefix . 'messages', array( 'success' => array(), 'info' => array(), 'alert' => array(), 'error' => array() ));
