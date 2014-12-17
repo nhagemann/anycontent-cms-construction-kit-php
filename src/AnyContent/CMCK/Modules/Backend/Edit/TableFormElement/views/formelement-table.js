@@ -20,10 +20,6 @@
             $('.formelement-table td').click(function () {
                 var textarea = $(this).children('textarea');
                 textarea.focus();
-                // move cursor to the end
-                var content = $(textarea).val();
-                $(textarea).val('');
-                $(textarea).val(content);
             });
 
             $('.formelement-table a[data-action=plus]').click(function () {
@@ -125,4 +121,4 @@
 
     /* ---------------------------------------- */
 })
-    (jQuery);
+(jQuery);
