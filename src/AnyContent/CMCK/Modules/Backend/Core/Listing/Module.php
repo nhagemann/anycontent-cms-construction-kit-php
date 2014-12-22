@@ -6,6 +6,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
+    const EVENT_LISTING_RENDER = 'event.listing.render';
 
     public function init(Application $app, $options = array())
     {
