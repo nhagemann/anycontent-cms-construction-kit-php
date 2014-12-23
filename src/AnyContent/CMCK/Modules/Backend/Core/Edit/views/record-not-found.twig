@@ -17,10 +17,15 @@
         <a href="{{ links.addrecordversion }}" class="btn btn-primary">Create now</a>
 
 
-        <hr/>
-        {{ buttons | raw }}
-
     </div>
+
+    {% block buttons %}
+        <div class="row">
+            <hr/>
+            {{ buttons | raw }}
+        </div>
+    {% endblock %}
+
     <div class="modal fade bs-modal-lg" id="modal_edit" tabindex="-1" role="dialog"
          aria-hidden="true"></div>
 {% endblock %}
