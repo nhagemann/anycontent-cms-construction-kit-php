@@ -27,7 +27,6 @@ class ListingRenderEvent extends Event
         return $this->template;
     }
 
-
     /**
      * @return mixed
      */
@@ -36,6 +35,33 @@ class ListingRenderEvent extends Event
         return $this->vars;
     }
 
+    /**
+     * @param mixed $template
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
 
+    /**
+     * @param mixed $vars
+     */
+    public function setVars($vars)
+    {
+        $this->vars = $vars;
+    }
 
+    /**
+     * @param null $key
+     *
+     * @return Application|mixed
+     */
+    public function getApp($key=null)
+    {
+        if ($key!=null)
+        {
+            return $this->app[$key];
+        }
+        return $this->app;
+    }
 }
