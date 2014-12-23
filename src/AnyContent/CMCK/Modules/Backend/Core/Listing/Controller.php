@@ -123,7 +123,12 @@ class Controller
 
         $vars['pager'] = $app['pager']->renderPager($count, $itemsPerPage, $page, 'listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
-        return $app->renderPage('listing.twig', $vars);
+        $template = 'listing.twig';
+
+        $event = new ListingRenderEvent($app, $template, $vars);
+        $app['dispatcher']->dispatch(Module::EVENT_LISTING_RENDER, $event);
+
+        return $app->renderPage($event->getTemplate(), $event->getVars());
     }
 
 

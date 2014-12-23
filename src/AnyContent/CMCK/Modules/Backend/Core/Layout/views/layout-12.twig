@@ -40,10 +40,12 @@
 
 <div class="container">
     <br/>
+    {% block content_before %}{% endblock %}
 
     {% include 'messages.twig' %}
 
     {% block content %}{% endblock %}
+    {% block content_after %}{% endblock%}
 </div>
 
 
