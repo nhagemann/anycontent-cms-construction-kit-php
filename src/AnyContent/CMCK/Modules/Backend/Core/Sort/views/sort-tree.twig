@@ -128,9 +128,12 @@
     </div>
 
 
-    <div class="row">
-        <hr/>
-        {{ buttons | raw }}
-    </div>
+
+    {% block buttons %}
+        <div class="row">
+            <hr/>
+            {{ buttons | raw }}
+        </div>
+    {% endblock %}
 
 {% endblock %}
