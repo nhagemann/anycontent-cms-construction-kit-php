@@ -2,22 +2,54 @@
 // in sequence editing iframe.
 
 
-function cmck_modal(url, onShown) {
+function cmck_modal(url, onShown , undefined ) {
 
-    $('#modal_edit').removeData();
-    var target = $('#modal_edit');
-    $(target).modal({
-        keyboard: true,
-        remote: url
-    }).on('shown.bs.modal', onShown).on('hide.bs.modal', function () {
+
+    $('#modal_edit').on('show.bs.modal', function () {
+
+         if (typeof onShown == 'function')
+        {
+            onShown();
+        }
+    });
+
+    /*
+    $('#modal_edit').on('hide.bs.modal', function () {
         // make sure the modal content is loaded everytime and all event listeners are deleted
         $('#modal_edit').removeData();
-        //$('#modal_edit',parent.window.document).removeData();
-        $(target).unbind();
+        $('#modal_edit').unbind();
+    });*/
+
+    $('#modal_edit').modal({
+        keyboard: true,
+        remote  : url
     });
+
 
 };
 
+function cmck_modal_hide()
+{
+    $('#modal_edit').modal('hide');
+    $('#modal_edit').removeData();
+
+}
+
+function cmck_modal_set_property(name,value)
+{
+    $('#form_edit [name=' + name + ']').val(value);
+}
+
+function cmck_set_var(name,value)
+{
+    $.cmck = {};
+    $.cmck.test = value;
+}
+
+function cmck_get_var(name,value)
+{
+    return $.cmck.test;
+}
 
 $(document).on("cmck", function (e, params) {
 
@@ -34,10 +66,10 @@ $(document).on("cmck", function (e, params) {
                 }
             }
             break;
+
     }
 
 });
-
 
 
 $(document).ready(function () {

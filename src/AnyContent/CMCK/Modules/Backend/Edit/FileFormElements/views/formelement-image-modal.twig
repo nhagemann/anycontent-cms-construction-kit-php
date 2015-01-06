@@ -16,21 +16,5 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
     </div>
-    <script>
-        // create available in global scope, which shall retrieve the files selection path
-        var cmck_fe_files_input;
-
-        // link this variable to the corresponding input field upon loading of the modal
-        var cmck_fe_files_modal_shown = function (options) {
-            cmck_fe_files_input = options.input;
-        };
-
-        // create method in global scope for setting the path by accessing the global variable.
-        // This method can get called from the iframe displaying the files
-        var cmck_fe_files_modal_select = function (value) {
-            cmck_fe_files_input.val(value);
-            $('#modal_edit').modal('hide');
-        };
-    </script>
 </div>
 

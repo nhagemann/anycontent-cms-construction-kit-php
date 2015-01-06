@@ -12,21 +12,12 @@
 
                 $('.formelement-file-modal-button').click(function () {
 
-
-                    // get the input field, which shall contain latitude and longitude upon selection
+                    // get the input field
                     var input = $($(this).attr('data-input'));
 
-                    var options = {input: input};
+                    parent.cmck_set_var('fe_file_property',input.attr('name'));
 
-                    console.log (input);
-
-                    // when showing the modal, call the function within the just loaded modal and provide pointer to the input field
-                    var onShown = function () {
-                        parent.cmck_fe_files_modal_shown(options);
-                    };
-
-                    // start modal on top level
-                    parent.cmck_modal($(this).attr('href'), onShown);
+                    parent.cmck_modal($(this).attr('href'));
 
                     return false;
                 });
