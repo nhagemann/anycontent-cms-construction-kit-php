@@ -34,6 +34,16 @@
 
                     return false;
                 });
+
+                $('.formelement-file-modal-button-download').click(function () {
+
+                    var id = $(this).attr('data-input');
+                    var value = $(id).val();
+                    value = $(this).attr('href')+value;
+                    window.location.href = value;
+
+                    return false;
+                });
                 break;
 
         }

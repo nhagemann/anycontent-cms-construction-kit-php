@@ -31,7 +31,7 @@ class FormElementFile extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
 
         $this->vars['url_view'] = rtrim($this->app['url_generator']->generate('viewFile', array( 'repositoryAccessHash' =>  $this->getCurrentRepositoryAccessHash(), 'id' => '/' )),'/').'/';
 
-        $this->vars['url_download'] = rtrim($this->app['url_generator']->generate('downloadFile', array( 'repositoryAccessHash' =>  $this->getCurrentRepositoryAccessHash(), 'id' => '/' )),'/');
+        $this->vars['url_download'] = rtrim($this->app['url_generator']->generate('downloadFile', array( 'repositoryAccessHash' =>  $this->getCurrentRepositoryAccessHash(), 'id' => '/' )),'/').'/';
 
         return $this->twig->render($this->template, $this->vars);
     }
