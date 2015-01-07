@@ -15,7 +15,7 @@
                     // get the input field
                     var input = $($(this).attr('data-input'));
 
-                    parent.cmck_set_var('fe_file_property',input);
+                    parent.cmck_set_var('fe_file_property', input);
 
                     parent.cmck_modal($(this).attr('href'));
 
@@ -28,9 +28,20 @@
                     var value = $(id).val();
 
                     $(parent.document).find('#modal_files_file_zoom_title').html(value);
-                    $(parent.document).find('#modal_files_file_zoom_iframe').attr('src',$(this).attr('href')+value);
+                    $(parent.document).find('#modal_files_file_zoom_iframe').attr('src', $(this).attr('href') + value);
 
-                    parent.cmck_modal_id('modal_files_file_zoom');
+                    $.ajax({
+                        url    : $(this).attr('href') + value,
+                        type   : 'HEAD',
+                        error  : function () {
+                            alert('File not found. Please check file path.');
+                        },
+                        success: function () {
+                            parent.cmck_modal_id('modal_files_file_zoom');
+                        }
+                    });
+
+
 
                     return false;
                 });
@@ -39,8 +50,19 @@
 
                     var id = $(this).attr('data-input');
                     var value = $(id).val();
-                    value = $(this).attr('href')+value;
-                    window.location.href = value;
+                    value = $(this).attr('href') + value;
+
+                    $.ajax({
+                        url    : value,
+                        type   : 'HEAD',
+                        error  : function () {
+                            alert('File not found. Please check file path.');
+                        },
+                        success: function () {
+                            window.location.href = value;
+                        }
+                    });
+
 
                     return false;
                 });
