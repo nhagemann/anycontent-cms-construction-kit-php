@@ -5,20 +5,17 @@
 function cmck_modal(url, onShown , undefined ) {
 
 
-    $('#modal_edit').on('show.bs.modal', function () {
+    $('#modal_edit').off('shown.bs.modal');
 
-         if (typeof onShown == 'function')
+    $('#modal_edit').on('shown.bs.modal', function () {
+
+        if (typeof onShown == 'function')
         {
             onShown();
         }
     });
 
-    /*
-    $('#modal_edit').on('hide.bs.modal', function () {
-        // make sure the modal content is loaded everytime and all event listeners are deleted
-        $('#modal_edit').removeData();
-        $('#modal_edit').unbind();
-    });*/
+    $('#modal_edit').removeData();
 
     $('#modal_edit').modal({
         keyboard: true,
@@ -42,13 +39,15 @@ function cmck_modal_set_property(name,value)
 
 function cmck_set_var(name,value)
 {
-    $.cmck = {};
-    $.cmck.test = value;
+    if  (typeof $.cmck != 'object') {
+        $.cmck = {};
+    }
+    $.cmck[name] = value;
 }
 
 function cmck_get_var(name,value)
 {
-    return $.cmck.test;
+    return $.cmck[name];
 }
 
 $(document).on("cmck", function (e, params) {
