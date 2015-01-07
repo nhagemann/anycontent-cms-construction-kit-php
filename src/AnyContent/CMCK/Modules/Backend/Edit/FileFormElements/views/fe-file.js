@@ -21,20 +21,21 @@
 
                     return false;
                 });
-/*
+
                 $('.formelement-file-modal-button-view').click(function () {
 
-                    var input = $($(this).attr('data-input')).attr('value');
+                    var id = $(this).attr('data-input');
+                    var value = $(id).val();
 
-                    $('#modal_files_file_zoom_title').html(input);
-                    $('#modal_files_file_zoom_iframe').attr(input);
+                    $(parent.document).find('#modal_files_file_zoom_title').html(value);
+                    $(parent.document).find('#modal_files_file_zoom_iframe').attr('src',$(this).attr('href')+value);
 
-                    //var url = 'http://anycontent-g.hahnair.dev/file/53f621c7cf1b3d7632e50f7401bae796/view/Agencies/Profiles/2014/07/7d613544-5303-e411-bd4f-005056ad001b/image-upload-2014-07-08-53bbf9852afdc.jpg';
-                    var options = {keyboard: true, remote: url};
-                    $('#modal_files_file_zoom').modal(options);
+                    var options = {keyboard: true};
+                    $(parent.document).find('#modal_files_file_zoom').removeData();
+                    $(parent.document).find('#modal_files_file_zoom').modal(options);
 
                     return false;
-                });*/
+                });
                 break;
 
         }
