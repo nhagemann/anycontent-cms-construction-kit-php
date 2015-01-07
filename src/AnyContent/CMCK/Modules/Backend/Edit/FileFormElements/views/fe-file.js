@@ -30,9 +30,7 @@
                     $(parent.document).find('#modal_files_file_zoom_title').html(value);
                     $(parent.document).find('#modal_files_file_zoom_iframe').attr('src',$(this).attr('href')+value);
 
-                    var options = {keyboard: true};
-                    $(parent.document).find('#modal_files_file_zoom').removeData();
-                    $(parent.document).find('#modal_files_file_zoom').modal(options);
+                    parent.cmck_modal_id('modal_files_file_zoom');
 
                     return false;
                 });

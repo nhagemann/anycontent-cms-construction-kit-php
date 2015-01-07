@@ -1,13 +1,13 @@
 // This file gets included when editing content or config records. In contrast to 'edit.js' this file does NOT get included
 // in sequence editing iframe.
 
+function cmck_modal_id(id, url, onShown)
+{
+    id = '#' + id;
 
-function cmck_modal(url, onShown , undefined ) {
+    $(id).off('shown.bs.modal');
 
-
-    $('#modal_edit').off('shown.bs.modal');
-
-    $('#modal_edit').on('shown.bs.modal', function () {
+    $(id).on('shown.bs.modal', function () {
 
         if (typeof onShown == 'function')
         {
@@ -15,20 +15,31 @@ function cmck_modal(url, onShown , undefined ) {
         }
     });
 
-    $('#modal_edit').removeData();
+    $(id).removeData();
 
-    $('#modal_edit').modal({
+    $(id).modal({
         keyboard: true,
         remote  : url
     });
+}
+
+function cmck_modal(url, onShown ) {
+    cmck_modal_id('modal_edit',url, onShown);
+}
 
 
-};
+function cmck_modal_id_hide(id)
+{
+    id = '#' + id;
+
+    $(id).modal('hide');
+    $(id).removeData();
+}
+
 
 function cmck_modal_hide()
 {
-    $('#modal_edit').modal('hide');
-    $('#modal_edit').removeData();
+    cmck_modal_id_hide('modal_edit');
 
 }
 
