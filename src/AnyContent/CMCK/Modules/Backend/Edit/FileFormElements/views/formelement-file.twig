@@ -2,6 +2,21 @@
 
 {% block input %}
     <div class="col-xs-6">
+        {% if preview %}
+            <div class="file-item-preview" id="{{ id }}_preview">
+                <a href="{{ url_view }}{{ value }}"><img src="{{ url_view }}{{ value }}" width="60"/></a>
+            </div>
+        {% else %}
+            <div class="file-item-preview" id="{{ id }}_preview" style="display: none">
+                <a href=""><img src="" width="60"/></a>
+            </div>
+        {% endif %}
+    </div>
+    </div>
+    <div class="row">
+
+    <div class="col-xs-6">
+
         <div class="input-group">
 
             {% block icon %}
@@ -9,7 +24,7 @@
             {% endblock %}
 
             <input type="text" class="form-control" id="{{ id }}" name="{{ name }}"
-                   placeholder="{{ definition.placeholder }}" value="{{ value }}">
+                   placeholder="{{ definition.placeholder }}" value="{{ value }}" data-url-view="{{ url_view }}">
 
         </div>
 

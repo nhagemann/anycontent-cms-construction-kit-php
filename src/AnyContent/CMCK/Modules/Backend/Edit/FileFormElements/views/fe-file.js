@@ -31,16 +31,15 @@
                     $(parent.document).find('#modal_files_file_zoom_iframe').attr('src', $(this).attr('href') + value);
 
                     $.ajax({
-                        url    : $(this).attr('href') + value,
-                        type   : 'HEAD',
-                        error  : function () {
+                        url: $(this).attr('href') + value,
+                        type: 'HEAD',
+                        error: function () {
                             alert('File not found. Please check file path.');
                         },
                         success: function () {
                             parent.cmck_modal_id('modal_files_file_zoom');
                         }
                     });
-
 
 
                     return false;
@@ -53,9 +52,9 @@
                     value = $(this).attr('href') + value;
 
                     $.ajax({
-                        url    : value,
-                        type   : 'HEAD',
-                        error  : function () {
+                        url: value,
+                        type: 'HEAD',
+                        error: function () {
                             alert('File not found. Please check file path.');
                         },
                         success: function () {
@@ -65,6 +64,35 @@
 
 
                     return false;
+                });
+
+                $('.formelement-file input, .formelement-image input').on('change', function () {
+
+                    var id = '#' + $(this).attr('id') + '_preview';
+                    var value = $(this).val();
+
+                    $(id).hide();
+
+                    if (value) {
+
+                        if (value.toLowerCase().match(/\.(jpeg|jpg|gif|png)$/) != null) {
+                            var url_view = $(this).attr('data-url-view') + value;
+
+                            $.ajax({
+                                url: url_view,
+                                type: 'HEAD',
+                                error: function () {
+                                    $(id).hide();
+                                },
+                                success: function () {
+                                    $(id).show();
+                                    $(id + ' a').attr('href', url_view);
+                                    $(id + ' img').attr('src', url_view);
+                                }
+                            });
+                        }
+                    }
+
                 });
                 break;
 
