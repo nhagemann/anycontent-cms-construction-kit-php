@@ -72,6 +72,8 @@
                     var value = $(this).val();
 
                     $(id).hide();
+                    $(id + ' a').attr('href', '');
+                    $(id + ' img').attr('src', '');
 
                     if (value) {
 
