@@ -28,7 +28,7 @@ class Controller
 
         if ($mode == 'modal')
         {
-            $listFilesRouteName    = 'listFileSelect';
+            $listFilesRouteName    = 'listFilesSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
             $app['layout']->addJsFile('files-modal');
         }
@@ -249,10 +249,11 @@ class Controller
     }
 
 
-    public static function post(Application $app, Request $request, $repositoryAccessHash, $path = '')
+    public static function post(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode ='page')
     {
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
+
 
         if ($repository)
         {
@@ -325,6 +326,11 @@ class Controller
         }
 
         $url = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+
+        if ($mode =='modal')
+        {
+           $url = $app['url_generator']->generate('listFilesSelect', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+        }
 
         return new RedirectResponse($url, 303);
     }

@@ -1,34 +1,58 @@
 {% extends "layout-plain.twig" %}
 
 {% block content %}
-    <div class="container">
+    <div class="container files-list-modal">
 
-    {% for folder in folders %}
-        <div class="row">
+        {% for folder in folders %}
+            <div class="row">
 
-            <ul class="nav nav-tabs">
-                {% if loop.first %}
-                    <li{% if root %} class="active"{% endif %}><a href="{{ links.files }}"><span
-                                    class="glyphicon glyphicon-home"></span></a></li>
-                {% endif %}
-                {% for item in folder %}
+                <ul class="nav nav-tabs">
+                    {% if loop.first %}
+                        <li{% if root %} class="active"{% endif %}><a href="{{ links.files }}"><span
+                                        class="glyphicon glyphicon-home"></span></a></li>
+                    {% endif %}
+                    {% for item in folder %}
 
-                    <li class="{{ item.class }}"><a href="{{ item.url }}">{{ item.name }}</a></li>
-                {% endfor %}
-            </ul>
-            <br/>
-        </div>
-    {% endfor %}
-
-
-    <div class="row">
-        <br/>
-        {% for file in files %}
-            {% include "files-list-modal-item.twig" %}
+                        <li class="{{ item.class }}"><a href="{{ item.url }}">{{ item.name }}</a></li>
+                    {% endfor %}
+                </ul>
+                <br/>
+            </div>
         {% endfor %}
+
+
+        <div class="row">
+            <br/>
+            {% for file in files %}
+                {% include "files-list-modal-item.twig" %}
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <hr/>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>New File</label>
+
+
+                    <div class="input-group">
+                        <input type="file" name="upload_file" class="pull-left">
+
+
+                    <button type="submit" class="btn btn-xs btn-primary" id="modal_files_button_upload_file"><span
+                                class="glyphicon glyphicon-cloud-upload"></span> Upload File</a>  </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-           </div>
+
+
+
+
+
+    </div>
 
 {% endblock %}
 
