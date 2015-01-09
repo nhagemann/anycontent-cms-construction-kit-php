@@ -49,19 +49,21 @@
 
                     var id = $(this).attr('data-input');
                     var value = $(id).val();
-                    value = $(this).attr('href') + value;
 
-                    $.ajax({
-                        url: value,
-                        type: 'HEAD',
-                        error: function () {
-                            alert('File not found. Please check file path.');
-                        },
-                        success: function () {
-                            window.location.href = value;
-                        }
-                    });
+                    if (value.trim() != '') {
 
+                        value = $(this).attr('href') + value;
+
+                        $.ajax({
+                            url: value,
+                            type: 'HEAD',
+                            success: function () {
+                                window.location.href = value;
+                                return false;
+                            }
+                        });
+                    }
+                    alert('File not found. Please check file path.');
 
                     return false;
                 });
