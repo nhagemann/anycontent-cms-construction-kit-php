@@ -21,9 +21,9 @@ class Controller
     public static function modal(Application $app, Request $request, Module $module = null, $repositoryAccessHash, $path ='/')
     {
 
-        $vars['url_file_select'] = $app['url_generator']->generate('listFileSelect', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+        $vars['url_file_select'] = $app['url_generator']->generate('listFilesSelect', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
 
-        return $app['twig']->render('formelement-image-modal.twig', $vars);
+        return $app['twig']->render('formelement-file-modal.twig', $vars);
 
     }
 

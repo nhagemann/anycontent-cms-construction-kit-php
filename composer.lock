@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c967aa1f6bbeab26ede3ff1a66d1f4c2",
+    "hash": "856c6e70533dad8b3f810e7bd1fea2c5",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -283,16 +283,16 @@
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "0.8.1",
+            "version": "0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "5c25a3c08972ca54421f108b41621f181e77fbc1"
+                "reference": "1a4bafb9817f52821677ea901ed67025a9cf644d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/5c25a3c08972ca54421f108b41621f181e77fbc1",
-                "reference": "5c25a3c08972ca54421f108b41621f181e77fbc1",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/1a4bafb9817f52821677ea901ed67025a9cf644d",
+                "reference": "1a4bafb9817f52821677ea901ed67025a9cf644d",
                 "shasum": ""
             },
             "require": {
@@ -322,7 +322,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2014-12-04 16:42:10"
+            "time": "2014-12-15 11:16:29"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
@@ -1528,6 +1528,7 @@
         "knplabs/console-service-provider": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.2"
     },

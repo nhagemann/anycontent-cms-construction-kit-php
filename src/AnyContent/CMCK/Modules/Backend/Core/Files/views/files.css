@@ -1,13 +1,17 @@
 .file-item {
-    width: 290px;
-
+    width: 280px;
     margin-right: 10px;
     height: 140px;
-
 }
 
+.file-item-modal {
+    width: 270px;
+    margin-top:2px;
+    margin-right: 10px;
+    height: 120px;
+}
 
-.file-item .media{
+.file-item .media, .file-item-modal .media{
     padding:5px;
     padding-bottom: 0px;
 
@@ -19,4 +23,8 @@
 
 .file-select-item {
     cursor: pointer;
+}
+
+.files-list-modal{
+    width:850px;
 }

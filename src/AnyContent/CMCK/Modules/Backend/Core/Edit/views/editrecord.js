@@ -1,22 +1,68 @@
 // This file gets included when editing content or config records. In contrast to 'edit.js' this file does NOT get included
 // in sequence editing iframe.
 
+function cmck_modal_id(id, url, onShown) {
+    id = '#' + id;
 
-function cmck_modal(url, onShown) {
+    $(id).off('shown.bs.modal');
 
-    $('#modal_edit').removeData();
-    var target = $('#modal_edit');
-    $(target).modal({
-        keyboard: true,
-        remote: url
-    }).on('shown.bs.modal', onShown).on('hide.bs.modal', function () {
-        // make sure the modal content is loaded everytime and all event listeners are deleted
-        $('#modal_edit').removeData();
-        //$('#modal_edit',parent.window.document).removeData();
-        $(target).unbind();
+    $(id).on('shown.bs.modal', function () {
+
+        if (typeof onShown == 'function') {
+            onShown();
+        }
     });
 
-};
+    $(id).removeData();
+
+    $(id).modal({
+        keyboard: true,
+        remote: url
+    });
+}
+
+function cmck_modal(url, onShown) {
+    cmck_modal_id('modal_edit', url, onShown);
+}
+
+
+function cmck_modal_id_hide(id) {
+    id = '#' + id;
+
+    $(id).modal('hide');
+    $(id).removeData();
+}
+
+
+function cmck_modal_hide() {
+    cmck_modal_id_hide('modal_edit');
+
+}
+
+function cmck_modal_set_property(name, value) {
+    $('#form_edit [name=' + name + ']').val(value);
+}
+
+function cmck_set_var(name, value) {
+    if (typeof $.cmck != 'object') {
+        $.cmck = {};
+    }
+    $.cmck[name] = value;
+}
+
+function cmck_get_var(name, value) {
+    return $.cmck[name];
+}
+
+function cmck_trigger_change(object) {
+    $(object).trigger('change');
+    $('iframe').each(function (k,v) {
+        if(typeof v.contentWindow.cmck_sequence_trigger_change == 'function')
+        {
+            v.contentWindow.cmck_sequence_trigger_change(object);
+        }
+    });
+}
 
 
 $(document).on("cmck", function (e, params) {
@@ -34,10 +80,10 @@ $(document).on("cmck", function (e, params) {
                 }
             }
             break;
+
     }
 
 });
-
 
 
 $(document).ready(function () {

@@ -19,13 +19,8 @@
     {{ jsheadlinks | raw }}
     {{ cssheadlinks | raw }}
 </head>
-<body style="background-color:#F5F5F5">
-
-
-
-
-    <br/>
-    {% include 'messages.twig' %}
+<body class="layout-plain">
+<div class="container"><div class="row">{% include 'messages.twig' %}</div></div>
 {% block content %}{% endblock %}
 
 

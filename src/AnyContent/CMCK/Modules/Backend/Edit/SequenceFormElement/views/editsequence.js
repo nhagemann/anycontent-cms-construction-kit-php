@@ -1,3 +1,8 @@
+function cmck_sequence_trigger_change(object)
+{
+    $(object).trigger('change');
+}
+
 (function ($) {
 
     // This JavaScript is included on a page containing just one accordion/sortable for editing a sequence. This page

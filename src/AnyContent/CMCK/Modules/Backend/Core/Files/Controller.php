@@ -28,8 +28,9 @@ class Controller
 
         if ($mode == 'modal')
         {
-            $listFilesRouteName    = 'listFileSelect';
+            $listFilesRouteName    = 'listFilesSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
+            $app['layout']->addJsFile('files-modal');
         }
         else
         {
@@ -133,54 +134,46 @@ class Controller
     public static function viewFile(Application $app, Request $request, $repositoryAccessHash, $id)
     {
 
-        /** @var Repository $repository */
-        $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
+        if ($id) {
+            /** @var Repository $repository */
+            $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
 
-        if ($repository)
-        {
-            $app['context']->setCurrentRepository($repository);
-            /** @var File $file */
-            $file = $repository->getFile($id);
+            if ($repository) {
+                $app['context']->setCurrentRepository($repository);
+                /** @var File $file */
+                $file = $repository->getFile($id);
 
-            if ($file)
-            {
+                if ($file) {
 
-                if ($file->hasPublicUrl())
-                {
-                    return new RedirectResponse($file->getUrl('default'));
-                };
+                    if ($file->hasPublicUrl()) {
+                        return new RedirectResponse($file->getUrl('default'));
+                    };
 
-                $binary = $repository->getBinary($file);
+                    $binary = $repository->getBinary($file);
 
-                if ($binary !== false)
-                {
+                    if ($binary !== false) {
 
-                    $headers = array( 'Content-Type' => 'application/unknown', 'Content-Disposition' => 'inline' );
+                        $headers = array('Content-Type' => 'application/unknown', 'Content-Disposition' => 'inline');
 
-                    if ($file->isImage())
-                    {
+                        if ($file->isImage()) {
 
-                        switch (strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION)))
-                        {
-                            case 'jpg':
-                                $headers = array( 'Content-Type' => 'image/jpg' );
-                                break;
-                            case 'gif':
-                                $headers = array( 'Content-Type' => 'image/gif' );
-                                break;
-                            case 'png':
-                                $headers = array( 'Content-Type' => 'image/png' );
-                                break;
+                            switch (strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION))) {
+                                case 'jpg':
+                                    $headers = array('Content-Type' => 'image/jpg');
+                                    break;
+                                case 'gif':
+                                    $headers = array('Content-Type' => 'image/gif');
+                                    break;
+                                case 'png':
+                                    $headers = array('Content-Type' => 'image/png');
+                                    break;
+                            }
                         }
 
+                        return new Response($binary, 200, $headers);
                     }
-
-                    return new Response($binary, 200, $headers);
-
                 }
-
             }
-
         }
 
         return new Response('File not found', 404);
@@ -256,10 +249,11 @@ class Controller
     }
 
 
-    public static function post(Application $app, Request $request, $repositoryAccessHash, $path = '')
+    public static function post(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode ='page')
     {
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
+
 
         if ($repository)
         {
@@ -332,6 +326,11 @@ class Controller
         }
 
         $url = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+
+        if ($mode =='modal')
+        {
+           $url = $app['url_generator']->generate('listFilesSelect', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
+        }
 
         return new RedirectResponse($url, 303);
     }

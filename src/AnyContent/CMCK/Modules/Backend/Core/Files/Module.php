@@ -30,13 +30,16 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->assert('id', '.*')->bind('deleteFile');
 
         $app->post('/files/{repositoryAccessHash}/{path}', 'AnyContent\CMCK\Modules\Backend\Core\Files\Controller::post')
-            ->assert('path', '.*');
+            ->assert('path', '.*')->value('mode','page');
 
 
         // routes for file selection (as used in file form elements)
 
         $app->get('/file-select/{repositoryAccessHash}/{path}', 'AnyContent\CMCK\Modules\Backend\Core\Files\Controller::listFiles')
-            ->assert('path', '.*')->value('mode','modal')->bind('listFileSelect');
+            ->assert('path', '.*')->value('mode','modal')->bind('listFilesSelect');
+
+        $app->post('/file-select/{repositoryAccessHash}/{path}', 'AnyContent\CMCK\Modules\Backend\Core\Files\Controller::post')
+            ->assert('path', '.*')->value('mode','modal')->value('mode','modal');
 
     }
 
