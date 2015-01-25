@@ -1,5 +1,4 @@
-<div class="form-group formelement-{{ definition.FormElementType }}">
-
+<div class="form-group formelement-{{ definition.FormElementType }}{%if definition.isMandatory == true %} mandatory{% endif %}" data-formelement="{{ id }}">
     <div class="row">
         {% block label %}
             <div class="col-xs-8">
@@ -29,19 +28,3 @@
         {% endblock %}
     </div>
 </div>
-
-
-<!--
-<div class="control-group <?php if ($validationerror):?>error<?php endif?>">
-    <label class="control-label"
-           for="<?php echo $formid?>">{{ definition.label }}{% if definition.isMandatory == true %}*{% endif %}</label>
-
-    <div class="controls">
-        <input type="text"  id="<?php echo $formid?>" name="<?php echo $attribute_name?>"
-               value="{{ value }}"
-        <data-content
-        ="<?php echo $definition->help?>">
-
-    </div>
-</div>
--->

@@ -56,14 +56,26 @@ function cmck_get_var(name, value) {
 
 function cmck_trigger_change(object) {
     $(object).trigger('change');
-    $('iframe').each(function (k,v) {
-        if(typeof v.contentWindow.cmck_sequence_trigger_change == 'function')
-        {
+    $('iframe').each(function (k, v) {
+        if (typeof v.contentWindow.cmck_sequence_trigger_change == 'function') {
             v.contentWindow.cmck_sequence_trigger_change(object);
         }
     });
 }
 
+function cmck_message_alert(message)
+{
+    $('#messages').html('<div class="alert alert-warning">'+message+'</div>');
+    $(document).scrollTop('#messages');
+    $('#messages div').delay(3000).fadeOut(500);
+}
+
+function cmck_message_error(message)
+{
+    $('#messages').html('<div class="alert alert-danger">'+message+'</div>');
+    $(document).scrollTop('#messages');
+    $('#messages div').delay(3000).fadeOut(500);
+}
 
 $(document).on("cmck", function (e, params) {
 
@@ -104,7 +116,22 @@ $(document).ready(function () {
         $.event.trigger('cmck', {type: 'editform.Save'});
         countdown = parseInt($('#form_edit').attr('data-event-countdown'));
 
+
         if (countdown == 0) {
+            counterrors = 0;
+            $('.form-group.mandatory').each(function () {
+
+                $(this).removeClass('has-error');
+                idFormelement = '#' + $(this).attr('data-formelement');
+                if ($(idFormelement).val().trim() == '') {
+                    $(this).addClass('has-error');
+                    counterrors++;
+                }
+            });
+            if (counterrors > 0) {
+                cmck_message_alert('Please fill in all required fields.');
+                return false;
+            }
             return true;
         }
         return false;
@@ -115,6 +142,18 @@ $(document).ready(function () {
 
         cmck_modal($(this).attr('href'));
         return false;
+    });
+
+
+    // capture CTRL+S, CMD+S
+    $(document).keydown(function(e) {
+        if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey))
+        {
+            e.preventDefault();
+            $('#form_edit_button_submit').click();
+            return false;
+        }
+        return true;
     });
 
     // inform form elements about loading of the editing form
