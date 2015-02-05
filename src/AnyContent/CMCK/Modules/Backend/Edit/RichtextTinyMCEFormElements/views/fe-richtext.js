@@ -9,9 +9,14 @@ $(document).on("cmck", function (e, params) {
                 id = $(this).attr('id');
                 rows = $(this).attr('rows');
                 h = 90 + rows * 18;
-                tinymce.init({selector: '#' + id, height: h});
+                tinymce.init({
+                    selector: '#' + id, height: h, setup: function (editor) {
+                        editor.on('change', function () {
+                            tinymce.triggerSave();
+                        });
+                    }
+                });
             });
             break;
     }
-    ;
 });

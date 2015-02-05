@@ -12,6 +12,7 @@ use AnyContent\Client\Record;
 
 use AnyContent\CMCK\Modules\Backend\Core\Edit\FormManager;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +59,7 @@ class Controller
                 $attributes = array();
                 foreach ($viewDefinition->getFormElementDefinitions() as $formElementDefinition)
                 {
-                    $attributes[$formElementDefinition->getName()]=$formElementDefinition->getDefaultValue();
+                    $attributes[$formElementDefinition->getName()] = $formElementDefinition->getDefaultValue();
                 }
 
                 $vars['form'] = $formManager->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $attributes, array( 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
@@ -168,7 +169,8 @@ class Controller
             }
             else
             {
-                $vars['id']=$recordId;
+                $vars['id'] = $recordId;
+
                 return $app->renderPage('record-not-found.twig', $vars);
             }
         }
@@ -277,9 +279,9 @@ class Controller
                     }
                     else
                     {
-                        $app['context']->addErrorMessage('Could not save record.');
+                        $response = array( 'success' => false, 'message' => 'Could not save record. Please check your input.', 'properties' => array( '' ) );
 
-                        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
+                        return new JsonResponse($response);
                     }
                 }
                 if ($duplicate)
@@ -291,19 +293,31 @@ class Controller
 
                 if ($insert)
                 {
-                    return new RedirectResponse($app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 303);
+                    $url      = $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
+                    $response = array( 'success' => true, 'redirect' => $url );
+
+                    return new JsonResponse($response);
                 }
 
                 if ($list)
                 {
-                    return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
+                    $url      = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() ));
+                    $response = array( 'success' => true, 'redirect' => $url );
+
+                    return new JsonResponse($response);
                 }
 
-                return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
+                $url      = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+                $response = array( 'success' => true, 'redirect' => $url );
+
+                return new JsonResponse($response);
+
             }
             else
             {
-                return $app['layout']->render('record-notfound.twig');
+                $response = array( 'success' => false, 'message' => 'Record not found.' );
+
+                return new JsonResponse($response);
             }
         }
     }

@@ -63,17 +63,15 @@ function cmck_trigger_change(object) {
     });
 }
 
-function cmck_message_alert(message)
-{
-    $('#messages').html('<div class="alert alert-warning">'+message+'</div>');
-    $(document).scrollTop('#messages');
+function cmck_message_alert(message) {
+    $('#messages').html('<div class="alert alert-warning">' + message + '</div>');
+    $(document).scrollTop(0);
     $('#messages div').delay(3000).fadeOut(500);
 }
 
-function cmck_message_error(message)
-{
-    $('#messages').html('<div class="alert alert-danger">'+message+'</div>');
-    $(document).scrollTop('#messages');
+function cmck_message_error(message) {
+    $('#messages').html('<div class="alert alert-danger">' + message + '</div>');
+    $(document).scrollTop(0);
     $('#messages div').delay(3000).fadeOut(500);
 }
 
@@ -83,7 +81,6 @@ $(document).on("cmck", function (e, params) {
     switch (params.type) {
         case 'editform.setProperty': // Used from sequences upon storing.
 
-
             $('#form_edit [name=' + params.property + ']').val(params.value);
 
             if (params.save == true) {
@@ -92,9 +89,7 @@ $(document).on("cmck", function (e, params) {
                 }
             }
             break;
-
     }
-
 });
 
 
@@ -107,17 +102,23 @@ $(document).ready(function () {
         return false;
     });
 
-
-    // Interrupt posting of edit form to check for sequences and allow them to convert their input into
-    // a json representation for the containing property
+    // manual saving of edit form triggers an event - in opposite to internal calls for submitting the form
     $('#form_edit_button_submit').click(function () {
-
-
         $.event.trigger('cmck', {type: 'editform.Save'});
+        $('#form_edit').submit();
+        return false;
+    });
+
+    $('#form_edit').submit(function () {
+
+        // Interrupt posting of edit form to check for sequences and allow them to convert their input into
+        // a json representation for the containing property
+
         countdown = parseInt($('#form_edit').attr('data-event-countdown'));
 
 
-        if (countdown == 0) {
+        if (countdown == 0) { // no more sequences to be processed
+
             counterrors = 0;
             $('.form-group.mandatory').each(function () {
 
@@ -132,7 +133,42 @@ $(document).ready(function () {
                 cmck_message_alert('Please fill in all required fields.');
                 return false;
             }
-            return true;
+
+            $.blockUI({message: null});
+
+            $.post($('#form_edit').attr('action'), $('#form_edit').serialize()).fail(function (data) {
+                cmck_message_error('Failed to save record. Please try again later or contact your administrator.');
+            }).done(function (response) {
+
+                if (response.success != undefined) {
+
+                    if (response.success == true) {
+                        location.href = response.redirect;
+                        return false;
+                    } else {
+                        if (response.message != undefined) {
+                            cmck_message_alert(response.message);
+                            if (response.properties != undefined) {
+                                for (i = 0; i < response.properties.length; i++) {
+                                    property = response.properties[i];
+                                    input = $('input[name="' + property + '"]');
+                                    id = input.attr('id');
+                                    $('div.form-group[data-formelement="' + id + '"]').addClass('has-error');
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                cmck_message_error('Failed to save record. Please try again later or contact your administrator.');
+
+
+                $.unblockUI();
+            });
+
+
+            return false;
+
         }
         return false;
     });
@@ -146,9 +182,8 @@ $(document).ready(function () {
 
 
     // capture CTRL+S, CMD+S
-    $(document).keydown(function(e) {
-        if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey))
-        {
+    $(document).keydown(function (e) {
+        if ((e.which == '115' || e.which == '83' ) && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             $('#form_edit_button_submit').click();
             return false;
