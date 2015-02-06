@@ -62,15 +62,15 @@ class FormElementSourceCode extends \AnyContent\CMCK\Modules\Backend\Edit\TextFo
 
     protected function addCodeMirrorModeJavaScriptFiles($layout)
     {
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/javascript/javascript.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/css/css.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/vbscript/vbscript.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/htmlmixed/htmlmixed.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/markdown/markdown.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/yaml/yaml.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/properties/properties.min.js');
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/sql/sql.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/xml/xml.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/javascript/javascript.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/css/css.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/vbscript/vbscript.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/htmlmixed/htmlmixed.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/markdown/markdown.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/yaml/yaml.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/properties/properties.min.js');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/sql/sql.min.js');
     }
 
 
@@ -80,12 +80,12 @@ class FormElementSourceCode extends \AnyContent\CMCK\Modules\Backend\Edit\TextFo
         $this->vars['mode']    = $this->getCodeMirrorMode();
         $this->vars['options'] = $this->getCodeMirrorOptions();
 
-        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.js');
-        $layout->addCSSLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.css');
+        $layout->addJsLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/codemirror.min.js');
+        $layout->addCSSLinkToHead('//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/codemirror.css');
 
         $this->addCodeMirrorModeJavaScriptFiles($layout);
 
-        $layout->addJsFile('fe-sourcecode.js');
+        $layout->addJsFile('feso.js');
 
         return $this->twig->render('formelement-sourcecode.twig', $this->vars);
 

@@ -1,10 +1,19 @@
+var codeMirrorList = [];
+
 $(document).on("cmck", function (e, params) {
+
 
     switch (params.type) {
         case 'editForm.init':
-        //TODO: Find out, why the code mirror textarea replacement doesn't work within sequences (i.e. bootstrap accordions?)
-        //case 'sequenceForm.init':
-        //case 'sequenceForm.refresh':
+        case 'sequenceForm.init':
+        case 'sequenceForm.refresh':
+
+            // turn off all existing codeMirror instances
+            for (i = 0; i < codeMirrorList.length; i++) {
+                codeMirrorList[i].toTextArea();
+            }
+            codeMirrorList = [];
+
             $('.textarea-codemirror').each(function () {
 
                 var options = {lineNumbers: true, lineWrapping: true};
@@ -25,15 +34,30 @@ $(document).on("cmck", function (e, params) {
                     }
                 }
 
+                var codeMirrorInstance = CodeMirror.fromTextArea(this, options);
 
-                var myCodeMirror = CodeMirror.fromTextArea(this, options);
+                if ($(this).attr('data-width') != undefined) {
+                    // set data-width on first instanciation to get it from actually displayed textareas
+                    width = $(this).width();
+                    $(this).attr('data-width', width);
+                }
+                else {
+                    width = $(this).attr('data-width');
+                }
 
-                width = $(this).width();
                 rows = $(this).attr('rows');
                 height = 5 + rows * 14;
-                myCodeMirror.setSize(width, height);
-                myCodeMirror.refresh();
+                codeMirrorInstance.setSize(width, height);
+                codeMirrorInstance.refresh();
+
+                // make sure the hidden textarea is updated on every key stroke
+                that = this;
+                codeMirrorInstance.on('change', function (cMirror) {
+                    $(that).val(cMirror.getValue());
+                });
+                codeMirrorList.push(codeMirrorInstance);
             });
+
             break;
     }
     ;
