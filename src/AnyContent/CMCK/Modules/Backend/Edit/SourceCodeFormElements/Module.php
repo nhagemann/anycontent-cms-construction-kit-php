@@ -22,7 +22,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app['form']->registerFormElement('markdown', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementMarkdown');
         $app['form']->registerFormElement('html', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementHTML');
         $app['form']->registerFormElement('cmdl', 'AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements\FormElementCMDL');
-        $app['layout']->addCssFile('feso.css');
+
     }
 
 }

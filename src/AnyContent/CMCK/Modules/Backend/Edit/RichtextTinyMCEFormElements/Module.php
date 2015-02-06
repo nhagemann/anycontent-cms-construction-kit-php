@@ -4,7 +4,6 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
-use AnyContent\CMCK\Modules\Backend\Edit\Edit\FormManager;
 
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {

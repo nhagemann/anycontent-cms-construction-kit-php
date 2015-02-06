@@ -2,6 +2,8 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Edit\SourceCodeFormElements;
 
+use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
+
 class FormElementSourceCode extends \AnyContent\CMCK\Modules\Backend\Edit\TextFormElements\FormElementTextarea
 {
 
@@ -86,6 +88,7 @@ class FormElementSourceCode extends \AnyContent\CMCK\Modules\Backend\Edit\TextFo
         $this->addCodeMirrorModeJavaScriptFiles($layout);
 
         $layout->addJsFile('feso.js');
+        $layout->addCssFile('feso.css');
 
         return $this->twig->render('formelement-sourcecode.twig', $this->vars);
 

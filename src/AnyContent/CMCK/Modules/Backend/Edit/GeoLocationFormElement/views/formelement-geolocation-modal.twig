@@ -47,21 +47,21 @@
             if (lat != '' && long != '') {
                 var mapOptions = {
                     zoom: 10,
-                    center: new google.maps.LatLng(lat, long)
+                    center: new window.google.maps.LatLng(lat, long)
                 };
             }
             else {
                 var mapOptions = {
                     zoom: 2,
-                    center: new google.maps.LatLng(0, 0)
+                    center: new window.google.maps.LatLng(0, 0)
                 };
             }
 
-            geocoder = new google.maps.Geocoder();
+            geocoder = new window.google.maps.Geocoder();
 
-            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            map = new window.google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-            marker = new google.maps.Marker(
+            marker = new window.google.maps.Marker(
                     {
                         map: map,
                         draggable: true,
@@ -69,7 +69,7 @@
                         position: map.getCenter()
                     });
 
-            google.maps.event.addListener(marker, 'dragend', function () {
+            window.google.maps.event.addListener(marker, 'dragend', function () {
                 //console.log(marker.getPosition());
             });
 
@@ -84,7 +84,7 @@
 
 
                 geocoder.geocode({ 'address': address}, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
+                    if (status == window.google.maps.GeocoderStatus.OK) {
                         marker.setPosition(results[0].geometry.location);
                         map.setCenter(results[0].geometry.location);
                         map.setZoom(14);
