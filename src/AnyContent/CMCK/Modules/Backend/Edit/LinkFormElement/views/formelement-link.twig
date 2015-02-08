@@ -6,7 +6,7 @@
 
             <span class="input-group-addon"><span class="glyphicon glyphicon-link"></span></span>
             <input type="text" class="form-control" id="{{ id }}" name="{{ name }}"
-                   placeholder="{{ definition.placeholder }}" value="{{ value }}">
+                   placeholder="{{ definition.placeholder }}" value="{{ value }}"{% if definition.isProtected %} disabled="disabled"{% endif %}>
 
         </div>
     </div>

@@ -18,6 +18,7 @@ $(document).on("cmck", function (e, params) {
 
                 var options = {lineNumbers: true, lineWrapping: true};
 
+
                 var mode = ($(this).attr('data-mode'));
                 if (mode) {
                     options.mode = mode;
@@ -48,10 +49,15 @@ $(document).on("cmck", function (e, params) {
                 rows = $(this).attr('rows');
                 height = 5 + rows * 14;
                 codeMirrorInstance.setSize(width, height);
+
+                if ($(this).attr('disabled')=='disabled') {
+                    codeMirrorInstance.setOption('readOnly', true);
+                }
+
                 codeMirrorInstance.refresh();
 
                 // make sure the hidden textarea is updated on every key stroke
-                that = this;
+                var that = this;
                 codeMirrorInstance.on('change', function (cMirror) {
                     $(that).val(cMirror.getValue());
                 });

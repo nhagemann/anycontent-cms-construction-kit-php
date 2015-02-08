@@ -24,7 +24,7 @@
             {% endblock %}
 
             <input type="text" class="form-control" id="{{ id }}" name="{{ name }}"
-                   placeholder="{{ definition.placeholder }}" value="{{ value }}" data-url-view="{{ url_view }}">
+                   placeholder="{{ definition.placeholder }}" value="{{ value }}" data-url-view="{{ url_view }}"{% if definition.isProtected %} disabled="disabled"{% endif %}>
 
         </div>
 

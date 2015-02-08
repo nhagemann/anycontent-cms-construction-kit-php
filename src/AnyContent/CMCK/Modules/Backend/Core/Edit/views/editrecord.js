@@ -123,8 +123,17 @@ $(document).ready(function () {
             $('.form-group.mandatory').each(function () {
 
                 $(this).removeClass('has-error');
-                idFormelement = '#' + $(this).attr('data-formelement');
-                if ($(idFormelement).val().trim() == '') {
+                idFormelement = $(this).attr('data-formelement');
+                val = '';
+                // Check value of all form fiels having a id starting with the string provided in data-formelement.
+                // Usually it will be exactly one form fields, but some form elements split the input into different
+                // form fields, e.g. "geolocation".
+                $('[id^="'+ idFormelement+'"]').each(function(){
+                    val = val + $(this).val().trim();
+                    console.log(val);
+                });
+
+                if (val == '') {
                     $(this).addClass('has-error');
                     counterrors++;
                 }

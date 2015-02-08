@@ -2,7 +2,7 @@
     <div class="row">
         {% block label %}
             <div class="col-xs-8">
-                <label for="{{ id }}">{{ definition.label }}{% if definition.isMandatory == true %}*{% endif %}
+                <label for="{{ id }}">{{ definition.label }}{% if definition.isMandatory == true %}*{% endif %}{% if definition.isProtected %}<sup>§</sup>{% endif %}
 
                 </label>
                 {% if definition.info %}
@@ -23,7 +23,7 @@
             <div class="col-xs-6">
                 <textarea id="{{ id }}" name="{{ name }}" placeholder="{{ definition.placeholder }}"
                           class="form-control"
-                          rows="3">{{ value }}</textarea>
+                          rows="3"{% if definition.isProtected %} disabled="disabled"{% endif %}>{{ value }}</textarea>
             </div>
         {% endblock %}
     </div>

@@ -16,11 +16,11 @@
         "silex/silex": "~1.1",
         "twig/twig": ">=1.8,<2.0-dev",
         "nitra/php-min": "dev-master",
-        "nhagemann/cmdl-parser-php": "0.8.*",
-        "nhagemann/anycontent-client-php": "0.8.*",
+        "nhagemann/cmdl-parser-php": "0.9.*",
+        "nhagemann/anycontent-client-php": "0.9.*",
         "phpoffice/phpexcel": "1.7.9",
-        "symfony/filesystem": "v2.4.2",
-        "symfony/yaml": "2.4.*",
+        "symfony/filesystem": "2.5.*",
+        "symfony/yaml": "2.5.*",
         "knplabs/console-service-provider": "dev-master",
         "monolog/monolog": ">=1.0.0"
 
@@ -33,5 +33,6 @@
         "psr-0": {
             "AnyContent": "src/"
         }
-    }
+    },
+    "prefer-stable": true
 }
