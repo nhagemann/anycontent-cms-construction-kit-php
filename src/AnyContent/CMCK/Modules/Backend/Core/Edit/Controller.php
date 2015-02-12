@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
+use AnyContent\Client\ContentFilter;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
@@ -11,6 +12,8 @@ use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 
 use AnyContent\CMCK\Modules\Backend\Core\Edit\FormManager;
+
+use CMDL\FormElementDefinition;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -266,6 +269,41 @@ class Controller
                 foreach ($values as $property => $value)
                 {
                     $record->setProperty($property, $value);
+                }
+
+                if ($save) // check for unique properties
+                {
+                    $properties = array();
+                    /**
+                     * @var $formElementDefinitions FormElementDefinition[]
+                     */
+                    $formElementDefinitions = $viewDefinition->getFormElementDefinitions();
+                    foreach ($formElementDefinitions as $formElementDefinition)
+                    {
+                        if ($formElementDefinition->isUnique() && $record->getProperty($formElementDefinition->getName())!='')
+                        {
+                            $filter = new ContentFilter($contentTypeDefinition);
+                            $filter->addCondition($formElementDefinition->getName(), '=', $record->getProperty($formElementDefinition->getName()));
+
+                            $records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 1, 1, $filter);
+
+                            if (count($records) != 0)
+                            {
+                                $record = array_shift($records);
+                                if (count($records) > 1 || $record->getID() != $recordId)
+                                {
+                                    $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
+                                }
+                            }
+                        }
+                    }
+                    if (count($properties) > 0)
+                    {
+                        $message  = 'Could not save record. <em>' . join(',', array_values($properties)) . '</em> must be unique for all records of this content type.';
+                        $response = array( 'success' => false, 'message' => $message, 'properties' => array_keys($properties) );
+
+                        return new JsonResponse($response);
+                    }
                 }
 
                 if ($save)

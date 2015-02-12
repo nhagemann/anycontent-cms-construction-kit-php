@@ -17,6 +17,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
     public function init(Application $app, $options = array())
     {
+
         parent::init($app, $options);
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
@@ -40,15 +41,24 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         {
             if ($request->get('_route') != 'login' && $request->get('_route') != 'postLogin')
             {
+
                 if (!$app['user']->isLoggedIn())
                 {
                     Header('Location: ' . $app['url_generator']->generate('login'), 303);
                     die ();
                 }
             }
+
         });
 
-        $app->registerAuthenticationAdapter('config', 'AnyContent\CMCK\Modules\Backend\Core\User\ConfigAuthenticationAdapter');
+        if ($this->app['env'] == 'console')
+        {
+            $app->registerAuthenticationAdapter('config', 'AnyContent\CMCK\Modules\Backend\Core\User\ConsoleAuthenticationAdapter');
+        }
+        else
+        {
+            $app->registerAuthenticationAdapter('config', 'AnyContent\CMCK\Modules\Backend\Core\User\ConfigAuthenticationAdapter');
+        }
 
     }
 

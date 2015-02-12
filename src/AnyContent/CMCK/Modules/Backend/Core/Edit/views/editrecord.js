@@ -147,6 +147,7 @@ $(document).ready(function () {
 
             $.post($('#form_edit').attr('action'), $('#form_edit').serialize()).fail(function (data) {
                 cmck_message_error('Failed to save record. Please try again later or contact your administrator.');
+                $.unblockUI();
             }).done(function (response) {
 
                 if (response.success != undefined) {
@@ -165,6 +166,7 @@ $(document).ready(function () {
                                     $('div.form-group[data-formelement="' + id + '"]').addClass('has-error');
                                 }
                             }
+                            $.unblockUI();
                             return false;
                         }
                     }

@@ -6,6 +6,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 
 class UserManager
 {
+    protected $app;
 
     protected $cache = null;
 
@@ -19,7 +20,7 @@ class UserManager
 
     public function __construct($app, $context, $config, $session)
     {
-
+        $this->app = $app;
         $this->context = $context;
         $this->config  = $config;
         $this->session = $session;

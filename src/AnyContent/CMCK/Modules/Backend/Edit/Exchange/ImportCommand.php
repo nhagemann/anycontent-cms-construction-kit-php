@@ -30,17 +30,24 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('');
+
+
         $app = $this->getSilexApplication();
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
 
         $contentTypeName = $input->getArgument('content type');
         $repositoryUrl   = $input->getArgument('repository');
+        $filename        = $input->getArgument('filename');
 
         $workspace = 'default';
         $language  = 'default';
 
         $output->writeln('Starting import for content type ' . $contentTypeName . '.');
+
+        $output->writeln('');
+
         $exporter = new Exporter();
 
         $repositories = $repositoryManager->listRepositories();
@@ -72,9 +79,34 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         if (!$repository->hasContentType($contentTypeName))
         {
             $output->writeln(self::escapeError . 'Repository ' . $repositoryUrl . ' does not have a content type named ' . $contentTypeName . '. Use the list command to show available content types.' . self::escapeReset);
+
+            return;
         }
 
-        $output->writeln('Gotta import now');
+
+        if (strpos($filename,'/')!==0)
+        {
+            $filename = getcwd() . '/'.$filename;
+        }
+        $filename = realpath($filename);
+
+        if (!file_exists($filename))
+        {
+            $output->writeln(self::escapeError . 'Could not find/access file.'. self::escapeReset);
+
+            return;
+        }
+
+        $output->writeln('Reading '. $filename);
+        $output->writeln('');
+
+        $data =file_get_contents($filename);
+
+
+        $exporter = new Exporter();
+        $exporter->setOutput($output);
+        $exporter->importJSON($repository,$contentTypeName,$data,$workspace,$language);
+
     }
 
 }

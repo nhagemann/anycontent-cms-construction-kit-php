@@ -37,6 +37,7 @@ class RepositoryManager
 
     public function init($config)
     {
+
         foreach ($config->getRepositoriesConfiguration() as $repository)
         {
             $this->addAllContentTypesOfRepository($repository['url'], null, null, 'Basic', $repository['shortcut'], null);

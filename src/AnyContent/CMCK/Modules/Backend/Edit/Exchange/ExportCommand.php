@@ -39,8 +39,11 @@ class ExportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $workspace = 'default';
         $language = 'default';
 
+        $output->writeln('');
         $output->writeln('Starting export for content type ' . $contentTypeName . '.');
+        $output->writeln('');
         $exporter = new Exporter();
+        $exporter->setOutput($output);
 
         $repositories = $repositoryManager->listRepositories();
 
@@ -83,8 +86,12 @@ class ExportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
 
         $filesystem = new Filesystem();
 
-
+        $output->writeln('');
+        $output->writeln('Dumping data to '.$filename);
         $filesystem->dumpFile($filename,$json);
-        echo __FILE__;
+        $output->writeln('');
+        $output->writeln('Done');
+        $output->writeln('');
+
     }
 }
