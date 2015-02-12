@@ -95,6 +95,8 @@ class Application extends SilexApplication
             'console.project_directory' => APPLICATION_PATH
         ));
 
+        $this->addTemplatesFolders(__DIR__ . '/views/');
+
         foreach ($this->modules as $module)
         {
             $class = $module['class'] . '\Module';
