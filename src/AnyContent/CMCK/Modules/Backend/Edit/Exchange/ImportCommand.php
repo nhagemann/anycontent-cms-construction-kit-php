@@ -44,7 +44,7 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $workspace = 'default';
         $language  = 'default';
 
-        $output->writeln('Starting import for content type ' . $contentTypeName . '.');
+        $output->writeln('Starting import for content type ' . $contentTypeName);
 
         $output->writeln('');
 
@@ -100,12 +100,22 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $output->writeln('Reading '. $filename);
         $output->writeln('');
 
-        $data =file_get_contents($filename);
 
 
-        $exporter = new Exporter();
-        $exporter->setOutput($output);
-        $exporter->importJSON($repository,$contentTypeName,$data,$workspace,$language);
+
+        if ($input->getOption('xlsx') == true)
+        {
+            $exporter = new Exporter();
+            $exporter->setOutput($output);
+            $exporter->importXLSX($repository, $contentTypeName, $filename, $workspace, $language);
+        }
+        else // default (JSON)
+        {
+            $data =file_get_contents($filename);
+            $exporter = new Exporter();
+            $exporter->setOutput($output);
+            $exporter->importJSON($repository, $contentTypeName, $data, $workspace, $language);
+        }
 
     }
 

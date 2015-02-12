@@ -37,10 +37,10 @@ class ExportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $repositoryUrl   = $input->getArgument('repository');
 
         $workspace = 'default';
-        $language = 'default';
+        $language  = 'default';
 
         $output->writeln('');
-        $output->writeln('Starting export for content type ' . $contentTypeName . '.');
+        $output->writeln('Starting export for content type ' . $contentTypeName);
         $output->writeln('');
         $exporter = new Exporter();
         $exporter->setOutput($output);
@@ -76,19 +76,34 @@ class ExportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
             $output->writeln(self::escapeError . 'Repository ' . $repositoryUrl . ' does not have a content type named ' . $contentTypeName . '. Use the list command to show available content types.' . self::escapeReset);
         }
 
-        $json = $exporter->exportJSON($repository, $contentTypeName,$workspace,$language);
-        if (!$json)
+        if ($input->getOption('xlsx') == true)
         {
-            $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryUrl . '.' . self::escapeReset);
+            $filename = $contentTypeName . '.' . $workspace . '.' . $language . '.xlsx';
+            $data = $exporter->exportXLSX($repository, $contentTypeName, $workspace, $language);
+            if (!$data)
+            {
+                $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryUrl . '.' . self::escapeReset);
+                return;
+            }
+        }
+        else // default (JSON)
+        {
+            $filename = $contentTypeName . '.' . $workspace . '.' . $language . '.json';
+            $data = $exporter->exportJSON($repository, $contentTypeName, $workspace, $language);
+            if (!$data)
+            {
+                $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryUrl . '.' . self::escapeReset);
+                return;
+            }
         }
 
-        $filename = $contentTypeName.'.'.$workspace.'.'.$language.'.json';
+
 
         $filesystem = new Filesystem();
 
         $output->writeln('');
-        $output->writeln('Dumping data to '.$filename);
-        $filesystem->dumpFile($filename,$json);
+        $output->writeln('Dumping data to ' . $filename);
+        $filesystem->dumpFile($filename, $data);
         $output->writeln('');
         $output->writeln('Done');
         $output->writeln('');
