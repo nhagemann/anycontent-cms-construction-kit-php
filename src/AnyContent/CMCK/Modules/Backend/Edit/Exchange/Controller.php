@@ -5,6 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\Exchange;
 use AnyContent\Client\ContentFilter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +51,8 @@ class Controller
         if ($repository)
         {
             $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($contentTypeDefinition);
 
             $workspace = $request->get('workspace');
             if (!$contentTypeDefinition->hasWorkspace($workspace))
@@ -63,13 +66,24 @@ class Controller
                 $language = 'default';
             }
 
+            $format = $request->get('format');
+
             $exporter = new Exporter();
 
-            $data = $exporter->exportXLSX($repository, $repository->getContentTypeDefinition()
-                                                                  ->getName(), $workspace, $language);
+            if ($format == 'j')
+            {
+                $data     = $exporter->exportJSON($repository, $repository->getContentTypeDefinition()
+                                                                          ->getName(), $workspace, $language);
+                $filename = strtolower(date('Ymd') . '_export_' . $contentTypeDefinition->getName() . '_' . $workspace . '_' . $language . '.json');
+            }
+            else
+            {
+                $data     = $exporter->exportXLSX($repository, $repository->getContentTypeDefinition()
+                                                                          ->getName(), $workspace, $language);
+                $filename = strtolower(date('Ymd') . '_export_' . $contentTypeDefinition->getName() . '_' . $workspace . '_' . $language . '.xlsx');
+            }
             if ($data)
             {
-                $filename = strtolower(date('Ymd') . '_export_' . $contentTypeDefinition->getName() . '_' . $workspace . '_' . $language . '.xlsx');
 
                 // Redirect output to a client’s web browser
                 header('Content-Type: application/vnd.ms-excel');
@@ -104,8 +118,9 @@ class Controller
 
     public static function importRecords(Application $app, Request $request, $contentTypeAccessHash, Module $module = null)
     {
-        $vars           = array();
-        $vars['record'] = false;
+        $vars = array();
+
+        $vars['links']['execute'] = $app['url_generator']->generate('executeImportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
@@ -120,4 +135,91 @@ class Controller
 
         return $app->renderPage('importrecords-modal.twig', $vars);
     }
+
+
+    public static function executeImportRecords(Application $app, Request $request, $contentTypeAccessHash, Module $module = null)
+    {
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+        $success    = false;
+        $filename   = null;
+
+        if ($repository)
+        {
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($contentTypeDefinition);
+
+            $workspace = $request->get('workspace');
+            if (!$contentTypeDefinition->hasWorkspace($workspace))
+            {
+                $workspace = 'default';
+            }
+
+            $language = $request->get('language');
+            if (!$contentTypeDefinition->hasLanguage($language))
+            {
+                $language = 'default';
+            }
+
+            $format = $request->get('format');
+
+            if ($request->files->get('file'))
+            {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $request->files->get('file');
+
+                if ($uploadedFile->isValid())
+                {
+                    $filename = $uploadedFile->getClientOriginalName();
+                    $importer = new Importer();
+
+                    $importer->setTruncateRecords((boolean)$request->get('truncate'));
+                    $importer->setGenerateNewIDs((boolean)$request->get('newids'));
+                    $importer->setPropertyChangesCheck((boolean)$request->get('propertyupdate'));
+                    $importer->setNewerRevisionUpdateProtection((boolean)$request->get('protectedrevisions'));
+
+                    set_time_limit(0);
+
+                    if ($format == 'j')
+                    {
+                        $data = file_get_contents($uploadedFile->getRealPath());
+                        if ($data)
+                        {
+                            if ($importer->importJSON($repository, $contentTypeDefinition->getName(), $data, $workspace, $language))
+                            {
+                                $success = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ($importer->importXLSX($repository, $contentTypeDefinition->getName(), $uploadedFile->getRealPath(), $workspace, $language))
+                        {
+                            $success = true;
+                        }
+                    }
+
+                }
+
+            }
+            else
+            {
+                $app['context']->addInfoMessage('Did you actually upload a file? Nothing here.');
+            }
+
+        }
+        if ($success)
+        {
+            $app['context']->addSuccessMessage($importer->getCount() . ' record(s) imported from ' . $filename);
+        }
+        else
+        {
+            $app['context']->addErrorMessage('Could not import records.');
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )));
+
+    }
+
 }

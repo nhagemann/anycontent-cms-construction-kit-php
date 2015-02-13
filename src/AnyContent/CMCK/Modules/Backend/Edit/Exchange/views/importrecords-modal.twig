@@ -13,7 +13,8 @@
             <div class="row">
                 <div class="col-xs-12">
 
-                    <form role="form" method="post" name="form_import" action="xxx" id="form_import"
+                    <form role="form" method="post" name="form_import" action="{{ links.execute }}" id="form_import"
+                          enctype="multipart/form-data"
                           class="form-horizontal">
                         <fieldset>
                             <legend>File</legend>
@@ -21,7 +22,7 @@
                                 <label class="col-md-3 control-label">File</label>
 
                                 <div class="col-md-6"><br/>
-                                    <input type="file"/>
+                                    <input type="file" name="file"/>
                                 </div>
                             </div>
 
@@ -32,7 +33,7 @@
                                     <label class="col-md-3 control-label">Target </label>
 
                                     <div class="col-md-6">
-                                        <select name="target_workspace" class="form-control">
+                                        <select name="workspace" class="form-control">
                                             {% for key,value in workspaces.list %}
                                                 <option value="{{ key }}"{% if key == workspaces.current %} selected="selected"{% endif %}>{{ value }}</option>
                                             {% endfor %}
@@ -49,7 +50,7 @@
                                     <label class="col-md-3 control-label">Target</label>
 
                                     <div class="col-md-6">
-                                        <select id="selectbasic" name="target_language" class="form-control">
+                                        <select name="language" class="form-control">
                                             {% for key,value in languages.list %}
                                                 <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
                                             {% endfor %}
@@ -63,10 +64,10 @@
                                 <label class="col-md-3 control-label">Source</label>
 
                                 <div class="col-md-6">
-                                    <select id="selectbasic" name="target_language" class="form-control">
+                                    <select name="format" class="form-control">
 
                                         <option value="x" selected="selected">Excel (2007)</option>
-                                        <option value="x">JSON</option>
+                                        <option value="j">JSON</option>
 
                                     </select>
                                 </div>
@@ -77,7 +78,8 @@
                                 <label class="col-md-3 control-label">Truncate</label>
 
                                 <div class="col-md-6">
-                                    <input type="checkbox"> Delete all existing records upon import
+                                    <input type="checkbox" name="truncate" value="1"> Delete all existing records upon
+                                    import
                                 </div>
 
                             </div>
@@ -86,16 +88,19 @@
 
 
                                 <div class="col-md-6">
-                                    <input type="checkbox"> Generate new ID for <strong>every</strong> record
+                                    <input type="checkbox" name="newids" value="1"> Generate new ID for
+                                    <strong>every</strong> record
                                 </div>
                             </div>
                         </fieldset>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Updates</label>
 
-
                             <div class="col-md-9">
-                                <input type="checkbox"> Skip records having a newer revision (revision number must be
+                                <input type="checkbox" name="propertyupdate" value="1" checked="checked"> Update only those records that have different property values
+                            </div>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="protectedrevisions" value="1"> Ignore records whose revision number has increased (revision number must be
                                 provided)
                             </div>
                         </div>
@@ -105,13 +110,22 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="modal_button_transfer"
-                        onclick="$('#form_import').submit();">Import
+                <button type="button" class="btn btn-primary" id="modal_button_import">Import
                 </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
 
         </div>
+        <script type="text/javascript">
 
+            $('#modal_button_import').click(function () {
+
+                cmck_modal_hide();
+                $.blockUI({message: null});
+                $('#form_import').submit();
+                return false;
+            });
+
+        </script>
     </div>
 </div>

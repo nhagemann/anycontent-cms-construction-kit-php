@@ -4,13 +4,10 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\Exchange;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+
 use Symfony\Component\Console\Output\OutputInterface;
 
-use AnyContent\CMCK\Modules\Backend\Edit\Exchange\Exporter;
 use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
-
-use Symfony\Component\Filesystem\Filesystem;
 
 class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Command
 {
@@ -32,7 +29,6 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
     {
         $output->writeln('');
 
-
         $app = $this->getSilexApplication();
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
@@ -47,8 +43,6 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $output->writeln('Starting import for content type ' . $contentTypeName);
 
         $output->writeln('');
-
-        $exporter = new Exporter();
 
         $repositories = $repositoryManager->listRepositories();
 
@@ -83,38 +77,34 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
             return;
         }
 
-
-        if (strpos($filename,'/')!==0)
+        if (strpos($filename, '/') !== 0)
         {
-            $filename = getcwd() . '/'.$filename;
+            $filename = getcwd() . '/' . $filename;
         }
         $filename = realpath($filename);
 
         if (!file_exists($filename))
         {
-            $output->writeln(self::escapeError . 'Could not find/access file.'. self::escapeReset);
+            $output->writeln(self::escapeError . 'Could not find/access file.' . self::escapeReset);
 
             return;
         }
 
-        $output->writeln('Reading '. $filename);
+        $output->writeln('Reading ' . $filename);
         $output->writeln('');
-
-
-
 
         if ($input->getOption('xlsx') == true)
         {
-            $exporter = new Exporter();
-            $exporter->setOutput($output);
-            $exporter->importXLSX($repository, $contentTypeName, $filename, $workspace, $language);
+            $importer = new Importer();
+            $importer->setOutput($output);
+            $importer->importXLSX($repository, $contentTypeName, $filename, $workspace, $language);
         }
         else // default (JSON)
         {
-            $data =file_get_contents($filename);
-            $exporter = new Exporter();
-            $exporter->setOutput($output);
-            $exporter->importJSON($repository, $contentTypeName, $data, $workspace, $language);
+            $data     = file_get_contents($filename);
+            $importer = new Importer();
+            $importer->setOutput($output);
+            $importer->importJSON($repository, $contentTypeName, $data, $workspace, $language);
         }
 
     }

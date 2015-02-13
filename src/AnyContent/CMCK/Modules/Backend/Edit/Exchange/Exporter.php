@@ -27,7 +27,7 @@ class Exporter
         /** @var Record $record */
         $records = $repository->getRecords($workspace, $viewName, $language, 'id', array(), null, 1, null, null, 0);
 
-        if ($records)
+        if ($records!==false)
         {
             $result                         = array();
             $result['info']['content_type'] = $contentTypeName;
@@ -42,7 +42,7 @@ class Exporter
             {
                 $this->writeln('Processing record ' . $record->getID() . ' - ' . $record->getName());
 
-                $result['records'][$record->getID()] = array( 'id' => $record->getID(), 'properties' => $record->getProperties() );
+                $result['records'][$record->getID()] = array( 'id' => $record->getID(), 'revision' => $record->getRevision(), 'properties' => $record->getProperties() );
             }
 
             $json = json_encode($result);
@@ -71,7 +71,7 @@ class Exporter
         /** @var Record $record */
         $records = $repository->getRecords($workspace, $viewName, $language, 'id', array(), null, 1, null, null, 0);
 
-        if ($records)
+        if ($records!==false)
         {
             // Create new PHPExcel object
             $objPHPExcel = new \PHPExcel();
@@ -94,8 +94,11 @@ class Exporter
             $worksheet->setCellValueByColumnAndRow(0, 1, '.id');
             $worksheet->getStyleByColumnAndRow(0, 1)->getFont()->setBold(false)->setItalic(true);
 
+            $worksheet->setCellValueByColumnAndRow(1, 1, '.revision');
+            $worksheet->getStyleByColumnAndRow(1, 1)->getFont()->setBold(false)->setItalic(true);
+
             $row    = 1;
-            $column = 1;
+            $column = 2;
             foreach ($contentTypeDefinition->getProperties($viewName) as $property)
             {
                 $worksheet->setCellValueByColumnAndRow($column, $row, $property);
@@ -111,8 +114,9 @@ class Exporter
                 $this->writeln('Processing record ' . $record->getID() . ' - ' . $record->getName());
 
                 $worksheet->setCellValueByColumnAndRow(0, $row, $record->getID());
+                $worksheet->setCellValueByColumnAndRow(1, $row, $record->getRevision());
 
-                $column = 1;
+                $column = 2;
                 foreach ($contentTypeDefinition->getProperties($viewName) as $property)
                 {
                     $worksheet->setCellValueByColumnAndRow($column, $row, $record->getProperty($property));
@@ -131,152 +135,6 @@ class Exporter
 
         return false;
 
-    }
-
-
-    public function importJSON(Repository $repository, $contentTypeName, $data, $workspace = 'default', $language = 'default', $viewName = 'exchange')
-    {
-        $repository->selectContentType($contentTypeName);
-
-        // Select view and fallback if necessary
-        $contentTypeDefinition = $repository->getContentTypeDefinition();
-        $viewDefinition        = $contentTypeDefinition->getExchangeViewDefinition($viewName);
-        $viewName              = $viewDefinition->getName();
-
-        $data = json_decode($data, true);
-
-        if (json_last_error() != 0)
-        {
-            $this->writeln('Error parsing JSON data.');
-
-            return;
-        }
-
-        if (array_key_exists('records', $data))
-        {
-            $rows = $data['records'];
-
-            foreach ($rows as $row)
-            {
-                $id         = $row['id'];
-                $properties = $row['properties'];
-                $name       = '';
-                if (isset($properties['name']))
-                {
-                    $name = $properties['name'];
-                }
-
-                $msg = trim('Importing record ' . $id) . ' - ' . $name;
-
-                $record = new Record($contentTypeDefinition, 'Imported Record', $viewName, $workspace, $language);
-                $record->setProperties($properties);
-                $record->setID($id);
-                $id = $repository->saveRecord($record);
-
-                if ($id)
-                {
-                    $msg .= ' [' . $id . ']';
-                }
-                else
-                {
-                    $msg .= ' [ERROR]';
-                }
-                $this->writeln($msg);
-
-            }
-        }
-    }
-
-
-    public function importXLSX(Repository $repository, $contentTypeName, $filename, $workspace = 'default', $language = 'default', $viewName = 'exchange')
-    {
-        $repository->selectContentType($contentTypeName);
-
-        // Select view and fallback if necessary
-        $contentTypeDefinition = $repository->getContentTypeDefinition();
-        $viewDefinition        = $contentTypeDefinition->getExchangeViewDefinition($viewName);
-        $viewName              = $viewDefinition->getName();
-
-        $objPHPExcel = \PHPExcel_IOFactory::load($filename);
-
-        if ($objPHPExcel)
-        {
-            $objWorksheet = $objPHPExcel->getActiveSheet();
-
-            $highestRow    = $objWorksheet->getHighestRow(); // e.g. 10
-            $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
-
-            $highestColumnIndex = \PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
-            $idColumnIndex      = null;
-
-            $propertiesColumnIndices = array();
-
-            for ($i = 0; $i <= $highestColumnIndex; $i++)
-            {
-                $value = trim($objWorksheet->getCellByColumnAndRow($i, 1)->getValue());
-                if ($value != '')
-                {
-                    if ($value == Util::generateValidIdentifier($value))
-                    {
-                        if ($contentTypeDefinition->hasProperty($value, $viewName))
-                        {
-                            $this->writeln('Detected valid property ' . $value);
-                            $propertiesColumnIndices[$value] = $i;
-                        }
-                    }
-                    else
-                    {
-                        if ($value == '.id')
-                        {
-                            $idColumnIndex = $i;
-                        }
-                    }
-
-                }
-
-            }
-
-            $this->writeln('');
-
-            for ($row = 2; $row <= $highestRow; ++$row)
-            {
-                $id = null;
-                if ($idColumnIndex !== false)
-                {
-                    $id = $objWorksheet->getCellByColumnAndRow($idColumnIndex, $row)->getValue();
-                }
-                $properties = array();
-                foreach ($propertiesColumnIndices as $property => $col)
-                {
-                    $value                 = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-                    $properties[$property] = $value;
-                }
-                $name = '';
-
-                if (isset($propertiesColumnIndices['name']))
-                {
-                    $name = $objWorksheet->getCellByColumnAndRow($propertiesColumnIndices['name'], $row)->getValue();
-                }
-
-                $msg = trim('Importing record ' . $id) . ' - ' . $name;
-
-                $record = new Record($contentTypeDefinition, 'Imported Record', $viewName, $workspace, $language);
-                $record->setProperties($properties);
-                $record->setID($id);
-                $id = $repository->saveRecord($record);
-
-                if ($id)
-                {
-                    $msg .= ' [' . $id . ']';
-                }
-                else
-                {
-                    $msg .= ' [ERROR]';
-                }
-                $this->writeln($msg);
-
-            }
-        }
     }
 
 

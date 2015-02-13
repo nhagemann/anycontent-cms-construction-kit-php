@@ -43,7 +43,7 @@
                                     <label class="col-md-3 control-label">Source</label>
 
                                     <div class="col-md-6">
-                                        <select id="selectbasic" name="language" class="form-control">
+                                        <select name="language" class="form-control">
                                             {% for key,value in languages.list %}
                                                 <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
                                             {% endfor %}
@@ -57,10 +57,10 @@
                                 <label class="col-md-3 control-label">Target</label>
 
                                 <div class="col-md-6">
-                                    <select id="selectbasic" name="format" class="form-control">
+                                    <select name="format" class="form-control">
 
                                         <option value="x" selected="selected">Excel 2007</option>
-                                        <option value="x">JSON</option>
+                                        <option value="j">JSON</option>
 
                                     </select>
                                 </div>
@@ -80,6 +80,8 @@
             {# http://stackoverflow.com/questions/1106377/detect-when-browser-receives-file-download #}
             $('#modal_button_export').click(function () {
 
+                cmck_modal_hide();
+                $.blockUI({message: null});
                 $('#form_export').submit();
                 downloadTimer = window.setInterval(function () {
 
@@ -96,6 +98,5 @@
 
 
         </script>
-
     </div>
 </div>
