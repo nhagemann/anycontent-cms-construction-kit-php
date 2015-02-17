@@ -19,7 +19,11 @@ class FormElementNumber extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
         $this->vars['leftAddOn']  = $leftAddOn;
         $this->vars['rightAddOn'] = $rightAddOn;
 
-        $this->vars['value'] = number_format((double)$this->vars['value'], $this->definition->getDigits(), '.', '');
+        $this->vars['value'] = trim($this->vars['value']);
+        if ($this->vars['value'] != '')
+        {
+            $this->vars['value'] = number_format((double)$this->vars['value'], $this->definition->getDigits(), '.', '');
+        }
 
         return $this->twig->render('formelement-number.twig', $this->vars);
     }
@@ -46,7 +50,11 @@ class FormElementNumber extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormE
             $value  = join('', $tokens) . '.' . $digits;
         }
 
-        $value = number_format($value, $this->definition->getDigits(), '.', '');
+        $value = trim($value);
+        if ($value != '')
+        {
+            $value = number_format($value, $this->definition->getDigits(), '.', '');
+        }
 
         return $value;
     }

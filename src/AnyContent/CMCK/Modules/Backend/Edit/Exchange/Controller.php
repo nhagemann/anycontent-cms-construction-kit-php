@@ -3,6 +3,9 @@
 namespace AnyContent\CMCK\Modules\Backend\Edit\Exchange;
 
 use AnyContent\Client\ContentFilter;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +16,111 @@ use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 use AnyContent\Client\UserInfo;
 
-use AnyContent\CMCK\Modules\Backend\Edit\Export\Module;
-
 class Controller
 {
 
-    public static function exportRecords(Application $app, Request $request, $contentTypeAccessHash, Module $module=null)
+    public static function exportRecords(Application $app, Request $request, $contentTypeAccessHash, Module $module = null)
     {
+        $vars = array();
+
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+
+        if ($repository)
+        {
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($contentTypeDefinition);
+        }
+
+        $downloadToken = md5(microtime());
+
+        $vars['links']['execute'] = $app['url_generator']->generate('executeExportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'token' => $downloadToken ));
+        $vars['links']['list']    = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
+        $vars['token']            = $downloadToken;
+
+        return $app->renderPage('exportrecords-modal.twig', $vars);
+    }
+
+
+    public static function executeExportRecords(Application $app, Request $request, $contentTypeAccessHash, $token, Module $module = null)
+    {
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+
+        if ($repository)
+        {
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($contentTypeDefinition);
+
+            $workspace = $request->get('workspace');
+            if (!$contentTypeDefinition->hasWorkspace($workspace))
+            {
+                $workspace = 'default';
+            }
+
+            $language = $request->get('language');
+            if (!$contentTypeDefinition->hasLanguage($language))
+            {
+                $language = 'default';
+            }
+
+            $format = $request->get('format');
+
+            $exporter = new Exporter();
+
+            if ($format == 'j')
+            {
+                $data     = $exporter->exportJSON($repository, $repository->getContentTypeDefinition()
+                                                                          ->getName(), $workspace, $language);
+                $filename = strtolower(date('Ymd') . '_export_' . $contentTypeDefinition->getName() . '_' . $workspace . '_' . $language . '.json');
+            }
+            else
+            {
+                $data     = $exporter->exportXLSX($repository, $repository->getContentTypeDefinition()
+                                                                          ->getName(), $workspace, $language);
+                $filename = strtolower(date('Ymd') . '_export_' . $contentTypeDefinition->getName() . '_' . $workspace . '_' . $language . '.xlsx');
+            }
+            if ($data)
+            {
+
+                // Redirect output to a client’s web browser
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment;filename="' . $filename . '"');
+                header('Cache-Control: max-age=0');
+                // If you're serving to IE 9, then the following may be needed
+                header('Cache-Control: max-age=1');
+
+                // If you're serving to IE over SSL, then the following may be needed
+                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+                header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                header('Pragma: public'); // HTTP/1.0
+
+                $response = new Response($data);
+                $cookie   = new Cookie("anycontent-download", $token, 0, '/', null, false, false); //Not http only!
+                $response->headers->setCookie($cookie);
+
+                $app['context']->addSuccessMessage('Records exported to ' . $filename);
+
+                return $response;
+
+            }
+
+        }
+        $app['context']->addErrorMessage('Could not export records.');
+
+        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )));
+
+    }
+
+
+    public static function importRecords(Application $app, Request $request, $contentTypeAccessHash, Module $module = null)
+    {
+        $vars = array();
+
+        $vars['links']['execute'] = $app['url_generator']->generate('executeImportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
@@ -30,114 +131,94 @@ class Controller
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($contentTypeDefinition);
 
-            $viewName = $contentTypeDefinition->getExchangeViewDefinition()->getName();
+        }
 
-            // Create new PHPExcel object
-            $objPHPExcel = new \PHPExcel();
+        return $app->renderPage('importrecords-modal.twig', $vars);
+    }
 
-            // Set document properties
-            $objPHPExcel->getProperties()->setCreator("AnyContent CMCK")
-                ->setLastModifiedBy("AnyContent CMCK")
-                ->setTitle("Full Export from content type " . $contentTypeDefinition->getTitle())
-                ->setSubject("Office 2007 XLSX Test Document")
-                ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-                ->setKeywords("office 2007 openxml php")
-                ->setCategory("Test result file");
 
-            $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-            $worksheet->setTitle('Export');
+    public static function executeImportRecords(Application $app, Request $request, $contentTypeAccessHash, Module $module = null)
+    {
+        /** @var Repository $repository */
+        $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+        $success    = false;
+        $filename   = null;
 
-            $worksheet->setCellValueByColumnAndRow(0, 1, 'record.id');
-            $worksheet->getStyleByColumnAndRow(0, 1)->getFont()->setBold(false)->setItalic(true);
-            $worksheet->setCellValueByColumnAndRow(1, 1, 'record.lastchange');
-            $worksheet->getStyleByColumnAndRow(1, 1)->getFont()->setBold(false)->setItalic(true);
-            $worksheet->getColumnDimension('B')->setWidth(15);
+        if ($repository)
+        {
+            $contentTypeDefinition = $repository->getContentTypeDefinition();
+            $app['context']->setCurrentRepository($repository);
+            $app['context']->setCurrentContentType($contentTypeDefinition);
 
-            $row    = 1;
-            $column = 2;
-            foreach ($contentTypeDefinition->getProperties($viewName) as $property)
+            $workspace = $request->get('workspace');
+            if (!$contentTypeDefinition->hasWorkspace($workspace))
             {
-                $worksheet->setCellValueByColumnAndRow($column, $row, $property);
-                $worksheet->getStyleByColumnAndRow($column, $row)->getFont()->setBold(true);
-
-                $column++;
+                $workspace = 'default';
             }
-            //$worksheet->setCellValueByColumnAndRow($column++, $row, 'record.revision');
-            //$worksheet->setCellValueByColumnAndRow($column++, $row, 'record.parent_id');
-            //$worksheet->setCellValueByColumnAndRow($column++, $row, 'record.position');
-            $row++;
 
-            //  setBreakByColumnAndRow($pColumn = 0, $pRow = 1, $pBreak = PHPExcel_Worksheet::BREAK_NONE)
-
-            //$this->workbook->getActiveSheet()->getStyle($cell)->getNumberFormat()->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-
-            /** @var Record $record */
-            foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $viewName, $app['context']->getCurrentLanguage(), 'id', array(), null, 1, null, null, $app['context']->getCurrentTimeShift()) AS $record)
+            $language = $request->get('language');
+            if (!$contentTypeDefinition->hasLanguage($language))
             {
-                /** @var UserInfo $userInfo */
-                $userInfo = $record->getLastChangeUserInfo();
+                $language = 'default';
+            }
 
-                $worksheet->setCellValueByColumnAndRow(0, $row, $record->getID());
-                $date = new \DateTime();
-                $date->setTimestamp($userInfo->getTimestamp());
-                $dateExcel = \PHPExcel_Shared_Date::PHPToExcel($date);
-                $worksheet->setCellValueByColumnAndRow(1, $row, $dateExcel);
-                $worksheet->getStyleByColumnAndRow(1, $row)->getNumberFormat()
-                    ->setFormatCode($module->getOption('FormatCode.DateTime'));
+            $format = $request->get('format');
 
-                $column = 2;
-                foreach ($contentTypeDefinition->getProperties($viewName) as $property)
+            if ($request->files->get('file'))
+            {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $request->files->get('file');
+
+                if ($uploadedFile->isValid())
                 {
-                    $worksheet->setCellValueByColumnAndRow($column, $row, $record->getProperty($property));
-                    //$worksheet->getStyleByColumnAndRow($column, $row)->getNumberFormat()
-                    //    ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
-                    $column++;
+                    $filename = $uploadedFile->getClientOriginalName();
+                    $importer = new Importer();
+
+                    $importer->setTruncateRecords((boolean)$request->get('truncate'));
+                    $importer->setGenerateNewIDs((boolean)$request->get('newids'));
+                    $importer->setPropertyChangesCheck((boolean)$request->get('propertyupdate'));
+                    $importer->setNewerRevisionUpdateProtection((boolean)$request->get('protectedrevisions'));
+
+                    set_time_limit(0);
+
+                    if ($format == 'j')
+                    {
+                        $data = file_get_contents($uploadedFile->getRealPath());
+                        if ($data)
+                        {
+                            if ($importer->importJSON($repository, $contentTypeDefinition->getName(), $data, $workspace, $language))
+                            {
+                                $success = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ($importer->importXLSX($repository, $contentTypeDefinition->getName(), $uploadedFile->getRealPath(), $workspace, $language))
+                        {
+                            $success = true;
+                        }
+                    }
+
                 }
 
-                /*$item                     = array();
-                $item['record']           = $record;
-                $item['name']             = $record->getName();
-                $item['id']               = $record->getID();
-                $item['editUrl']          = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-                $item['deleteUrl']        = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID() ));
-                $item['status']['label']  = $record->getStatusLabel();
-                $item['subtype']['label'] = $record->getSubtypeLabel();
-                $item['position']         = $record->getPosition();
-                $item['level']            = $record->getLevelWithinSortedTree();
-
-
-                $item['username'] = $userInfo->getName();
-                $date             = new \DateTime();
-                $date->setTimestamp($userInfo->getTimestamp());
-                $item['lastChangeDate'] = $date->format('d.m.Y H:i:s');
-                $item['gravatar']       = '<img src="https://www.gravatar.com/avatar/' . md5(trim($userInfo->getUsername())) . '?s=40" height="40" width="40"/>';
-
-                */
-                $row++;
+            }
+            else
+            {
+                $app['context']->addInfoMessage('Did you actually upload a file? Nothing here.');
             }
 
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
-
-            // Redirect output to a client’s web browser (Excel5)
-            header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="01simple.xls"');
-            header('Cache-Control: max-age=0');
-            // If you're serving to IE 9, then the following may be needed
-            header('Cache-Control: max-age=1');
-
-            // If you're serving to IE over SSL, then the following may be needed
-            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-            header('Pragma: public'); // HTTP/1.0
-
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-            $objWriter->save('php://output');
-            die();
-
         }
-        die();
+        if ($success)
+        {
+            $app['context']->addSuccessMessage($importer->getCount() . ' record(s) imported from ' . $filename);
+        }
+        else
+        {
+            $app['context']->addErrorMessage('Could not import records.');
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )));
 
     }
 

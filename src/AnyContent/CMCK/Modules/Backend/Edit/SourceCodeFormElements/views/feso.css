@@ -5,7 +5,6 @@
     border-left: 1px solid #ccc;
     border-top: 1px solid #ccc;
 
-
 }
 
 .CodeMirror-vscrollbar {
@@ -14,3 +13,6 @@
     margin-bottom: 1px;
 }
 
+div.form-group.has-error div.CodeMirror {
+    border-color: #a94442;
+}

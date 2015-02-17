@@ -14,8 +14,6 @@ class FormElementGeoLocation extends \AnyContent\CMCK\Modules\Backend\Core\Edit\
 
     public function render($layout)
     {
-        //TODO API KEY as module option
-        $layout->addJsLinkToHead('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false');
 
         $layout->addJsFile('fe-geolocation.js');
 

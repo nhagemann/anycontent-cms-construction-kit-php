@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
+use AnyContent\Client\ContentFilter;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use CMDL\ContentTypeDefinition;
@@ -12,6 +13,9 @@ use AnyContent\Client\Record;
 
 use AnyContent\CMCK\Modules\Backend\Core\Edit\FormManager;
 
+use CMDL\FormElementDefinition;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +43,7 @@ class Controller
             $formManager->setDataTypeDefinition($repository->getContentTypeDefinition());
 
             $app['layout']->addCssFile('listing.css');
+            $app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
@@ -58,7 +63,7 @@ class Controller
                 $attributes = array();
                 foreach ($viewDefinition->getFormElementDefinitions() as $formElementDefinition)
                 {
-                    $attributes[$formElementDefinition->getName()]=$formElementDefinition->getDefaultValue();
+                    $attributes[$formElementDefinition->getName()] = $formElementDefinition->getDefaultValue();
                 }
 
                 $vars['form'] = $formManager->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $attributes, array( 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
@@ -124,6 +129,7 @@ class Controller
             $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
             $app['layout']->addCssFile('listing.css');
+            $app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
@@ -168,7 +174,8 @@ class Controller
             }
             else
             {
-                $vars['id']=$recordId;
+                $vars['id'] = $recordId;
+
                 return $app->renderPage('record-not-found.twig', $vars);
             }
         }
@@ -266,6 +273,41 @@ class Controller
                     $record->setProperty($property, $value);
                 }
 
+                if ($save) // check for unique properties
+                {
+                    $properties = array();
+                    /**
+                     * @var $formElementDefinitions FormElementDefinition[]
+                     */
+                    $formElementDefinitions = $viewDefinition->getFormElementDefinitions();
+                    foreach ($formElementDefinitions as $formElementDefinition)
+                    {
+                        if ($formElementDefinition->isUnique() && $record->getProperty($formElementDefinition->getName())!='')
+                        {
+                            $filter = new ContentFilter($contentTypeDefinition);
+                            $filter->addCondition($formElementDefinition->getName(), '=', $record->getProperty($formElementDefinition->getName()));
+
+                            $records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 1, 1, $filter);
+
+                            if (count($records) != 0)
+                            {
+                                $record = array_shift($records);
+                                if (count($records) > 1 || $record->getID() != $recordId)
+                                {
+                                    $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
+                                }
+                            }
+                        }
+                    }
+                    if (count($properties) > 0)
+                    {
+                        $message  = 'Could not save record. <em>' . join(',', array_values($properties)) . '</em> must be unique for all records of this content type.';
+                        $response = array( 'success' => false, 'message' => $message, 'properties' => array_keys($properties) );
+
+                        return new JsonResponse($response);
+                    }
+                }
+
                 if ($save)
                 {
                     $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
@@ -277,9 +319,9 @@ class Controller
                     }
                     else
                     {
-                        $app['context']->addErrorMessage('Could not save record.');
+                        $response = array( 'success' => false, 'message' => 'Could not save record. Please check your input.', 'properties' => array( '' ) );
 
-                        return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
+                        return new JsonResponse($response);
                     }
                 }
                 if ($duplicate)
@@ -291,19 +333,31 @@ class Controller
 
                 if ($insert)
                 {
-                    return new RedirectResponse($app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 303);
+                    $url      = $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
+                    $response = array( 'success' => true, 'redirect' => $url );
+
+                    return new JsonResponse($response);
                 }
 
                 if ($list)
                 {
-                    return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
+                    $url      = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() ));
+                    $response = array( 'success' => true, 'redirect' => $url );
+
+                    return new JsonResponse($response);
                 }
 
-                return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
+                $url      = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
+                $response = array( 'success' => true, 'redirect' => $url );
+
+                return new JsonResponse($response);
+
             }
             else
             {
-                return $app['layout']->render('record-notfound.twig');
+                $response = array( 'success' => false, 'message' => 'Record not found.' );
+
+                return new JsonResponse($response);
             }
         }
     }

@@ -12,6 +12,7 @@ use AnyContent\Client\Record;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class Controller
@@ -36,7 +37,7 @@ class Controller
             $app['form']->setDataTypeDefinition($configTypeDefinition);
 
             /** @var Config $record */
-            $record = $repository->getConfig($configTypeDefinition->getName(),$app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(),$app['context']->getCurrentTimeShift());
+            $record = $repository->getConfig($configTypeDefinition->getName(), $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
             //$app['layout']->addCssFile('listing.css');
             $app['layout']->addJsFile('editrecord.js');
@@ -87,8 +88,7 @@ class Controller
             $app['context']->setCurrentLanguage($hidden['language']);
 
             /** @var Config $record */
-            $record = $repository->getConfig($configTypeDefinition->getName(),$app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(),$app['context']->getCurrentTimeShift());
-
+            $record = $repository->getConfig($configTypeDefinition->getName(), $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
             if ($record)
             {
@@ -116,12 +116,16 @@ class Controller
 
                 }
 
-                return new RedirectResponse($app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeAccessHash )), 303);
+                $url      = $app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
+                $response = array( 'success' => true, 'redirect' => $url );
 
+                return new JsonResponse($response);
             }
             else
             {
-                return $app['layout']->render('config-notfound.twig');
+                $response = array( 'success' => false, 'message' => 'Config not found.' );
+
+                return new JsonResponse($response);
             }
         }
     }

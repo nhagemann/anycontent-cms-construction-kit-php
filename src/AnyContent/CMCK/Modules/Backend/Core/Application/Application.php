@@ -58,7 +58,7 @@ class Application extends SilexApplication
             $options = $this->authenticationAdapter[$config['type']]['options'];
             unset($config['type']);
 
-            $adapter = new $class($config,$this['session'],$options);
+            $adapter = new $class($config, $this['session'], $options);
         }
         else
         {
@@ -88,11 +88,14 @@ class Application extends SilexApplication
 
     public function initModules()
     {
+
         $this->register(new ConsoleServiceProvider(), array(
             'console.name'              => 'AnyContent CMCK Console',
             'console.version'           => '1.0.0',
             'console.project_directory' => APPLICATION_PATH
         ));
+
+        $this->addTemplatesFolders(__DIR__ . '/views/');
 
         foreach ($this->modules as $module)
         {
@@ -108,11 +111,7 @@ class Application extends SilexApplication
         ));
 
         $this['twig']->setCache(APPLICATION_PATH . '/twig-cache');
-    }
 
-
-    public function run(Request $request = null)
-    {
         // Init Cache
 
         $cacheConfiguration = $this['config']->getCacheConfiguration();
@@ -149,7 +148,6 @@ class Application extends SilexApplication
 
         $this['repos']->setUserInfo($this['user']->getClientUserInfo());
 
-        parent::run($request);
     }
 
 
@@ -195,6 +193,7 @@ class Application extends SilexApplication
         }, $priority);
     }
 
+
     /**
      * Adds an event listener that listens on the specified events.
      *
@@ -209,5 +208,9 @@ class Application extends SilexApplication
     {
         $this['dispatcher']->addListener($eventName, $listener, $priority);
     }
+
+
+
+
 }
 

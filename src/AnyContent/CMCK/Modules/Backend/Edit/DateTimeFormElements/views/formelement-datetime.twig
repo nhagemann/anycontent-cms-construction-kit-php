@@ -45,7 +45,7 @@
 
                 <input type="text" class="form-control formelement-tooltip datepicker" id="{{ id }}" name="{{ name }}[]"
                        placeholder="{{ definition.placeholder }}" value="{{ value }}" data-toggle="tooltip"
-                       data-trigger="hover" data-placement="right" data-content="{{ definition.hint }}">
+                       data-trigger="hover" data-placement="right" data-content="{{ definition.hint }}" {% if definition.isProtected %} disabled="disabled"{% endif %}>
             </div>
         </div>
 
