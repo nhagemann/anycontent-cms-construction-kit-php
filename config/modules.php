@@ -23,6 +23,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Exchange', array( 'Fo
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
 
+
 // Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
 
 if (!function_exists('apc_exists'))
