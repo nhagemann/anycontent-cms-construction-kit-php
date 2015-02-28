@@ -1,0 +1,62 @@
+{% extends "layout-default.twig" %}
+
+{% block content %}
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="{{ links.home }}">Home</a></li>
+            <li><a href="{{ links.admin }}">Admin</a></li>
+            {% if data_type =='content' %}
+                <li>Content Type <strong>{{ definition.getName }}</strong></li>
+            {% else %}
+                <li>Config Type <strong>{{ definition.getName }}</strong></li>
+            {% endif %}
+        </ol>
+    </div>
+
+    <div class="row">
+        <h3><span class="label label-default">{{ definition.getName }}</span> {{ definition.getTitle }}</h3>
+    </div>
+    <div class="row">
+
+        <form class="well" role="form" method="post" name="form_admin" action="" id="form_admin">
+
+            <fieldset>
+                <div class="row">
+                    <div class="col-xs-8">
+
+                        <textarea id="cmdl" name="cmdl" placeholder="" class="form-control formelement-tooltip"
+                                  rows="35" data-toggle="tooltip" data-trigger="hover" data-placement="right"
+                                  data-content="" data-original-title="" title="">{{ cmdl }}</textarea>
+
+
+                    </div>
+                    <div>
+                        Take a look at the <a href="http://anycontent.readthedocs.org/en/latest/cmdl" target="_blank">Content
+                            Definition</a> section of the <a href="http://anycontent.readthedocs.org" target="_blank">AnyContent
+                            documentation</a> to know your options.
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr/>
+
+            <div class="controls">
+                    <span class="btn-group">
+                        <a href="#" class="btn btn-primary" id="form_admin_button_submit">Save</a>
+                    </span>
+
+                {% if data_type =='content' %}
+                    <span class="btn-group">
+                        <a href="{{ links.delete }}" class="btn btn-danger admin_button_delete_content_type">Delete</a>
+                    </span>
+                {% else %}
+                    <span class="btn-group">
+                        <a href="{{ links.delete }}" class="btn btn-danger admin_button_delete_config_type">Delete</a>
+                    </span>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}

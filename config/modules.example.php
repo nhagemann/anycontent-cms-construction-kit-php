@@ -18,10 +18,11 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElemen
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\TableFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\ColorFormElement');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Exchange', array( 'FormatCode.DateTime' => 'd.m.YYYY hh:mm' ));
-
-
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
+
+// If you want to edit your content/config configuration from the backend:
+// $app->registerModule('AnyContent\CMCK\Modules\Admin\CMDL');
 
 // Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
 

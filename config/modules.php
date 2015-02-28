@@ -22,7 +22,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\PasswordFormElement')
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Edit\Exchange', array( 'FormatCode.DateTime' => 'd.m.YYYY hh:mm' ));
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
-
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Admin\CMDL');
 
 // Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
 
