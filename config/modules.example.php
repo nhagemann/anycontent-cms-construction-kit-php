@@ -22,7 +22,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
 
 // If you want to edit your content/config configuration from the backend:
-// $app->registerModule('AnyContent\CMCK\Modules\Admin\CMDL');
+// $app->registerModule('AnyContent\CMCK\Modules\Backend\Admin\CMDL');
 
 // Provide apc_exists function for older PHP versions
 
