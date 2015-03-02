@@ -60,6 +60,12 @@ function cmck_trigger_change(object) {
     });
 }
 
+function cmck_message_info(message) {
+    $('#messages').html('<div class="alert alert-info">' + message + '</div>');
+    $(document).scrollTop(0);
+    $('#messages div').delay(3000).fadeOut(500);
+}
+
 function cmck_message_alert(message) {
     $('#messages').html('<div class="alert alert-warning">' + message + '</div>');
     $(document).scrollTop(0);

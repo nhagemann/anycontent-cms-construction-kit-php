@@ -287,13 +287,15 @@ class Controller
                             $filter = new ContentFilter($contentTypeDefinition);
                             $filter->addCondition($formElementDefinition->getName(), '=', $record->getProperty($formElementDefinition->getName()));
 
-                            $records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 1, 1, $filter);
+                            $records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 2, 1, $filter);
 
-                            if (count($records) != 0)
-                            {
+                            if (count($records) > 1) {
+                                $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
+                            }
+                            elseif (count($records) == 1) {
                                 $record = array_shift($records);
-                                if (count($records) > 1 || $record->getID() != $recordId)
-                                {
+
+                                if ($record->getID() != $recordId) {
                                     $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
                                 }
                             }

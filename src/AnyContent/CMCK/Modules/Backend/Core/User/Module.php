@@ -37,9 +37,10 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         });
 
         // Perform a hard redirect, if no user is logged in
-        $app->before(function ($request) use ($app)
+        $app->before(function (Request $request) use ($app)
         {
-            if ($request->get('_route') != 'login' && $request->get('_route') != 'postLogin')
+
+            if ($request->get('_route') != 'login' && $request->get('_route') != 'postLogin' && substr($request->getPathInfo(), 0, 7) != '/public')
             {
 
                 if (!$app['user']->isLoggedIn())

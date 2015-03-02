@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.2",
-        "silex/silex": "~1.1",
+        "php": ">=5.3",
+        "silex/silex": "1.2.*",
         "twig/twig": ">=1.8,<2.0-dev",
         "nitra/php-min": "dev-master",
         "nhagemann/cmdl-parser-php": "0.9.*",
