@@ -24,7 +24,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
 // If you want to edit your content/config configuration from the backend:
 // $app->registerModule('AnyContent\CMCK\Modules\Admin\CMDL');
 
-// Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
+// Provide apc_exists function for older PHP versions
 
 if (!function_exists('apc_exists'))
 {
