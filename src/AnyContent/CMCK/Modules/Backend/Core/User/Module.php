@@ -40,7 +40,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app->before(function (Request $request) use ($app)
         {
 
-            if ($request->get('_route') != 'login' && $request->get('_route') != 'postLogin' && substr($request->getPathInfo(), 0, 7) != '/public')
+            $parts = explode('/', trim($request->getPathInfo(), '/'));
+
+            if (isset($parts[0]) && !in_array($parts[0], array( 'login', 'css', 'js', 'public' )))
             {
 
                 if (!$app['user']->isLoggedIn())
