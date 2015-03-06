@@ -146,6 +146,7 @@ class Controller
                 if ($client->saveContentTypeCMDL($contentTypeDefinition->getName(), $cmdl))
                 {
                     $response['success'] = true;
+                    $app['menus']->clearCache();
                 }
             }
             catch (\Exception $e)
@@ -192,6 +193,7 @@ class Controller
                 if ($client->saveConfigTypeCMDL($configTypeDefinition->getName(), $cmdl))
                 {
                     $response['success'] = true;
+                    $app['menus']->clearCache();
                 }
             }
             catch (\Exception $e)
@@ -230,6 +232,7 @@ class Controller
                     if ($client->saveContentTypeCMDL($contentTypeName, '### definition of content type ' . $contentTypeName . ' ###' . PHP_EOL . PHP_EOL . 'Name'))
                     {
                         $app['context']->addSuccessMessage('Content Type ' . $contentTypeName . ' created.');
+                        $app['menus']->clearCache();
 
                         return new RedirectResponse($url);
                     }
@@ -274,6 +277,7 @@ class Controller
                     if ($client->saveConfigTypeCMDL($configTypeName, '### definition of config type ' . $configTypeName . ' ###' . PHP_EOL))
                     {
                         $app['context']->addSuccessMessage('Config Type ' . $configTypeName . ' created.');
+                        $app['menus']->clearCache();
 
                         return new RedirectResponse($url);
                     }
@@ -312,6 +316,7 @@ class Controller
             if ($client->deleteContentType($contentTypeName))
             {
                 $app['context']->addSuccessMessage('Content Type ' . $contentTypeName . ' deleted.');
+                $app['menus']->clearCache();
 
                 return new RedirectResponse($url);
             }
@@ -343,6 +348,7 @@ class Controller
             if ($client->deleteConfigType($configTypeName))
             {
                 $app['context']->addSuccessMessage('Config Type ' . $configTypeName . ' deleted.');
+                $app['menus']->clearCache();
 
                 return new RedirectResponse($url);
             }

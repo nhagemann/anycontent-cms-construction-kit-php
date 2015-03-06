@@ -115,4 +115,11 @@ class MenuManager
 
         return $this->twig->render('core_menu_buttongroup.twig', array( 'buttons' => $buttons ));
     }
+
+
+    public function clearCache()
+    {
+        $cacheToken = 'cmck_menu_main_' . $this->session->getId();
+        $this->cache->delete($cacheToken);
+    }
 }
