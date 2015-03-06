@@ -211,16 +211,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.12.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "1fbe8c2641f2b163addf49cc5e18f144bec6b19f"
+                "reference": "c41c218e239b50446fd883acb1ecfd4b770caeae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1fbe8c2641f2b163addf49cc5e18f144bec6b19f",
-                "reference": "1fbe8c2641f2b163addf49cc5e18f144bec6b19f",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c41c218e239b50446fd883acb1ecfd4b770caeae",
+                "reference": "c41c218e239b50446fd883acb1ecfd4b770caeae",
                 "shasum": ""
             },
             "require": {
@@ -237,6 +237,7 @@
                 "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
+                "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
             },
             "suggest": {
@@ -253,7 +254,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12.x-dev"
+                    "dev-master": "1.13.x-dev"
                 }
             },
             "autoload": {
@@ -279,20 +280,20 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-12-29 21:29:35"
+            "time": "2015-03-05 01:12:12"
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "0.9.1",
+            "version": "0.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "477ab2ddacdb420b9df7f52a2b982136125076e3"
+                "reference": "84797fc9d27d1aa5f70e4fcc2400ba31fc8273f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/477ab2ddacdb420b9df7f52a2b982136125076e3",
-                "reference": "477ab2ddacdb420b9df7f52a2b982136125076e3",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/84797fc9d27d1aa5f70e4fcc2400ba31fc8273f8",
+                "reference": "84797fc9d27d1aa5f70e4fcc2400ba31fc8273f8",
                 "shasum": ""
             },
             "require": {
@@ -322,24 +323,24 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-02-17 11:40:56"
+            "time": "2015-03-06 19:09:18"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
-            "version": "0.9",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "28bc7baca6815870a844f13bce658602402cb709"
+                "reference": "aa5052f74d801db788f02ec194d7f68629882533"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/28bc7baca6815870a844f13bce658602402cb709",
-                "reference": "28bc7baca6815870a844f13bce658602402cb709",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/aa5052f74d801db788f02ec194d7f68629882533",
+                "reference": "aa5052f74d801db788f02ec194d7f68629882533",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "php": ">=5.4"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7.0"
@@ -363,7 +364,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-02-06 12:06:36"
+            "time": "2015-03-06 19:05:56"
         },
         {
             "name": "nitra/php-min",
