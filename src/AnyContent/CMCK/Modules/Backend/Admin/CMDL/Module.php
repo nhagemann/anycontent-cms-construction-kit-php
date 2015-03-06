@@ -22,7 +22,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
 
-        $app->get('admin', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::adminList')->bind('adminList');
+        $app->get('admin', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::admin')->bind('admin');
 
         $app
             ->get('/admin/edit/content_type/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::adminEditContentType')

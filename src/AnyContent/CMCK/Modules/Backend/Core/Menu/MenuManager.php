@@ -5,6 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Menu;
 class MenuManager
 {
 
+    protected $app;
     protected $repositoryManager;
     protected $twig;
     protected $layout;
@@ -16,6 +17,7 @@ class MenuManager
 
     public function __construct($app, $repositoryManager, $twig, $layout, $urlGenerator, $cache, $config)
     {
+        $this->app               = $app;
         $this->session           = $app['session'];
         $this->repositoryManager = $repositoryManager;
         $this->twig              = $twig;
@@ -66,6 +68,25 @@ class MenuManager
 
                 $url     = rtrim($appItem['url'], '/') . '/' . $repositoryItem['accessHash'];
                 $items[] = array( 'type' => 'link', 'text' => $appName, 'url' => $url, 'glyphicon' => 'glyphicon-dashboard' );
+            }
+            $items[] = array( 'type' => 'divider' );
+        }
+
+        // Add menu items Admin and/or Help if appropriate routes exist
+
+        if ($this->app->routeExists('admin') || $this->app->routeExists('help'))
+        {
+            if ($this->app->routeExists('admin'))
+            {
+                $url     = $this->urlGenerator->generate('admin');
+                $items[] = array( 'type' => 'link', 'text' => 'Admin', 'url' => $url, 'glyphicon' => 'glyphicon-cog' );
+
+            }
+            if ($this->app->routeExists('help'))
+            {
+                $url     = $this->urlGenerator->generate('help');
+                $items[] = array( 'type' => 'link', 'text' => 'Help', 'url' => $url, 'glyphicon' => 'glyphicon-book' );
+
             }
             $items[] = array( 'type' => 'divider' );
         }

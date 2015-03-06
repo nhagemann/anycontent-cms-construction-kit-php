@@ -210,6 +210,18 @@ class Application extends SilexApplication
     }
 
 
+    /**
+     * Check if a route has been defined
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public function routeExists($name)
+    {
+        $routeCollection = $this['routes'];
+        return (null === $routeCollection->get($name)) ? false : true;
+    }
 
 
 }

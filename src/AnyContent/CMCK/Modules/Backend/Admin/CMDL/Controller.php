@@ -21,7 +21,7 @@ use CMDL\ContentTypeDefinition;
 class Controller
 {
 
-    public static function adminList(Application $app)
+    public static function admin(Application $app)
     {
         $app['layout']->addCssFile('listing.css');
         $app['layout']->addJsFile('app.js');
@@ -53,7 +53,7 @@ class Controller
         $vars                    = array();
         $vars['menu_mainmenu']   = $app['menus']->renderMainMenu();
         $vars['links']['home']   = $app['url_generator']->generate('index');
-        $vars['links']['admin']  = $app['url_generator']->generate('adminList');
+        $vars['links']['admin']  = $app['url_generator']->generate('admin');
         $vars['links']['delete'] = $app['url_generator']->generate('adminDeleteContentType', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
         /** @var Repository $repository */
@@ -86,7 +86,7 @@ class Controller
         $vars                    = array();
         $vars['menu_mainmenu']   = $app['menus']->renderMainMenu();
         $vars['links']['home']   = $app['url_generator']->generate('index');
-        $vars['links']['admin']  = $app['url_generator']->generate('adminList');
+        $vars['links']['admin']  = $app['url_generator']->generate('admin');
         $vars['links']['delete'] = $app['url_generator']->generate('adminDeleteConfigType', array( 'configTypeAccessHash' => $configTypeAccessHash ));
 
         /** @var Repository $repository */
@@ -207,7 +207,7 @@ class Controller
 
     public static function adminAddContentType(Application $app, Request $request, $repositoryAccessHash)
     {
-        $url = $app['url_generator']->generate('adminList');
+        $url = $app['url_generator']->generate('admin');
 
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
@@ -251,7 +251,7 @@ class Controller
 
     public static function adminAddConfigType(Application $app, Request $request, $repositoryAccessHash)
     {
-        $url = $app['url_generator']->generate('adminList');
+        $url = $app['url_generator']->generate('admin');
 
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
@@ -295,7 +295,7 @@ class Controller
 
     public static function adminDeleteContentType(Application $app, Request $request, $contentTypeAccessHash)
     {
-        $url = $app['url_generator']->generate('adminList');
+        $url = $app['url_generator']->generate('admin');
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
@@ -326,7 +326,7 @@ class Controller
 
     public static function adminDeleteConfigType(Application $app, Request $request, $configTypeAccessHash)
     {
-        $url = $app['url_generator']->generate('adminList');
+        $url = $app['url_generator']->generate('admin');
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByConfigTypeAccessHash($configTypeAccessHash);
