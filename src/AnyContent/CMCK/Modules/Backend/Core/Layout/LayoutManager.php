@@ -2,8 +2,13 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Layout;
 
+use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
+
 class LayoutManager
 {
+
+    /** @var  Application */
+    protected $app;
 
     protected $twig;
 
@@ -20,8 +25,9 @@ class LayoutManager
     protected $cssLinks = array( 'head' => array(), 'body' => array() );
 
 
-    public function __construct($twig, $context)
+    public function __construct(Application $app, $twig, $context)
     {
+        $this->app     = $app;
         $this->twig    = $twig;
         $this->context = $context;
     }
@@ -102,6 +108,7 @@ class LayoutManager
 
     public function render($templateFilename, $vars = array(), $displayMessages = true)
     {
+        $app = $this->getApplication();
 
         $this->addCssFile('layout.css');
         $this->addJsFile('messages.js');
@@ -153,7 +160,6 @@ class LayoutManager
 
         if ($displayMessages)
         {
-
             $messages            = array();
             $messages['success'] = $this->context->getSuccessMessages();
             $messages['info']    = $this->context->getInfoMessages();
@@ -162,6 +168,25 @@ class LayoutManager
             $vars['messages']    = $messages;
         }
 
+        $event = new LayoutTemplateRenderEvent($app, $templateFilename, $vars);
+
+        /** @var LayoutTemplateRenderEvent $event */
+        $event = $app['dispatcher']->dispatch(Module::EVENT_LAYOUT_TEMPLATE_RENDER, $event);
+
+        $templateFilename = $event->getTemplate();
+        $vars = $event->getVars();
+
         return $this->twig->render($templateFilename, $vars);
     }
+
+
+    /**
+     * @return Application
+     */
+    protected function getApplication()
+    {
+        return $this->app;
+    }
+
+
 }

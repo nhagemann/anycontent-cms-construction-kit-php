@@ -5,16 +5,20 @@
 
 {% block content %}
 
+
+
+    {% block listing_header %}
+        <div class="row">
+            <h2>
+                <a href="{{ links.reset }}">{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</a>
+            </h2>
+            <br/></div>
+    {% endblock %}
+
     <div class="row">
-
-        <h2>
-            <a href="{{ links.reset }}">{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</a>
-        </h2>
-        <br/>
-
-
         {% include "listing-searchbox.twig" %}
-
+    </div>
+    <div class="row">
         {% if records %}
             <table class="table table-curved">
                 <thead>
@@ -24,7 +28,7 @@
                         <th class="col-xs-1"><a href="{{ links.sortBySubtype }}">Subtype</a></th>
                     {% endif %}
                     <th><a href="{{ links.sortByName }}">Name</a></th>
-                    <th class="scol-xs-2"><a href="{{ links.sortByLastChange }}">Last change</a></th>
+                    <th class="col-xs-2"><a href="{{ links.sortByLastChange }}">Last change</a></th>
                     {% if definition.hasStatusList() %}
                         <th class="col-xs-1"><a href="{{ links.sortByStatus }}">Status</a></th>
                     {% endif %}

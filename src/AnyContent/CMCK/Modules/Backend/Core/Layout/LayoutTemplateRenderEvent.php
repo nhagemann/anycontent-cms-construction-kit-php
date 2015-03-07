@@ -1,12 +1,11 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
+namespace AnyContent\CMCK\Modules\Backend\Core\Layout;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use Symfony\Component\EventDispatcher\Event;
 
-/** @deprecated */
-class ListingRenderEvent extends Event
+class LayoutTemplateRenderEvent extends Event
 {
 
     protected $app;
