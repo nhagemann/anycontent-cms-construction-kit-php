@@ -84,8 +84,16 @@ class FormElementTable extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEl
     {
         $c = count($this->definition->getColumnHeadings());
 
-        $value = array_chunk($input, $c);
-        $value = json_encode($value);
+        if (is_array($input))
+        {
+            $value = array_chunk($input, $c);
+            $value = json_encode($value);
+        }
+        else
+        {
+            // Received invalid data
+            $value = null;
+        }
 
         return $value;
     }
