@@ -29,7 +29,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->bind('adminEditContentType');
 
         $app
-            ->post('/admin/edit/content_type/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::postEditContentType');
+            ->post('/admin/edit/content_type/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::postEditContentType')
+            ->bind('postEditContentType');
 
         $app
             ->get('/admin/delete/content_type/{contentTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::adminDeleteContentType')
@@ -44,7 +45,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->bind('adminEditConfigType');
 
         $app
-            ->post('/admin/edit/config_type/{configTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::postEditConfigType');
+            ->post('/admin/edit/config_type/{configTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::postEditConfigType')
+            ->bind('postEditConfigType');
 
         $app
             ->get('/admin/delete/config_type/{configTypeAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::adminDeleteConfigType')
