@@ -293,9 +293,9 @@ class Controller
                                 $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
                             }
                             elseif (count($records) == 1) {
-                                $record = array_shift($records);
+                                $oldRecord = array_shift($records);
 
-                                if ($record->getID() != $recordId) {
+                                if ($oldRecord->getID() != $recordId) {
                                     $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
                                 }
                             }
