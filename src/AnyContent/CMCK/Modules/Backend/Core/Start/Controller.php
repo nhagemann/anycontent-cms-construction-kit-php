@@ -33,9 +33,14 @@ class Controller
         $items = array();
         foreach ($repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
         {
+            try
+            {
+                $items[] = self::extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, false);
+            }
+            catch (\Exception $e)
+            {
 
-            $items[] = self::extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, false);
-
+            }
         }
 
         $vars['repositories'] = $items;
