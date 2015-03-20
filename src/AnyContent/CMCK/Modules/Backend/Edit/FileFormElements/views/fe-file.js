@@ -31,10 +31,11 @@
                     $(parent.document).find('#modal_files_file_zoom_iframe').attr('src', $(this).attr('href') + value);
 
                     $.ajax({
-                        url: $(this).attr('href') + value,
+                        url : $(this).attr('href') + value,
                         type: 'HEAD'
                     }).always(function (o) {
-                        if (o.status == 404) { // ignore all other errors, especially missing Access-Control-Allow-Origin header
+
+                        if (o != undefined && o.status == 404) { // ignore all other errors, especially missing Access-Control-Allow-Origin header
                             alert('File not found. Please check file path.');
                         }
                         else {
@@ -56,16 +57,19 @@
                         value = $(this).attr('href') + value;
 
                         $.ajax({
-                            url: value,
-                            type: 'HEAD',
-                            success: function () {
-                                window.location.href = value;
-                                return false;
-                            },
-                            error: function () {
+                            url : value,
+                            type: 'HEAD'
+                        }).always(function (o) {
+
+                            if (o != undefined && o.status == 404) { // ignore all other errors, especially missing Access-Control-Allow-Origin header
                                 alert('File not found. Please check file path.');
                             }
+                            else {
+                                window.location.href = value;
+                                return false;
+                            }
                         });
+                      
                     }
 
 
@@ -87,9 +91,9 @@
                             var url_view = $(this).attr('data-url-view') + value;
 
                             $.ajax({
-                                url: url_view,
-                                type: 'HEAD',
-                                error: function () {
+                                url    : url_view,
+                                type   : 'HEAD',
+                                error  : function () {
                                     $(id).hide();
                                 },
                                 success: function () {
