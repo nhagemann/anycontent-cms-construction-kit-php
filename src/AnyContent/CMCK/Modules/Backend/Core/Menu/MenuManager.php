@@ -51,12 +51,12 @@ class MenuManager
             foreach ($this->repositoryManager->listContentTypes($repositoryUrl) as $contentTypName => $contentTypeItem)
             {
                 $url     = $this->urlGenerator->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'], 'page' => 1 ));
-                $items[] = array( 'type' => 'link', 'text' => $contentTypName, 'url' => $url, 'glyphicon' => 'glyphicon-file' );
+                $items[] = array( 'type' => 'link', 'text' => $contentTypeItem['title'], 'url' => $url, 'glyphicon' => 'glyphicon-file' );
             }
             foreach ($this->repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
             {
                 $url     = $this->urlGenerator->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] ));
-                $items[] = array( 'type' => 'link', 'text' => $configTypeName, 'url' => $url, 'glyphicon' => 'glyphicon-wrench' );
+                $items[] = array( 'type' => 'link', 'text' => $configTypeItem['title'], 'url' => $url, 'glyphicon' => 'glyphicon-wrench' );
             }
             if ($this->repositoryManager->hasFiles($repositoryUrl))
             {
