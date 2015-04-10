@@ -38,4 +38,5 @@ class Installer
         echo "...\n";
         echo "Done.\n";
     }
+
 }

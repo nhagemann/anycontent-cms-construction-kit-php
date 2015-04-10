@@ -6,6 +6,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
 
+
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
     const EVENT_LAYOUT_TEMPLATE_RENDER = 'event.layout.template.render';
@@ -23,6 +24,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         {
             return new LayoutManager($app, $app['twig'], $app['context']);
         });
+
+        $app['console']->add(new DumpRevisionCommand());
 
     }
 
