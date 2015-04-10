@@ -115,7 +115,7 @@ class LayoutManager
 
         $vars = array_merge($this->vars, $vars);
 
-        $cssurl = '';
+        $cssurl = $app->getRevision().'/';
         foreach ($this->cssFiles as $cssFilename)
         {
             $cssurl .= pathinfo($cssFilename, PATHINFO_FILENAME) . '/';
@@ -123,7 +123,7 @@ class LayoutManager
         $cssurl         = trim($cssurl, '/');
         $vars['cssurl'] = $cssurl;
 
-        $jsurl = '';
+        $jsurl = $app->getRevision().'/';
         foreach ($this->jsFiles as $jsFilename)
         {
             $jsurl .= pathinfo($jsFilename, PATHINFO_FILENAME) . '/';

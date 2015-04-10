@@ -5,6 +5,7 @@ body {
 
 .navbar-brand img {margin-top:-5px}
 
+
 /* smaller margins for h-tags used within the print form element*/
 .formelement-print h1, h2, h3, h4, h5, h6 {
     margin: 8px 0px 8px 0px;

@@ -43,8 +43,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
 
         $app->post('/content/edit/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord')->value('workspace',null)->value('language',null);
-        $app->post('/content/add/{contentTypeAccessHash}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
-        $app->post('/content/add/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord');
+        $app->post('/content/add/{contentTypeAccessHash}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord')->value('workspace',null)->value('language',null);
+        $app->post('/content/add/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::saveRecord')->value('workspace',null)->value('language',null);
 
         $app['form'] = $app->share(function ($app)
         {

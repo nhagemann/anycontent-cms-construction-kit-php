@@ -220,9 +220,28 @@ class Application extends SilexApplication
     public function routeExists($name)
     {
         $routeCollection = $this['routes'];
+
         return (null === $routeCollection->get($name)) ? false : true;
     }
 
+
+    /**
+     * Revision is used for caching, random number during development ($app['debug']=true)
+     * @return string
+     */
+    public function getRevision()
+    {
+        if ($this['debug'] == false)
+        {
+
+            if (file_exists(APPLICATION_PATH . '/config/revision.txt'))
+            {
+                return file_get_contents(APPLICATION_PATH . '/config/revision.txt');
+            }
+        }
+
+        return substr(md5(uniqid()), 0, 8);
+    }
 
 }
 

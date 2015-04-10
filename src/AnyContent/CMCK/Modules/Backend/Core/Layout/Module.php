@@ -17,8 +17,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
 
-        $app->get('/css/{files}', 'AnyContent\CMCK\Modules\Backend\Core\Layout\Controller::css')->assert('files', '.+');
-        $app->get('/js/{files}', 'AnyContent\CMCK\Modules\Backend\Core\Layout\Controller::js')->assert('files', '.+');
+        $app->get('/css/{revision}/{files}', 'AnyContent\CMCK\Modules\Backend\Core\Layout\Controller::css')->assert('files', '.+');
+        $app->get('/js/{revision}/{files}', 'AnyContent\CMCK\Modules\Backend\Core\Layout\Controller::js')->assert('files', '.+');
 
         $app['layout'] = $app->share(function ($app)
         {
