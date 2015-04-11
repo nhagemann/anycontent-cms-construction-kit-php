@@ -3,6 +3,7 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\ContentFilter;
+use CMDL\ContentTypeDefinition;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +73,7 @@ class Controller
         $vars['searchTerm'] = $searchTerm;
         if ($searchTerm != '')
         {
-            $filter = new ContentFilter($contentTypeDefinition);
+
 
             if (is_numeric($searchTerm))
             {
@@ -84,7 +85,8 @@ class Controller
                     return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
                 }
             }
-            $filter->addCondition('name', '><', $searchTerm);
+            $filter = FilterUtil::normalizeFilterQuery($app,$searchTerm,$contentTypeDefinition);
+
         }
 
         $vars['records'] = self::getRecords($app, $repository, $contentTypeAccessHash, null, 'default', $itemsPerPage, $page, $filter);
@@ -171,4 +173,7 @@ class Controller
 
         return $records;
     }
+
+
+
 }

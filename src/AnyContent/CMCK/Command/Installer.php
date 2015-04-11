@@ -30,6 +30,8 @@ class Installer
         $filesystem->copy($packageDir . '/config/config.example.yml', $baseDir . '/config/config.example.yml');
         $filesystem->copy($packageDir . '/config/modules.example.php', $baseDir . '/config/modules.example.php');
 
+        $filesystem->copy($packageDir . '/config/revision.txt', $baseDir . '/config/revision.txt');
+
         echo "Creating TWIG cache folder, deleting eventually current cache files.\n";
 
         $filesystem->remove($baseDir . '/twig-cache');
