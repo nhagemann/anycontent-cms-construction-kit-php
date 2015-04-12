@@ -32,10 +32,12 @@ class Installer
 
         $filesystem->copy($packageDir . '/config/revision.txt', $baseDir . '/config/revision.txt');
 
-        echo "Creating TWIG cache folder, deleting eventually current cache files.\n";
+        echo "Creating cache folder, deleting eventually current cache files.\n";
 
         $filesystem->remove($baseDir . '/twig-cache');
         $filesystem->mkdir($baseDir . '/twig-cache');
+        $filesystem->remove($baseDir . '/doctrine-cache');
+        $filesystem->mkdir($baseDir . '/doctrine-cache');
 
         echo "...\n";
         echo "Done.\n";

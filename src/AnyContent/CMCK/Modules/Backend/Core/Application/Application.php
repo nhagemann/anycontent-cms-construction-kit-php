@@ -134,6 +134,10 @@ class Application extends SilexApplication
                 $cacheDriver->setMemcached($memcached);
                 $this->setCacheDriver($cacheDriver);
                 break;
+            case 'file':
+                $cacheDriver = new PhPFileCache(APPLICATION_PATH . '/doctrine-cache', 'txt');
+                $this->setCacheDriver($cacheDriver);
+                break;
         }
 
         // Now add the repositories
@@ -227,6 +231,7 @@ class Application extends SilexApplication
 
     /**
      * Revision is used for caching, random number during development ($app['debug']=true)
+     *
      * @return string
      */
     public function getRevision()

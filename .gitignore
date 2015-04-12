@@ -1,6 +1,7 @@
 /config/config.yml
 /config/modules.php
 twig-cache/*
+doctrine-cache/*
 vendor/*
 
 # php storm files
