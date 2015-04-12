@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Application;
 
+use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use Silex\Application as SilexApplication;
 
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -160,6 +161,22 @@ class Application extends SilexApplication
         foreach ($this->modules as $module)
         {
             $module['module']->preRender($this);
+
+        }
+
+
+        $vars['requestLog'] = false;
+
+        /** @var ContextManager $contextManager */
+        $contextManager = $this['context'];
+
+        $repository = $contextManager->getCurrentRepository();
+
+        if ($repository)
+        {
+            $client = $repository->getClient();
+
+            $vars['requestLog'] = $client->getLog();
 
         }
 

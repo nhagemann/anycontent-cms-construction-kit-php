@@ -287,16 +287,16 @@
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "0.10.2",
+            "version": "0.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "5597382643b22824ef0d3a7472c56e52c2b67f11"
+                "reference": "00ffa94da701955e65ba2cc4ccdbb7972403fb8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/5597382643b22824ef0d3a7472c56e52c2b67f11",
-                "reference": "5597382643b22824ef0d3a7472c56e52c2b67f11",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/00ffa94da701955e65ba2cc4ccdbb7972403fb8a",
+                "reference": "00ffa94da701955e65ba2cc4ccdbb7972403fb8a",
                 "shasum": ""
             },
             "require": {
@@ -326,7 +326,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-04-11 13:47:16"
+            "time": "2015-04-12 18:02:21"
         },
         {
             "name": "nhagemann/cmdl-parser-php",

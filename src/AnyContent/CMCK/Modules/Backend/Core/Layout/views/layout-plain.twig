@@ -31,6 +31,18 @@
 <script src="/js/{{ jsurl }}"></script>
 {{ jsbodylinks | raw }}
 {{ cssbodylinks | raw }}
+
+{% if (requestLog) %}<!--
+{% for line in requestLog %}
+
+Url: {{ line.url }}
+Code: {{ line.code }}
+Time: {{ line.time }} ms
+Size: {{ line.size }}
+
+{% endfor %}
+-->
+{% endif %}
 </body>
 </html>
 
