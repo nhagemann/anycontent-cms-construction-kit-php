@@ -389,7 +389,7 @@ class Importer
     {
         if ($this->output)
         {
-            $this->writeln($msg);
+            $this->output->writeln($msg);
         }
     }
 
