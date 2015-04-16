@@ -119,21 +119,22 @@ class Importer
                 $value = trim($objWorksheet->getCellByColumnAndRow($i, 1)->getValue());
                 if ($value != '')
                 {
-                    if ($value == Util::generateValidIdentifier($value))
-                    {
-                        if ($contentTypeDefinition->hasProperty($value, $viewName))
-                        {
-                            $this->writeln('Detected valid property ' . $value);
-                            $propertiesColumnIndices[$value] = $i;
-                        }
-                    }
-                    else
+                    if (substr($value,0,1)=='.')
                     {
                         if ($value == '.id')
                         {
                             $idColumnIndex = $i;
                         }
                     }
+                    else{
+                        $value = Util::generateValidIdentifier($value);
+                        if ($contentTypeDefinition->hasProperty($value, $viewName))
+                        {
+                            $this->writeln('Detected valid property ' . $value);
+                            $propertiesColumnIndices[$value] = $i;
+                        }
+                    }
+
 
                 }
 
@@ -142,9 +143,11 @@ class Importer
             for ($row = 2; $row <= $highestRow; ++$row)
             {
                 $id = null;
-                if ($idColumnIndex !== false && !$this->isGenerateNewIDs())
+                if ($idColumnIndex !== null)
                 {
-                    $id = $objWorksheet->getCellByColumnAndRow($idColumnIndex, $row)->getValue();
+                    if (!$this->isGenerateNewIDs()) {
+                        $id = $objWorksheet->getCellByColumnAndRow($idColumnIndex, $row)->getValue();
+                    }
                 }
                 $properties = array();
                 foreach ($propertiesColumnIndices as $property => $col)
