@@ -25,10 +25,13 @@ class Importer
 
     protected $error = false;
 
+    protected $importableRecords = array();
+
 
     public function importJSON(Repository $repository, $contentTypeName, $data, $workspace = 'default', $language = 'default', $viewName = 'exchange')
     {
         $this->records = null;
+        $this->importableRecords = array();
         $this->count   = 0;
         $this->error   = false;
 
@@ -86,6 +89,7 @@ class Importer
     {
         $this->count   = 0;
         $this->records = null;
+        $this->importableRecords = array();
         $this->error   = false;
 
         $repository->selectContentType($contentTypeName);
@@ -140,6 +144,8 @@ class Importer
 
             }
 
+            $records = array();
+
             for ($row = 2; $row <= $highestRow; ++$row)
             {
                 $id = null;
@@ -164,6 +170,12 @@ class Importer
                 $this->writeln($msg);
 
             }
+
+            $this->writeln('Found '.$this->count.' records to import');
+            $msg = $this->saveRecords($repository,$workspace,$viewName,$language);
+            $this->writeln($msg);
+
+
         }
         else
         {
@@ -178,7 +190,7 @@ class Importer
     protected function saveRecord(Repository $repository, Record $record, $workspace, $viewName, $language)
     {
 
-        $msg = trim('Importing record ' . $record->getID()) . ' - ' . $record->getName();
+        $msg = trim('Preparing record ' . $record->getID()) . ' - ' . $record->getName();
 
         if ($this->isNewerRevisionUpdateProtection())
         {
@@ -190,7 +202,11 @@ class Importer
 
         if ($this->isPropertyChangesCheck() == false || $this->hasChanged($repository, $record, $workspace, $viewName, $language))
         {
-            $id = $repository->saveRecord($record, $workspace, $viewName, $language);
+
+            $this->importableRecords[] = $record;
+            $this->count++;
+
+            /*$id = $repository->saveRecord($record, $workspace, $viewName, $language);
 
             if ($id)
             {
@@ -200,7 +216,7 @@ class Importer
             else
             {
                 $msg .= ' [ERROR]';
-            }
+            }*/
         }
         else
         {
@@ -210,6 +226,18 @@ class Importer
         return $msg;
     }
 
+    protected function saveRecords(Repository $repository, $workspace, $viewName, $language)
+    {
+        $result =$repository->saveRecords($this->importableRecords,$workspace,$viewName,$language);
+
+        if ($result)
+        {
+            foreach ($result as $k => $v)
+            {
+                $this->writeln('Imported record nr '.$k.' with id '.$v);
+            }
+        }
+    }
 
     protected function hasChanged(Repository $repository, Record $record, $workspace, $viewName, $language)
     {
@@ -262,14 +290,9 @@ class Importer
     protected function deleteEffectiveRecords(Repository $repository, $workspace, $viewName, $language)
     {
         $this->writeln('');
-        $this->writeln('Start deleting current effective records');
+        $this->writeln('Deleting all records in workspace '.$workspace. ' with language '.$language);
 
-        $records = $this->getRecords($repository, $workspace, $viewName, $language);
-        foreach ($records as $id => $record)
-        {
-            $this->writeln('Deleting record ' . $record->getID() . ' - ' . $record->getName());
-            $repository->deleteRecord($id, $workspace, $language);
-        }
+        $repository->deleteRecords($workspace,$language);
 
         $this->records = null;
     }
