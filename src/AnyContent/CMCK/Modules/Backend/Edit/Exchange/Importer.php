@@ -21,18 +21,26 @@ class Importer
 
     protected $output;
 
-    protected $records = null;
-
     protected $error = false;
 
-    protected $importableRecords = array();
+    /**
+     * current records of a content type for compare operations
+     *
+     * @var null
+     */
+    protected $records = null;
+
+    /**
+     * @var array stashed records to be saved
+     */
+    protected $stash = array();
 
 
     public function importJSON(Repository $repository, $contentTypeName, $data, $workspace = 'default', $language = 'default', $viewName = 'exchange')
     {
-        $this->records = null;
-        $this->importableRecords = array();
         $this->count   = 0;
+        $this->records = null;
+        $this->stash = array();
         $this->error   = false;
 
         $repository->selectContentType($contentTypeName);
@@ -75,9 +83,22 @@ class Importer
                 $record->setProperties($properties);
                 $record->setID($id);
 
-                $msg = $this->saveRecord($repository, $record, $workspace, $viewName, $language);
+                $msg = $this->stashRecord($repository, $record, $workspace, $viewName, $language);
 
                 $this->writeln($msg);
+            }
+
+            $this->writeln('');
+            $this->writeln('Found ' . $this->count . ' records to import');
+            $this->writeln('');
+
+            if ($this->count !=0)
+            {
+                $this->writeln('Starting bulk import');
+                $this->writeln('');
+                $msg = $this->saveRecords($repository, $workspace, $viewName, $language);
+                $this->writeln($msg);
+                $this->writeln('');
             }
         }
 
@@ -89,7 +110,7 @@ class Importer
     {
         $this->count   = 0;
         $this->records = null;
-        $this->importableRecords = array();
+        $this->stash = array();
         $this->error   = false;
 
         $repository->selectContentType($contentTypeName);
@@ -144,37 +165,54 @@ class Importer
 
             }
 
-            $records = array();
+            $this->writeln('');
 
-            for ($row = 2; $row <= $highestRow; ++$row)
+            if (count($propertiesColumnIndices)!=0)
             {
-                $id = null;
-                if ($idColumnIndex !== null)
+
+                for ($row = 2; $row <= $highestRow; ++$row)
                 {
-                    if (!$this->isGenerateNewIDs()) {
-                        $id = $objWorksheet->getCellByColumnAndRow($idColumnIndex, $row)->getValue();
+                    $id = null;
+                    if ($idColumnIndex !== null)
+                    {
+                        if (!$this->isGenerateNewIDs())
+                        {
+                            $id = $objWorksheet->getCellByColumnAndRow($idColumnIndex, $row)->getValue();
+                        }
                     }
+                    $properties = array();
+                    foreach ($propertiesColumnIndices as $property => $col)
+                    {
+                        $value                 = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+                        $properties[$property] = $value;
+                    }
+
+                    $record = new Record($contentTypeDefinition, 'Imported Record', $viewName, $workspace, $language);
+                    $record->setProperties($properties);
+                    $record->setID($id);
+
+                    $msg = $this->stashRecord($repository, $record, $workspace, $viewName, $language);
+
+                    $this->writeln($msg);
+
                 }
-                $properties = array();
-                foreach ($propertiesColumnIndices as $property => $col)
+
+                $this->writeln('');
+                $this->writeln('Found ' . $this->count . ' records to import');
+                $this->writeln('');
+
+                if ($this->count !=0)
                 {
-                    $value                 = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-                    $properties[$property] = $value;
+                    $this->writeln('Starting bulk import');
+                    $this->writeln('');
+                    $msg = $this->saveRecords($repository, $workspace, $viewName, $language);
+                    $this->writeln($msg);
+                    $this->writeln('');
                 }
-
-                $record = new Record($contentTypeDefinition, 'Imported Record', $viewName, $workspace, $language);
-                $record->setProperties($properties);
-                $record->setID($id);
-                $msg = $this->saveRecord($repository, $record, $workspace, $viewName, $language);
-
-                $this->writeln($msg);
-
             }
-
-            $this->writeln('Found '.$this->count.' records to import');
-            $msg = $this->saveRecords($repository,$workspace,$viewName,$language);
-            $this->writeln($msg);
-
+            else{
+                $this->writeln('Excel does not contain matching property columns.');
+            }
 
         }
         else
@@ -187,7 +225,7 @@ class Importer
     }
 
 
-    protected function saveRecord(Repository $repository, Record $record, $workspace, $viewName, $language)
+    protected function stashRecord(Repository $repository, Record $record, $workspace, $viewName, $language)
     {
 
         $msg = trim('Preparing record ' . $record->getID()) . ' - ' . $record->getName();
@@ -202,21 +240,8 @@ class Importer
 
         if ($this->isPropertyChangesCheck() == false || $this->hasChanged($repository, $record, $workspace, $viewName, $language))
         {
-
-            $this->importableRecords[] = $record;
+            $this->stash[] = $record;
             $this->count++;
-
-            /*$id = $repository->saveRecord($record, $workspace, $viewName, $language);
-
-            if ($id)
-            {
-                $msg .= ' [' . $id . ']';
-                $this->count++;
-            }
-            else
-            {
-                $msg .= ' [ERROR]';
-            }*/
         }
         else
         {
@@ -228,13 +253,20 @@ class Importer
 
     protected function saveRecords(Repository $repository, $workspace, $viewName, $language)
     {
-        $result =$repository->saveRecords($this->importableRecords,$workspace,$viewName,$language);
+        $result =$repository->saveRecords($this->stash,$workspace,$viewName,$language);
 
         if ($result)
         {
             foreach ($result as $k => $v)
             {
-                $this->writeln('Imported record nr '.$k.' with id '.$v);
+                if ($v!=null)
+                {
+                    $this->writeln('Imported record number ' . ($k+1) . '. Id ' . $v.' has been asigned.');
+                }
+                else
+                {
+                    $this->writeln('Import of record number '. ($k+1) .' failed.');
+                }
             }
         }
     }
