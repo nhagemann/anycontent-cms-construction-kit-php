@@ -12,6 +12,7 @@ class PhPFileCache extends \Doctrine\Common\Cache\PhpFileCache
         {
             return unserialize($data);
         }
+        return $data;
     }
 
     protected function doSave($id, $data, $lifeTime = 0)

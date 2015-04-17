@@ -115,10 +115,13 @@ class Application extends SilexApplication
 
         // Init Cache
 
+
         $cacheConfiguration = $this['config']->getCacheConfiguration();
 
         switch ($cacheConfiguration['driver']['type'])
         {
+            case 'none':
+                break;
             case 'apc':
                 $cacheDriver = new  \Doctrine\Common\Cache\ApcCache();
                 $this->setCacheDriver($cacheDriver);
@@ -139,7 +142,15 @@ class Application extends SilexApplication
                 $cacheDriver = new PhPFileCache(APPLICATION_PATH . '/doctrine-cache', 'txt');
                 $this->setCacheDriver($cacheDriver);
                 break;
+            case 'mysql':
+                $cacheDriver = new MySQLCache($cacheConfiguration['driver']['host'],$cacheConfiguration['driver']['dbname'],$cacheConfiguration['driver']['tablename'],$cacheConfiguration['driver']['user'],$cacheConfiguration['driver']['password'],$cacheConfiguration['driver']['port']);
+                $this->setCacheDriver($cacheDriver);
+                break;
+            default:
+                throw new \Exception ('Unknown authentication adapter type ' . $cacheConfiguration['driver']['type'] . '.');
+                break;
         }
+
 
         // Now add the repositories
 
