@@ -565,7 +565,7 @@ class RepositoryManager
     {
         foreach ($this->repositoryObjects as $repositoryUrl => $repositoryObject)
         {
-            if ($repository == $repositoryObject)
+            if ($repository === $repositoryObject)
             {
                 if ($contentTypeDefinition != null)
                 {
