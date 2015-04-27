@@ -27,11 +27,16 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
             $order     = $this->definition->getOrder();
             $timeshift = $this->definition->getTimeShift();
 
-            $records = $repository->getRecords($workspace, $viewName, $language, $order, $timeshift);
 
-            foreach ($records as $record)
+            $repository->stashDimensions()->setWorkspace($workspace)->setViewName($viewName)->setLanguage($language)->setOrder($order)->setTimeshift($timeshift);
+
+            $records = $repository->getRecordsAsIDNameList();
+
+            $repository->unStashDimensions();
+
+            foreach ($records as $id => $name)
             {
-                $options[$record->getId()] = '#' . $record->getId() . ' ' . $record->getName();
+                $options[$id] = '#' . $id. ': ' . $name;
             }
         }
         else{
