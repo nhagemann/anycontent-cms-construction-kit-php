@@ -26,7 +26,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         //@upgrade API KEY as module option
         //@upgrade add only if a record with geolocation form element is edited
-        $app['layout']->addJsLinkToHead('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false');
+        $app['layout']->addJsLinkToHead('https://maps.googleapis.com/maps/api/js?v=3.19&sensor=false');
     }
 
 }
