@@ -35,7 +35,7 @@ class MenuManager
 
         $cacheToken = 'cmck_menu_main_' . $this->session->getId();
 
-        if ($this->cache->contains($cacheToken))
+        if ($this->cacheSeconds > 0 && $this->cache->contains($cacheToken))
         {
             return $this->cache->fetch($cacheToken);
         }
@@ -94,7 +94,7 @@ class MenuManager
         $url     = $this->urlGenerator->generate('logout');
         $items[] = array( 'type' => 'link', 'text' => 'Logout', 'url' => $url, 'glyphicon' => 'glyphicon-user' );
 
-        $html = $this->renderDropDown($items);
+        $html = $this->renderDropDown($items,'mainmenu');
 
         $this->cache->save($cacheToken, $html, $this->cacheSeconds);
 
@@ -102,9 +102,9 @@ class MenuManager
     }
 
 
-    public function renderDropDown($items)
+    public function renderDropDown($items,$id=null)
     {
-        return $this->twig->render('core_menu_dropdown.twig', array( 'items' => $items ));
+        return $this->twig->render('core_menu_dropdown.twig', array( 'items' => $items,'id' => $id ));
     }
 
 

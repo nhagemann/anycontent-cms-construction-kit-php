@@ -2,3 +2,31 @@ li.dropdown-header a {
     padding-left: 0px;
     color: #999;
 }
+
+#mainmenu {
+    max-height: 450px;
+    overflow-y: scroll;
+}
+
+@media (min-height: 800px) {
+    #mainmenu {
+        max-height: 650px;
+        overflow-y: scroll;
+    }
+}
+
+@media (min-height: 1000px) {
+    #mainmenu {
+        max-height: 850px;
+        overflow-y: scroll;
+    }
+}
+
+@media (min-height: 1200px) {
+    #mainmenu {
+        max-height: 1050px;
+        overflow-y: scroll;
+    }
+}
+
+

@@ -1,4 +1,4 @@
-<ul class="dropdown-menu" role="menu">
+<ul class="dropdown-menu" role="menu" {% if id %}id="{{ id }}">{% endif %}
     {% for item in items %}
         {% if item.type == 'header' %}
             <li role="presentation" class="dropdown-header"><a href="{{ item.url }}">{{ item.text }}</a></li>
