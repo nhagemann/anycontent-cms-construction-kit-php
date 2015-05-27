@@ -5,27 +5,28 @@ li.dropdown-header a {
 
 #mainmenu {
     max-height: 450px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    direction: ltr;
 }
 
-@media (min-height: 800px) {
+@media (min-height: 700px) {
     #mainmenu {
-        max-height: 650px;
-        overflow-y: scroll;
+        max-height: 600px;
+        overflow-y: auto;
     }
 }
 
-@media (min-height: 1000px) {
+@media (min-height: 900px) {
     #mainmenu {
-        max-height: 850px;
-        overflow-y: scroll;
+        max-height: 750px;
+        overflow-y: auto;
     }
 }
 
-@media (min-height: 1200px) {
+@media (min-height: 1050px) {
     #mainmenu {
-        max-height: 1050px;
-        overflow-y: scroll;
+        max-height: 925px;
+        overflow-y: auto;
     }
 }
 
