@@ -23,7 +23,7 @@ class Controller
 
     public static function admin(Application $app)
     {
-        $app['layout']->addCssFile('listing.css');
+
         $app['layout']->addJsFile('app.js');
         $app['layout']->addJsFile('admin.js');
 

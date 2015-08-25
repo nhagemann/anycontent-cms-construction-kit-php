@@ -39,7 +39,6 @@ class Controller
             /** @var Config $record */
             $record = $repository->getConfig($configTypeDefinition->getName(), $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
-            //$app['layout']->addCssFile('listing.css');
             $app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('editrecord.js');
 

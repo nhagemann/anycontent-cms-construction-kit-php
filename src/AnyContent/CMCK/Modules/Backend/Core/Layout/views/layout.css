@@ -1,9 +1,10 @@
 /* add margin to compensate the space used by the permanent navbars and make sure, that all buttons are always visible (at least with scrolling) */
 body {
     margin-bottom: 150px;
+    background-image: url(/img/p6.png);
 }
 
-.navbar-brand img {margin-top:-5px}
+.navbar-brand img {margin-top:-8px}
 
 
 /* smaller margins for h-tags used within the print form element*/
@@ -26,4 +27,20 @@ body {
 #form_timeshift .bfh-datepicker-calendar {
     top: -211px;
     left: -231px;
+}
+
+.table-striped
+{
+    border: 1px solid #ccc;
+    border-collapse: separate;
+    border-radius: 2px;
+}
+
+.gravatar{
+    padding-right: 5px;
+
+}
+
+.gravatar > img{
+    background-color: #0B74B5;
 }

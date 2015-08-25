@@ -108,7 +108,6 @@ class Controller
         $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageListRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $page ));
         $vars['links']['reset']      = $app['url_generator']->generate('listRecordsReset', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
-        $app['layout']->addCssFile('listing.css');
         $app['layout']->addJsFile('app.js');
 
         $buttons      = array();

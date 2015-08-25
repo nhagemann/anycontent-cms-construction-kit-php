@@ -21,7 +21,7 @@ class Controller
 
     public static function index(Application $app)
     {
-        $app['layout']->addCssFile('listing.css');
+
 
         $vars = array();
 
@@ -51,7 +51,6 @@ class Controller
 
     public static function indexRepository(Application $app, $repositoryAccessHash)
     {
-        $app['layout']->addCssFile('listing.css');
 
         $vars = array();
 

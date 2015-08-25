@@ -9,9 +9,7 @@
 
     {% block listing_header %}
         <div class="row">
-            <h2>
-                <a href="{{ links.reset }}">{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</a>
-            </h2>
+            <a href="{{ links.reset }}"><h2>{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</h2></a>
             <br/></div>
     {% endblock %}
 
@@ -21,7 +19,7 @@
     {% block listing_content %}
         <div class="row">
             {% if records %}
-                <table class="table table-curved">
+                <table class="table table-striped">
                     <thead>
                     <tr>
                         <th class="col-xs-1"><a href="{{ links.sortById }}">ID</a></th>
