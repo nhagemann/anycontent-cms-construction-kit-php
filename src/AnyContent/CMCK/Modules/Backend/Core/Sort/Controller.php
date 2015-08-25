@@ -23,6 +23,10 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
+        $vars['repository']          = $repository;
+        $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+        $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
         $vars['definition'] = $contentTypeDefinition;

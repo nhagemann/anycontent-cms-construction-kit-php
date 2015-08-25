@@ -22,7 +22,6 @@ class Controller
     public static function index(Application $app)
     {
 
-
         $vars = array();
 
         $vars['menu_mainmenu'] = $app['menus']->renderMainMenu();
@@ -83,7 +82,7 @@ class Controller
         }
 
         $item          = array();
-        $item['title'] = $repositoryUrl;
+        $item['title'] = $repositoryItem['title'];
         $item['url']   = $repositoryUrl;
         $item['link']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
         $item['files'] = false;

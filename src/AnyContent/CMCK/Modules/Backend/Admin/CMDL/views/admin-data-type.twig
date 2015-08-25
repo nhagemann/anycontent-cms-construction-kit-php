@@ -5,16 +5,17 @@
         <ol class="breadcrumb">
             <li><a href="{{ links.home }}">Home</a></li>
             <li><a href="{{ links.admin }}">Admin</a></li>
-            {% if data_type =='content' %}
-                <li>Content Type <strong>{{ definition.getName }}</strong></li>
-            {% else %}
-                <li>Config Type <strong>{{ definition.getName }}</strong></li>
-            {% endif %}
+
         </ol>
     </div>
 
     <div class="row">
-        <h3><span class="label label-default">{{ definition.getName }}</span> {{ definition.getTitle }}</h3>
+        {% if data_type =='content' %}
+            <h3><small><span class="glyphicon glyphicon-file"></span></small> {{ definition.getName }}{% if definition.getTitle %} <small>({{ definition.getTitle }})</small>{% endif %}</h3>
+        {% else %}
+            <h3><small><span class="glyphicon glyphicon-wrench"></span></small> {{ definition.getName }}{% if definition.getTitle %} <small>({{ definition.getTitle }})</small>{% endif %}</h3>
+        {% endif %}
+
     </div>
     <div class="row">
 

@@ -33,6 +33,10 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
+        $vars['repository']          = $repository;
+        $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+        $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+
         $contentTypeDefinition = $repository->getContentTypeDefinition();
 
         $app['context']->setCurrentRepository($repository);
@@ -74,7 +78,6 @@ class Controller
         if ($searchTerm != '')
         {
 
-
             if (is_numeric($searchTerm))
             {
                 $recordId = (int)$searchTerm;
@@ -85,7 +88,7 @@ class Controller
                     return new RedirectResponse($app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId )), 303);
                 }
             }
-            $filter = FilterUtil::normalizeFilterQuery($app,$searchTerm,$contentTypeDefinition);
+            $filter = FilterUtil::normalizeFilterQuery($app, $searchTerm, $contentTypeDefinition);
 
         }
 
@@ -172,7 +175,5 @@ class Controller
 
         return $records;
     }
-
-
 
 }

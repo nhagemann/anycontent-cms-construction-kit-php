@@ -8,7 +8,7 @@ $(document).ready(function () {
     $('.feedback .alert-danger').delay(4500).fadeOut(500);
 });
 
-$('.timeshift').each(function() {
+$('.timeshift-blink').each(function() {
     var elem = $(this);
     setInterval(function() {
         if (elem.css('visibility') == 'hidden') {

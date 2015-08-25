@@ -69,20 +69,7 @@ class RepositoryManager
         }
         else
         {
-            $repositoryInfo                = array();
-            $repositoryInfo['url']         = $repositoryUrl;
-            $repositoryInfo['apiUser']     = $apiUser;
-            $repositoryInfo['apiPassword'] = $apiPassword;
-            $repositoryInfo['authType']    = $authType;
-            $repositoryInfo['shortcut']    = $shortcut;
-            $repositoryInfo['title']       = $repositoryUrl;
-            if ($repositoryTitle != null)
-            {
-                $repositoryInfo['title'] = $repositoryTitle;
-            }
-            $repositoryInfo['configTypes'] = array();
-            $repositoryInfo['apps']        = array();
-
+            $repositoryInfo = $this->addRepositoryInfo($repositoryUrl, $apiUser, $apiPassword, $authType, $shortcut, $repositoryTitle);
         }
 
         $repositoryInfo['contentTypes'] = array( '*' => '*' );
@@ -100,18 +87,8 @@ class RepositoryManager
         }
         else
         {
-            $repositoryInfo                = array();
-            $repositoryInfo['url']         = $repositoryUrl;
-            $repositoryInfo['apiUser']     = $apiUser;
-            $repositoryInfo['apiPassword'] = $apiPassword;
-            $repositoryInfo['authType']    = $authType;
-            $repositoryInfo['title']       = $repositoryUrl;
-            if ($repositoryTitle)
-            {
-                $repositoryInfo['title'] = $repositoryTitle;
-            }
-            $repositoryInfo['contentTypes'] = array();
-            $repositoryInfo['apps']         = array();
+            $repositoryInfo = $this->addRepositoryInfo($repositoryUrl, $apiUser, $apiPassword, $authType, null, $repositoryTitle);
+
         }
         $repositoryInfo['configTypes'] = array( '*' => '*' );
 
@@ -120,66 +97,64 @@ class RepositoryManager
     }
 
 
-    public function addOneContentType($contentTypeName, $url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $shortcut = null, $contentTypeTitle = null)
+    public function addOneContentType($contentTypeName, $repositoryUrl, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $shortcut = null, $contentTypeTitle = null)
     {
-        if (array_key_exists($url, $this->requestedRepositories))
+        if (array_key_exists($repositoryUrl, $this->requestedRepositories))
         {
-            $repositoryInfo = $this->requestedRepositories[$url];
+            $repositoryInfo = $this->requestedRepositories[$repositoryUrl];
         }
         else
         {
-            $repositoryInfo                = array();
-            $repositoryInfo['url']         = $url;
-            $repositoryInfo['apiUser']     = $apiUser;
-            $repositoryInfo['apiPassword'] = $apiPassword;
-            $repositoryInfo['authType']    = $authType;
-            $repositoryInfo['shortcut']    = $shortcut;
-            $repositoryInfo['title']       = $url;
-            if ($repositoryTitle)
-            {
-                $repositoryInfo['title'] = $repositoryTitle;
-            }
-            $repositoryInfo['contentTypes'] = array();
-            $repositoryInfo['configTypes']  = array();
-            $repositoryInfo['apps']         = array();
+            $repositoryInfo = $this->addRepositoryInfo($repositoryUrl, $apiUser, $apiPassword, $authType, $shortcut, $repositoryTitle);
         }
 
         $repositoryInfo['contentTypes'][$contentTypeName] = $contentTypeTitle;
 
-        $this->requestedRepositories[$url] = $repositoryInfo;
+        $this->requestedRepositories[$repositoryUrl] = $repositoryInfo;
 
     }
 
-    public function addOneConfigType($configTypeName, $url, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $shortcut = null, $configTypeTitle = null)
+
+    public function addOneConfigType($configTypeName, $repositoryUrl, $apiUser = null, $apiPassword = null, $authType = 'Basic', $repositoryTitle = null, $shortcut = null, $configTypeTitle = null)
     {
-        if (array_key_exists($url, $this->requestedRepositories))
+        if (array_key_exists($repositoryUrl, $this->requestedRepositories))
         {
-            $repositoryInfo = $this->requestedRepositories[$url];
+            $repositoryInfo = $this->requestedRepositories[$repositoryUrl];
         }
         else
         {
-            $repositoryInfo                = array();
-            $repositoryInfo['url']         = $url;
-            $repositoryInfo['apiUser']     = $apiUser;
-            $repositoryInfo['apiPassword'] = $apiPassword;
-            $repositoryInfo['authType']    = $authType;
-            $repositoryInfo['shortcut']    = $shortcut;
-            $repositoryInfo['title']       = $url;
-            if ($repositoryTitle)
-            {
-                $repositoryInfo['title'] = $repositoryTitle;
-            }
-            $repositoryInfo['contentTypes'] = array();
-            $repositoryInfo['configTypes']  = array();
-            $repositoryInfo['apps']         = array();
+            $repositoryInfo = $this->addRepositoryInfo($repositoryUrl, $apiUser, $apiPassword, $authType, null, $repositoryTitle);
+
         }
 
         $repositoryInfo['configTypes'][$configTypeName] = $configTypeTitle;
 
-        $this->requestedRepositories[$url] = $repositoryInfo;
+        $this->requestedRepositories[$repositoryUrl] = $repositoryInfo;
 
     }
 
+
+    protected function addRepositoryInfo($repositoryUrl, $apiUser = null, $apiPassword = null, $authType = 'Basic', $shortcut = null, $repositoryTitle = null)
+    {
+        $repositoryInfo                = array();
+        $repositoryInfo['url']         = $repositoryUrl;
+        $repositoryInfo['apiUser']     = $apiUser;
+        $repositoryInfo['apiPassword'] = $apiPassword;
+        $repositoryInfo['authType']    = $authType;
+        $repositoryInfo['shortcut']    = $shortcut;
+        $repositoryInfo['title']       = @array_pop(explode('/', $repositoryUrl));
+
+        if ($repositoryTitle != null)
+        {
+            $repositoryInfo['title'] = $repositoryTitle;
+        }
+        $repositoryInfo['contentTypes'] = array();
+        $repositoryInfo['configTypes']  = array();
+        $repositoryInfo['apps']         = array();
+
+        return $repositoryInfo;
+
+    }
 
 
     public function addAppToRepository($repositoryUrl, $name, $settings = array())
@@ -207,6 +182,7 @@ class RepositoryManager
         $repositories = array();
         foreach ($this->requestedRepositories as $repositoryInfo)
         {
+
             $hash                                 = md5($repositoryInfo['url']);
             $repositories[$repositoryInfo['url']] = array( 'title' => $repositoryInfo['title'], 'accessHash' => $hash, 'shortcut' => $repositoryInfo['shortcut'] );
         }
@@ -330,8 +306,6 @@ class RepositoryManager
             $this->initAccessHashes();
         }
 
-
-
         if (array_key_exists($hash, $this->contentTypeAccessHashes))
         {
             $repository = $this->contentTypeAccessHashes[$hash]['repository'];
@@ -391,8 +365,7 @@ class RepositoryManager
         {
             $repository = $this->configTypeAccessHashes[$hash]['repository'];
 
-
-            if ($repository->hasConfigType($this->configTypeAccessHashes[$hash]['configTypeName'])    )
+            if ($repository->hasConfigType($this->configTypeAccessHashes[$hash]['configTypeName']))
             {
                 $repository->selectConfigType($this->configTypeAccessHashes[$hash]['configTypeName']);
 
@@ -502,6 +475,12 @@ class RepositoryManager
         }
 
         return false;
+    }
+
+
+    public function getRepositoryAccessHashByUrl($repositoryUrl)
+    {
+        return md5($repositoryUrl);
     }
 
 

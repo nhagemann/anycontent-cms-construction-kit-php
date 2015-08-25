@@ -5,14 +5,19 @@
 
 {% block content %}
 
-    <div class="row" id="sortable_tree">
+    <div class="row">
 
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
+        </ol>
 
-        <h2>
-            <a href="{{ links.reset }}">{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</a>
-        </h2>
+        <a href="{{ links.reset }}">
+            <h2>{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</h2></a>
+
         <br/>
-
+    </div>
+    <div class="row" id="sortable_tree">
         <div class="col-xs-8">
 
             <ol class="sortable sortable-tree well" id="sortable_tree_left">

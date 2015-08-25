@@ -2,7 +2,14 @@
 
 {% block content %}
     <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
+            <li><a href="{{ links.listRecords }}" title="{{ definition.name }}">{% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</a></li>
+        </ol>
         {% if record %}
+
+
 
             <h3><span class="label label-info">#{{ record.id }}<small>.{{ record.revision }}</small></span> {{ record.name }}{% if definition.hasSubtypes() %} <span
                         class="badge primary subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}

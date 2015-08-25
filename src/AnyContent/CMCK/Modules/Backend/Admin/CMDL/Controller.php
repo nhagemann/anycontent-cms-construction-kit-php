@@ -42,6 +42,7 @@ class Controller
 
         }
 
+
         $vars['repositories'] = $items;
 
         return $app->renderPage('admin.twig', $vars);
@@ -372,7 +373,7 @@ class Controller
         }
 
         $item                              = array();
-        $item['title']                     = $repositoryUrl;
+        $item['title']                     = $repositoryItem['title'];
         $item['url']                       = $repositoryUrl;
         $item['link']                      = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
         $item['links']['add_content_type'] = $app['url_generator']->generate('adminAddContentType', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));

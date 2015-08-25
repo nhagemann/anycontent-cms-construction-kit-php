@@ -7,12 +7,16 @@
 
 
     <div class="row">
-        <h3>
-            <a href="{{ repository.link }}">{{ repository.title }}</a>
-            <a href="{{ repository.url }}">
-                <small>{{ repository.url }}</small>
-            </a>
-        </h3>
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+            </ol>
+            <a href="{{ repository.link }}"><h2>{{ repository.title }}</h2></a>
+
+        </div>
+        <br/>
+    </div>
+    <div class="row">
         <br/>
     </div>
     {% if repository.content_types %}
@@ -36,12 +40,14 @@
                             <td><a href="{{ contenttype.link }}">{{ contenttype.name }}</a></td>
                             <td>
                                 {% for k,v in contenttype.definition.workspaces %}
-                                    {{ v }} <small>({{ k }})</small><br/>
+                                    {{ v }}
+                                    <small>({{ k }})</small><br/>
                                 {% endfor %}
                             </td>
                             <td>
                                 {% for k,v in contenttype.definition.languages %}
-                                    {{ v }} <small>({{ k }})</small><br/>
+                                    {{ v }}
+                                    <small>({{ k }})</small><br/>
                                 {% endfor %}
                             </td>
                             <td><a href="{{ contenttype.link }}" class="btn btn-default"
@@ -75,12 +81,14 @@
                             <td><a href="{{ configtype.link }}">{{ configtype.name }}</a></td>
                             <td>
                                 {% for k,v in configtype.definition.workspaces %}
-                                    {{ v }} <small>({{ k }})</small><br/>
+                                    {{ v }}
+                                    <small>({{ k }})</small><br/>
                                 {% endfor %}
                             </td>
                             <td>
                                 {% for k,v in configtype.definition.languages %}
-                                    {{ v }} <small>({{ k }})</small><br/>
+                                    {{ v }}
+                                    <small>({{ k }})</small><br/>
                                 {% endfor %}
                             </td>
                             <td><a href="{{ configtype.link }}" class="btn btn-primary"
@@ -104,7 +112,14 @@
             </div>
         </div>
     {% endif %}
-
+    <br/>
+    <div class="row">
+        <div class="col-xs-8">
+            <h3>API</h3>
+            <br/>
+            <a href="{{ repository.url }}" target="_blank">{{ repository.url }}</a>
+        </div>
+    </div>
     <br/>
     <br/>
 

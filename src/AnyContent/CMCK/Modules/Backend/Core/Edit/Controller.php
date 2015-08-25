@@ -37,11 +37,15 @@ class Controller
 
         if ($repository)
         {
+            $vars['repository']          = $repository;
+            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+            $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+            $vars['links']['listRecords']= $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage()));
+
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
 
             $formManager->setDataTypeDefinition($repository->getContentTypeDefinition());
-
 
             $app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
@@ -70,7 +74,10 @@ class Controller
 
                 $buttons   = array();
                 $buttons[] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-list' );
-                $buttons[] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-move' );
+                if ($contentTypeDefinition->isSortable())
+                {
+                    $buttons[] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-move' );
+                }
                 $buttons[] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-plus' );
 
                 $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
@@ -108,6 +115,13 @@ class Controller
 
         if ($repository)
         {
+
+            $vars['repository']          = $repository;
+            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+            $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+            $vars['links']['listRecords']= $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage()));
+
+
             $app['context']->setCurrentRepository($repository);
 
             $contentTypeDefinition = $repository->getContentTypeDefinition();
@@ -126,14 +140,17 @@ class Controller
             /** @var Record $record */
             $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
-
             $app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
             $buttons      = array();
             $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-list' );
-            $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-move' );
+
+            if ($contentTypeDefinition->isSortable())
+            {
+                $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-move' );
+            }
             $buttons[400] = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-download', 'id' => 'listing_button_export' );
             $buttons[500] = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-upload', 'id' => 'listing_button_import' );
             $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-plus' );
@@ -280,20 +297,23 @@ class Controller
                     $formElementDefinitions = $viewDefinition->getFormElementDefinitions();
                     foreach ($formElementDefinitions as $formElementDefinition)
                     {
-                        if ($formElementDefinition->isUnique() && $record->getProperty($formElementDefinition->getName())!='')
+                        if ($formElementDefinition->isUnique() && $record->getProperty($formElementDefinition->getName()) != '')
                         {
                             $filter = new ContentFilter($contentTypeDefinition);
                             $filter->addCondition($formElementDefinition->getName(), '=', $record->getProperty($formElementDefinition->getName()));
 
                             $records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 2, 1, $filter);
 
-                            if (count($records) > 1) {
+                            if (count($records) > 1)
+                            {
                                 $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
                             }
-                            elseif (count($records) == 1) {
+                            elseif (count($records) == 1)
+                            {
                                 $oldRecord = array_shift($records);
 
-                                if ($oldRecord->getID() != $recordId) {
+                                if ($oldRecord->getID() != $recordId)
+                                {
                                     $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
                                 }
                             }

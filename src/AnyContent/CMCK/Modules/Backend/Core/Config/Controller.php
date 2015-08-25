@@ -31,6 +31,11 @@ class Controller
 
         if ($repository)
         {
+            $vars['repository']          = $repository;
+            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+            $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+
+
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentConfigType($configTypeDefinition);
 

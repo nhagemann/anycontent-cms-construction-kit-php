@@ -4,16 +4,21 @@
 
 {% block content %}
 
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+    </ol>
+    <h2>Admin</h2>
 
     {% for repository in repositories %}
+        <h3>
+            <a href="{{ repository.link }}">{{ repository.title }}</a>
+            <a href="{{ repository.url }}">
+                <small>{{ repository.url }}</small>
+            </a>
+        </h3>
+        <br/>
+
         <div class="row">
-            <h3>
-                <a href="{{ repository.link }}">{{ repository.title }}</a>
-                <a href="{{ repository.url }}">
-                    <small>{{ repository.url }}</small>
-                </a>
-            </h3>
-            <br/>
 
             <div class="col-xs-6">
 

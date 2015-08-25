@@ -2,9 +2,12 @@
 
 {% block content %}
     <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
+        </ol>
 
-
-        <h3><span class="glyphicon glyphicon-wrench"></span> {{ definition.name }}</h3>
+        <h2><small><span class="glyphicon glyphicon-wrench"></span></small> {{ definition.name }}</h2>
 
     </div>
 

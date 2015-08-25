@@ -8,8 +8,13 @@
 
 
     {% block listing_header %}
+
         <div class="row">
-            <a href="{{ links.reset }}"><h2>{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</h2></a>
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
+            </ol>
+            <a href="{{ links.reset }}" title="{{ definition.name }}"><h2><small><span class="glyphicon glyphicon-file"></span></small>{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</h2></a>
             <br/></div>
     {% endblock %}
 
