@@ -67,3 +67,8 @@ body.layout-default
 .gravatar > img{
     background-color: #0B74B5;
 }
+
+
+span.label > small{
+    color: #fff;
+}
