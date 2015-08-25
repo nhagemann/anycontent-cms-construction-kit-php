@@ -454,7 +454,7 @@ class ContextManager
 
     public function getCurrentItemsPerPage()
     {
-        return 8;
+        return 10;
     }
 
 

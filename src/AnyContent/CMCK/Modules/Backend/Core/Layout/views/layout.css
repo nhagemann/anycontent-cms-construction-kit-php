@@ -1,8 +1,13 @@
 /* add margin to compensate the space used by the permanent navbars and make sure, that all buttons are always visible (at least with scrolling) */
 body {
     margin-bottom: 150px;
-    background-image: url(/img/p6.png);
 }
+
+body.layout-default
+{
+    background-image: url(/img/subtle_dots.png);
+}
+
 
 .navbar-brand img {margin-top:-8px}
 
@@ -33,7 +38,25 @@ body {
 {
     border: 1px solid #ccc;
     border-collapse: separate;
-    border-radius: 2px;
+    border-radius: 3px;
+}
+
+.col-listing-id {
+    width: 100px;
+}
+
+.col-listing-position {
+    width: 80px;
+}
+.col-listing-lastchange {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 250px;
+
+}
+
+.col-listing-buttons {
+    width: 140px;
 }
 
 .gravatar{
