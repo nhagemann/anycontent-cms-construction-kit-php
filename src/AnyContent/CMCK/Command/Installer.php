@@ -39,6 +39,11 @@ class Installer
         $filesystem->remove($baseDir . '/doctrine-cache');
         $filesystem->mkdir($baseDir . '/doctrine-cache');
 
+        echo "Installing Console";
+
+        $filesystem->mkdir($baseDir . '/console');
+        $filesystem->copy($packageDir . '/console/console', $baseDir . '/console/console');
+
         echo "...\n";
         echo "Done.\n";
     }
