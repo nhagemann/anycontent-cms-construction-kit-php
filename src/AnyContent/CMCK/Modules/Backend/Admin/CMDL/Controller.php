@@ -383,7 +383,7 @@ class Controller
 
         foreach ($repositoryManager->listContentTypes($repositoryUrl) as $contentTypeName => $contentTypeItem)
         {
-            $info = array( 'name' => $contentTypeName, 'edit' => $app['url_generator']->generate('adminEditContentType', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'] )), 'delete' => $app['url_generator']->generate('adminDeleteContentType', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'] )) );
+            $info = array( 'name' => $contentTypeName, 'title'=>$contentTypeItem['title'], 'edit' => $app['url_generator']->generate('adminEditContentType', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'] )), 'delete' => $app['url_generator']->generate('adminDeleteContentType', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'] )) );
 
             if ($definition)
             {
@@ -397,7 +397,7 @@ class Controller
 
         foreach ($repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
         {
-            $info = array( 'name' => $configTypeName, 'edit' => $app['url_generator']->generate('adminEditConfigType', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )), 'delete' => $app['url_generator']->generate('adminDeleteConfigType', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )) );
+            $info = array( 'name' => $configTypeName, 'title'=>$configTypeItem['title'], 'edit' => $app['url_generator']->generate('adminEditConfigType', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )), 'delete' => $app['url_generator']->generate('adminDeleteConfigType', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )) );
 
             if ($definition)
             {
