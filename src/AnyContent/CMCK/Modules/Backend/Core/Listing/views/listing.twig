@@ -59,7 +59,7 @@
                                 <td><span class="badge status">{{ record.status.label }}</span></td>
                             {% endif %}
                             {% if definition.isSortable() %}
-                            <td></td>
+                            <td>{{ record.position }}</td>
                             {% endif %}
                             <td>
                                 <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>

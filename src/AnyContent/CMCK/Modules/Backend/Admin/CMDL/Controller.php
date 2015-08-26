@@ -220,7 +220,7 @@ class Controller
 
         if ($repository)
         {
-            $contentTypeName = trim($request->request->get('create_content_type'));
+            $contentTypeName = substr(trim($request->request->get('create_content_type')),0,32);
 
             $contentTypeName = Util::generateValidIdentifier($contentTypeName);
 
@@ -265,7 +265,7 @@ class Controller
 
         if ($repository)
         {
-            $configTypeName = trim($request->request->get('create_config_type'));
+            $configTypeName = substr(trim($request->request->get('create_config_type')),0,32);
 
             $configTypeName = Util::generateValidIdentifier($configTypeName);
 
