@@ -18,12 +18,12 @@ class Installer
 
         if (!$filesystem->exists($baseDir . '/web'))
         {
-            echo "Creating Web Folder\n";
+            echo "Creating web folder\n";
             $filesystem->mkdir($baseDir . '/web');
             $filesystem->mirror($packageDir . '/web', $baseDir . '/web');
         }
 
-        echo "Creating Config Folder with example config.\n";
+        echo "Creating config folder with example config.\n";
 
         $filesystem->mkdir($baseDir . '/config');
 
@@ -39,7 +39,7 @@ class Installer
         $filesystem->remove($baseDir . '/doctrine-cache');
         $filesystem->mkdir($baseDir . '/doctrine-cache');
 
-        echo "Installing Console";
+        echo "Installing console.\n";
 
         $filesystem->mkdir($baseDir . '/console');
         $filesystem->copy($packageDir . '/console/console', $baseDir . '/console/console');
