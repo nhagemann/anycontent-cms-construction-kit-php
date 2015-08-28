@@ -28,7 +28,9 @@
                         <tbody>
                         {% for contenttype in repository.content_types %}
                             <tr>
-                                <td><a href="{{ contenttype.link }}">{{ contenttype.name }}</a></td>
+                                <td>
+                                    <a href="{{ contenttype.link }}" title="{{ contenttype.name }}">{% if contenttype.title %}{{ contenttype.title }}{% else %}{{ contenttype.name }}{% endif %}</a>
+                                </td>
                                 <td><a href="{{ contenttype.link }}" class="btn btn-default"
                                        role="button"><span class="glyphicon glyphicon-list"></span> List Records</a>
                                 </td>
@@ -53,7 +55,7 @@
                         <tbody>
                         {% for configtype in repository.config_types %}
                             <tr>
-                                <td><a href="{{ configtype.link }}">{{ configtype.name }}</a></td>
+                                <td> <a href="{{ configtype.link }}" title="{{ configtype.name }}">{% if configtype.title %}{{ configtype.title }}{% else %}{{ configtype.name }}{% endif %}</a></td>
                                 <td><a href="{{ configtype.link }}" class="btn btn-primary"
                                        role="button"><span class="glyphicon glyphicon-wrench"></span> Edit</a></td>
 

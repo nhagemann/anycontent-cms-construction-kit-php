@@ -92,21 +92,24 @@ class Controller
         foreach ($repositoryManager->listContentTypes($repositoryUrl) as $contentTypeName => $contentTypeItem)
         {
 
-            $info = array( 'name' => $contentTypeItem['title'], 'link' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'], 'page' => 1 )) );
+            $info = array( 'name' => $contentTypeItem['name'], 'title' => $contentTypeItem['title'], 'link' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'], 'page' => 1 )) );
+
 
             if ($definition)
             {
                 $info['definition'] = $repository->getContentTypeDefinition($contentTypeName);
             }
 
+
             $item['content_types'][] = $info;
         }
+
 
         $item['config_types'] = array();
 
         foreach ($repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
         {
-            $info = array( 'name' => $configTypeItem['title'], 'link' => $app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )) );
+            $info = array( 'name' => $configTypeItem['name'], 'title' => $configTypeItem['title'], 'link' => $app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )) );
 
             if ($definition)
             {

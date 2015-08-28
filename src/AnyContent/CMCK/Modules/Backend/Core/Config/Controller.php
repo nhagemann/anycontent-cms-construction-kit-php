@@ -45,6 +45,7 @@ class Controller
             $record = $repository->getConfig($configTypeDefinition->getName(), $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
             $app['layout']->addJsFile('app.js');
+            $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
             if ($record)
