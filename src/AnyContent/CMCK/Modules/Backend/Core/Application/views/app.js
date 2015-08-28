@@ -11,12 +11,16 @@ function cmck_modal_id(id, url, onShown) {
     });
 
     $(id).removeData();
+    $(id).appendTo("body");
 
     $(id).modal({
-        keyboard: true,
-        remote: url
+        keyboard: true
+
     });
+
+    $(id).load(url);
 }
+
 
 function cmck_modal(url, onShown) {
     cmck_modal_id('modal_edit', url, onShown);
