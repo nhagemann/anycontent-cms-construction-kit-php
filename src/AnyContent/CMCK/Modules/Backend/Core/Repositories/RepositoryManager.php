@@ -213,12 +213,8 @@ class RepositoryManager
                 {
                     if (array_key_exists('*', $repositoryInfo['contentTypes']) OR array_key_exists($contentTypeName, $repositoryInfo['contentTypes']))
                     {
-                        if (!$contentTypeTitle)
-                        {
-                            $contentTypeTitle = $contentTypeName;
-                        }
                         $hash                           = md5($url . '-contentType-' . $contentTypeName);
-                        $contentTypes[$contentTypeName] = array( 'title' => $contentTypeTitle, 'accessHash' => $hash );
+                        $contentTypes[$contentTypeName] = array( 'name'=>$contentTypeName, 'title' => $contentTypeTitle, 'accessHash' => $hash );
                     }
                 }
             }
@@ -251,12 +247,8 @@ class RepositoryManager
                 {
                     if (array_key_exists('*', $repositoryInfo['configTypes']) OR array_key_exists($configTypeName, $repositoryInfo['configTypes']))
                     {
-                        if (!$configTypeTitle)
-                        {
-                            $configTypeTitle = $configTypeName;
-                        }
                         $hash                         = md5($url . '-configType-' . $configTypeName);
-                        $configTypes[$configTypeName] = array( 'title' => $configTypeTitle, 'accessHash' => $hash );
+                        $configTypes[$configTypeName] = array( 'name'=>$configTypeName, 'title' => $configTypeTitle, 'accessHash' => $hash );
                     }
                 }
             }

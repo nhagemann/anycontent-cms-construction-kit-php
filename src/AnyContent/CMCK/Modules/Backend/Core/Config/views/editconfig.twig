@@ -7,7 +7,7 @@
             <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
         </ol>
 
-        <h2><small><span class="glyphicon glyphicon-wrench"></span></small> {{ definition.name }}</h2>
+        <h2 title="{{ definition.name }}"><small><span class="glyphicon glyphicon-wrench"></span></small> {% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</h2>
 
     </div>
 

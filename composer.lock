@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a7831d59f6c387d6e2571263ce3a1202",
+    "hash": "896f53856b14a9010e6081a9e672c5ca",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -290,22 +290,22 @@
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "0.11.6",
+            "version": "0.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "70ce587465325e8bd3547bc5b4e9dd6914a8c637"
+                "reference": "3438038178db04578e66c01c99519a01b054b2f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/70ce587465325e8bd3547bc5b4e9dd6914a8c637",
-                "reference": "70ce587465325e8bd3547bc5b4e9dd6914a8c637",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/3438038178db04578e66c01c99519a01b054b2f5",
+                "reference": "3438038178db04578e66c01c99519a01b054b2f5",
                 "shasum": ""
             },
             "require": {
                 "doctrine/cache": "1.3.*",
                 "guzzle/guzzle": "3.9.*",
-                "nhagemann/cmdl-parser-php": "0.10.*",
+                "nhagemann/cmdl-parser-php": "0.12.*",
                 "php": ">=5.3"
             },
             "require-dev": {
@@ -329,11 +329,11 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-06-28 15:23:07"
+            "time": "2015-08-28 07:47:17"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
-            "version": "0.10",
+            "version": "0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
@@ -1117,16 +1117,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.21.0",
+            "version": "v1.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "913d282caca9ee0e8d05940c6caa486d58810dd4"
+                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/913d282caca9ee0e8d05940c6caa486d58810dd4",
-                "reference": "913d282caca9ee0e8d05940c6caa486d58810dd4",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
+                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
                 "shasum": ""
             },
             "require": {
@@ -1174,7 +1174,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-08-24 09:51:18"
+            "time": "2015-08-26 08:58:31"
         }
     ],
     "packages-dev": [
