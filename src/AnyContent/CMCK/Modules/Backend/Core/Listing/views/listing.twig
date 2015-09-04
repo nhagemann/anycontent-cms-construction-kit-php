@@ -47,7 +47,7 @@
                         <tr>
                             <td><a href="{{ record.editUrl }}">{{ record.id }}</a></td>
                             {% if definition.hasSubtypes() %}
-                                <td><span class="badge subtype">{{ record.subtype.label }}</span></td>
+                                <td class="col-listing-subtype"><span class="badge subtype">{{ record.subtype.label }}</span></td>
                             {% endif %}
                             <td><a href="{{ record.editUrl }}">{{ record.name }}</a>
                             </td>
@@ -56,10 +56,10 @@
                                 {% include "listing-userinfo.twig" %}
                             </td>
                             {% if definition.hasStatusList() %}
-                                <td><span class="badge status">{{ record.status.label }}</span></td>
+                                <td class="col-listing-status"><span class="badge status">{{ record.status.label }}</span></td>
                             {% endif %}
                             {% if definition.isSortable() %}
-                            <td>{{ record.position }}</td>
+                            <td class="col-listing-position">{{ record.position }}</td>
                             {% endif %}
                             <td>
                                 <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>

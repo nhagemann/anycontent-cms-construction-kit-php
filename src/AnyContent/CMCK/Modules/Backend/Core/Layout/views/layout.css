@@ -63,6 +63,14 @@ body.layout-default {
     width: 80px;
 }
 
+.col-listing-subtype {
+    width: 120px;
+}
+
+.col-listing-status {
+    width: 120px;
+}
+
 .col-listing-lastchange {
     white-space: nowrap;
     overflow: hidden;
