@@ -3,9 +3,11 @@
         <ul class="media-list">
             <li class="media">
                 {% if file.file.isImage %}
-                    <a class="pull-left" href="#">
-                        <img class="media-object" src="{{ file.links.view }}" width="60" alt="...">
-                    </a>
+                    <div class="file-item-preview pull-left">
+                        <a href="#">
+                            <img class="media-object" src="{{ file.links.view }}" width="60" alt="...">
+                        </a>
+                    </div>
                 {% endif %}
 
                 <div class="media-body">

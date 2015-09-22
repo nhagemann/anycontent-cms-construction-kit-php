@@ -23,9 +23,9 @@
                                 <legend>Workspace</legend>
 
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label">Source </label>
+                                    <label class="col-xs-3 control-label">Source </label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-xs-6">
                                         <select name="workspace" class="form-control">
                                             {% for key,value in workspaces.list %}
                                                 <option value="{{ key }}"{% if key == workspaces.current %} selected="selected"{% endif %}>{{ value }}</option>
@@ -40,9 +40,9 @@
 
 
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label">Source</label>
+                                    <label class="col-xs-3 control-label">Source</label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-xs-6">
                                         <select name="language" class="form-control">
                                             {% for key,value in languages.list %}
                                                 <option value="{{ key }}"{% if key == languages.current %} selected="selected"{% endif %}>{{ value }}</option>
@@ -54,9 +54,9 @@
                             <legend>Format</legend>
 
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Target</label>
+                                <label class="col-xs-3 control-label">Target</label>
 
-                                <div class="col-md-6">
+                                <div class="col-xs-6">
                                     <select name="format" class="form-control">
 
                                         <option value="x" selected="selected">Excel 2007</option>

@@ -47,7 +47,7 @@ class Controller
 
             $formManager->setDataTypeDefinition($repository->getContentTypeDefinition());
 
-            $app['layout']->addJsFile('app.js');
+            //$app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
@@ -140,7 +140,7 @@ class Controller
             /** @var Record $record */
             $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
 
-            $app['layout']->addJsFile('app.js');
+            //$app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
             $app['layout']->addJsFile('editrecord.js');
 
