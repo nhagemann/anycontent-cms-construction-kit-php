@@ -5,7 +5,7 @@
 
         var reset = function () {
             $('.formelement-table a').off();
-        }
+        };
 
         var init = function () {
 
@@ -27,6 +27,7 @@
                 var r = getSelectedRow(this);
                 var name = getTableName(this);
                 addRow(name, r);
+                return false;
             });
 
             $('.formelement-table a[data-action=minus]').click(function () {
@@ -34,6 +35,7 @@
                 var r = getSelectedRow(this);
                 var name = getTableName(this);
                 deleteRow(name, r);
+                return false;
 
             });
 
@@ -55,6 +57,9 @@
                 }
             });
 
+            $('.formelement-table table').each(function (index) {
+                hideMinusButtonsIfNecessary($(this).attr('name'));
+            })
 
         };
 
@@ -97,6 +102,19 @@
             var rows = ($('table[name=' + name + ']').find('tr'));
             row = rows[r];
             $(row).remove();
+            hideMinusButtonsIfNecessary(name);
+        };
+
+
+        var hideMinusButtonsIfNecessary = function (name){
+            var minusButtons = $('table[name=' + name + '] a[data-action=minus]');
+
+            $(minusButtons).each(function (index) {
+                $(this).show();
+            });
+            if (minusButtons.length == 1) {
+                $(minusButtons[0]).hide();
+            }
         };
 
         $(document).on("cmck", function (e, params) {
@@ -113,7 +131,7 @@
         });
         init();
 
-    }
+    };
 
     $(document).ready(function () {
         $(document).cmck_fe_table();
