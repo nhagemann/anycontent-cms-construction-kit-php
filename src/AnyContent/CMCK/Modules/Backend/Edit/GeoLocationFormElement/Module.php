@@ -7,15 +7,25 @@ use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
 
+    /**
+     * Available options:
+     *
+     * key  provide your google maps api key here
+     *
+     * @param Application $app
+     * @param array       $options
+     */
     public function init(Application $app, $options = array())
     {
+        parent::init($app, $options);
+
         $app->addTemplatesFolders(__DIR__ . '/views/');
         $app
             ->get('/edit/modal/geolocation/{name}', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
-            ->value('module',$this);
+            ->value('module', $this);
         $app
             ->get('/edit/modal/geolocation/{name}/{lat}/{long}', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
-            ->value('module',$this);
+            ->value('module', $this);
 
     }
 
@@ -24,9 +34,14 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     {
         $app['form']->registerFormElement('geolocation', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\FormElementGeoLocation');
 
-        //@upgrade API KEY as module option
+        $url = 'https://maps.googleapis.com/maps/api/js?v=3.19&sensor=false';
+
+        if (array_key_exists('key', $this->options))
+        {
+            $url = 'https://maps.googleapis.com/maps/api/js?key=' . $this->options['key'] . '&sensor=false';
+        }
         //@upgrade add only if a record with geolocation form element is edited
-        $app['layout']->addJsLinkToHead('https://maps.googleapis.com/maps/api/js?v=3.19&sensor=false');
+        $app['layout']->addJsLinkToHead($url);
     }
 
 }
