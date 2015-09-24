@@ -17,14 +17,11 @@ use AnyContent\Client\UserInfo;
 class Controller
 {
 
-    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1, $workspace = null, $language = null)
+    public static function listRecords(Application $app, Request $request, $contentTypeAccessHash, $page = 1, $workspace = null, $language = null, $nr = 1)
     {
 
-        // reset chained save operations to 'save' only upon listing of a content type
-        if (key($app['context']->getCurrentSaveOperation()) != 'save-list')
-        {
-            $app['context']->setCurrentSaveOperation('save', 'Save');
-        }
+        /** @var ContentViewsManager $contentViewsManager */
+        $contentViewsManager = $app['contentViews'];
 
         $vars = array();
 
@@ -51,6 +48,36 @@ class Controller
         if ($language != null && $contentTypeDefinition->hasLanguage($language))
         {
             $app['context']->setCurrentLanguage($language);
+        }
+
+        $contentViews = $contentViewsManager->getContentViews($repository, $contentTypeDefinition, $contentTypeAccessHash);
+
+        if (count($contentViews) == 0)
+        {
+            $contentViews[1] = new ContentViewDefault(1, $app, $contentTypeDefinition, $contentTypeAccessHash);
+        }
+        $vars['contentViews'] = $contentViews;
+
+        $currentContentView = $contentViewsManager->getContentView($repository, $contentTypeDefinition, $contentTypeAccessHash, $nr);
+
+        if (!$currentContentView)
+        {
+
+            $currentContentView = reset($contentViews);
+            $nr                 = key($contentViews);
+
+        }
+
+        $vars['currentContentViewNr'] = $nr;
+
+
+        $vars = $currentContentView->apply($vars);
+
+
+        // reset chained save operations to 'save' only upon listing of a content type
+        if (key($app['context']->getCurrentSaveOperation()) != 'save-list')
+        {
+            $app['context']->setCurrentSaveOperation('save', 'Save');
         }
 
         // check for sorting/search query parameters
@@ -130,12 +157,8 @@ class Controller
 
         $vars['pager'] = $app['pager']->renderPager($count, $itemsPerPage, $page, 'listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
-        $template = 'listing.twig';
 
-        $event = new ListingRenderEvent($app, $template, $vars);
-        $app['dispatcher']->dispatch(Module::EVENT_LISTING_RENDER, $event);
-
-        return $app->renderPage($event->getTemplate(), $event->getVars());
+        return $app->renderPage($currentContentView->getTemplate(), $vars);
     }
 
 

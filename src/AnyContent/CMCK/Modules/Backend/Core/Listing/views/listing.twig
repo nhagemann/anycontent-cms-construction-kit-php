@@ -14,13 +14,38 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
             </ol>
-            <a href="{{ links.reset }}" title="{{ definition.name }}"><h2><small><span class="glyphicon glyphicon-file"></span></small>{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}</h2></a>
-            <br/></div>
+            <a href="{{ links.reset }}" title="{{ definition.name }}">
+                <h2>
+                    <small><span class="glyphicon glyphicon-file"></span>
+                    </small>{% if definition.Title %}{{ definition.Title }}{% else %}{{ definition.Name }}{% endif %}
+                </h2>
+            </a>
+            <br/>
+        </div>
+        {% if contentViews|length>1 %}
+
+            <div class="row">
+
+                <ul class="nav nav-tabs">
+
+                    {% for nr,contentView in contentViews %}
+                        <li role="presentation" {% if nr == currentContentViewNr %}class="active"{% endif %}><a
+                                    href="{{ contentView.url }}">{{ contentView.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                <br/>
+
+            </div>
+        {% endif %}
     {% endblock %}
 
     <div class="row">
         {% include "listing-searchbox.twig" %}
     </div>
+
+
+
+
     {% block listing_content %}
         <div class="row">
             {% if records %}
@@ -37,7 +62,7 @@
                             <th class="col-listing-status"><a href="{{ links.sortByStatus }}">Status</a></th>
                         {% endif %}
                         {% if definition.isSortable() %}
-                        <th class="col-listing-position"><a href="{{ links.sortByPosition }}">Position</a></th>
+                            <th class="col-listing-position"><a href="{{ links.sortByPosition }}">Position</a></th>
                         {% endif %}
                         <th class="col-listing-buttons"></th>
                     </tr>
@@ -47,7 +72,8 @@
                         <tr>
                             <td><a href="{{ record.editUrl }}">{{ record.id }}</a></td>
                             {% if definition.hasSubtypes() %}
-                                <td class="col-listing-subtype"><span class="badge subtype">{{ record.subtype.label }}</span></td>
+                                <td class="col-listing-subtype"><span
+                                            class="badge subtype">{{ record.subtype.label }}</span></td>
                             {% endif %}
                             <td><a href="{{ record.editUrl }}">{{ record.name }}</a>
                             </td>
@@ -56,10 +82,11 @@
                                 {% include "listing-userinfo.twig" %}
                             </td>
                             {% if definition.hasStatusList() %}
-                                <td class="col-listing-status"><span class="badge status">{{ record.status.label }}</span></td>
+                                <td class="col-listing-status"><span
+                                            class="badge status">{{ record.status.label }}</span></td>
                             {% endif %}
                             {% if definition.isSortable() %}
-                            <td class="col-listing-position">{{ record.position }}</td>
+                                <td class="col-listing-position">{{ record.position }}</td>
                             {% endif %}
                             <td>
                                 <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>

@@ -26,6 +26,9 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Admin\CMDL');
 
+
+$app->registerModule('AnyContent\CMCK\Modules\Backend\View\Glossary');
+
 // Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
 
 if (!function_exists('apc_exists'))
