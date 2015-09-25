@@ -57,6 +57,33 @@ class BaseContentView
     }
 
 
+    /**
+     * @return Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+
+    /**
+     * @return ContentTypeDefinition
+     */
+    public function getContentTypeDefinition()
+    {
+        return $this->contentTypeDefinition;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getContentTypeAccessHash()
+    {
+        return $this->contentTypeAccessHash;
+    }
+
+
     public function __construct($nr, Application $app, Repository $repository, ContentTypeDefinition $contentTypeDefinition, $contentTypeAccessHash, CustomAnnotation $customAnnotation = null)
     {
         $this->nr                    = $nr;
@@ -83,7 +110,13 @@ class BaseContentView
 
     public function getTemplate()
     {
-        return 'listing.twig';
+        return 'template.twig';
+    }
+
+
+    public function doesProcessSearch()
+    {
+        return false;
     }
 
 

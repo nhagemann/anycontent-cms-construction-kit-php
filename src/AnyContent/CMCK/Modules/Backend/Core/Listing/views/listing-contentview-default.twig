@@ -1,0 +1,61 @@
+{% extends "listing.twig" %}
+
+{% block listing_content %}
+    <div class="row">
+        {% if records %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-listing-id"><a href="{{ links.sortById }}">ID</a></th>
+                    {% if definition.hasSubtypes() %}
+                        <th class="col-listing-subtype"><a href="{{ links.sortBySubtype }}">Subtype</a></th>
+                    {% endif %}
+                    <th><a href="{{ links.sortByName }}">Name</a></th>
+                    <th class="col-listing-lastchange"><a href="{{ links.sortByLastChange }}">Last change</a></th>
+                    {% if definition.hasStatusList() %}
+                        <th class="col-listing-status"><a href="{{ links.sortByStatus }}">Status</a></th>
+                    {% endif %}
+                    {% if definition.isSortable() %}
+                        <th class="col-listing-position"><a href="{{ links.sortByPosition }}">Position</a></th>
+                    {% endif %}
+                    <th class="col-listing-buttons"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td><a href="{{ record.editUrl }}">{{ record.id }}</a></td>
+                        {% if definition.hasSubtypes() %}
+                            <td class="col-listing-subtype"><span
+                                        class="badge subtype">{{ record.subtype.label }}</span></td>
+                        {% endif %}
+                        <td><a href="{{ record.editUrl }}">{{ record.name }}</a>
+                        </td>
+
+                        <td class="col-listing-lastchange">
+                            {% include "listing-userinfo.twig" %}
+                        </td>
+                        {% if definition.hasStatusList() %}
+                            <td class="col-listing-status"><span
+                                        class="badge status">{{ record.status.label }}</span></td>
+                        {% endif %}
+                        {% if definition.isSortable() %}
+                            <td class="col-listing-position">{{ record.position }}</td>
+                        {% endif %}
+                        <td>
+                            <a href="{{ record.editUrl }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ record.deleteUrl }}"
+                               class="btn btn-danger button_delete">Delete</a>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+            {{ pager | raw }}
+        {% endif %}
+    </div>
+{% endblock %}
+

@@ -21,7 +21,7 @@ class ContentViewGlossary extends BaseContentView
 
     public function getTemplate()
     {
-        return 'listing-glossary.twig';
+        return 'listing-contentview-glossary.twig';
     }
 
 
@@ -31,6 +31,7 @@ class ContentViewGlossary extends BaseContentView
 
         $glossary = array();
 
+        $this->repository->setOrder('name');
         $records = $this->repository->getRecordsAsRecordObjects(null, null, 1, 'AnyContent\CMCK\Modules\Backend\Core\Listing\ListingRecord');
 
         /** @var ListingRecord $record */

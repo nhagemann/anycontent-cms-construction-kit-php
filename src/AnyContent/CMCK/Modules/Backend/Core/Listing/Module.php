@@ -18,7 +18,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
         $app->get('/content/list/{contentTypeAccessHash}/{nr}/page/{page}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Listing\Controller::listRecords')
-            ->bind('listRecords')->value('page', 1)->value('workspace', null)->value('language', null)->value('nr', 1);
+            ->bind('listRecords')->value('page', 1)->value('workspace', null)->value('language', null)->value('nr', 0);
         $app->get('/content/list/{contentTypeAccessHash}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Listing\Controller::listRecords')
             ->bind('listRecordsReset')->value('workspace', null)->value('language', null)->value('nr', 1);
 

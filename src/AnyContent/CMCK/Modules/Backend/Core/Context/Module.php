@@ -20,7 +20,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['context'] = $app->share(function ($app)
         {
-            return new ContextManager($app['session']);
+            return new ContextManager($app);
         });
     }
 

@@ -3,21 +3,31 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Context;
 
 use AnyContent\Client\Repository;
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 use CMDL\DataTypeDefinition;
 use CMDL\ConfigTypeDefinition;
 use CMDL\ContentTypeDefinition;
 use AnyContent\Client\Record;
 use AnyContent\Client\Config;
 
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class ContextManager
 {
+    /** @var  Application */
+    protected $app;
 
+    /** @var  Session */
     protected $session;
 
+    /** @var Repository */
     protected $repository = null;
 
+    /** @var DataTypeDefinition */
     protected $dataTypeDefinition = null;
 
+    /** @var Recor */
     protected $record = null;
 
     protected $config = null;
@@ -27,10 +37,20 @@ class ContextManager
     protected $context = null;
 
 
-    public function __construct($session)
+    public function __construct(Application $app)
     {
-        $this->session = $session;
+        $this->app = $app;
+        $this->session = $app['session'];
         $this->init();
+    }
+
+
+    /**
+     * @return RepositoryManager
+     */
+    protected function getRepositoryManager()
+    {
+        return $this->app['repos'];
     }
 
     public function init()
@@ -47,6 +67,10 @@ class ContextManager
         if (!$this->session->has($this->prefix . 'searchterms'))
         {
             $this->session->set($this->prefix . 'searchterms', array());
+        }
+        if (!$this->session->has($this->prefix . 'contentviews'))
+        {
+            $this->session->set($this->prefix . 'contentviews', array());
         }
         if (!$this->session->has($this->prefix . 'listing_page'))
         {
@@ -150,6 +174,14 @@ class ContextManager
         return $this->dataTypeDefinition;
     }
 
+
+    /**
+     * @return bool|string
+     */
+    public function getCurrentContentTypeAccessHash()
+    {
+        return $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+    }
 
     /**
      * @return ConfigTypeDefinition
@@ -386,7 +418,7 @@ class ContextManager
         }
 
         $sorting                                       = $this->session->get($this->prefix . 'sorting');
-        $sorting[$this->dataTypeDefinition->getName()] = $order;
+        $sorting[$this->getCurrentContentTypeAccessHash()] = $order;
         $this->session->set($this->prefix . 'sorting', $sorting);
     }
 
@@ -396,9 +428,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'sorting'))
         {
             $sorting = $this->session->get($this->prefix . 'sorting');
-            if (array_key_exists($this->dataTypeDefinition->getName(), $sorting))
+            if (array_key_exists($this->getCurrentContentTypeAccessHash(), $sorting))
             {
-                return $sorting[$this->dataTypeDefinition->getName()];
+                return $sorting[$this->getCurrentContentTypeAccessHash()];
             }
         }
 
@@ -409,7 +441,7 @@ class ContextManager
     public function setCurrentListingPage($page)
     {
         $listing                                       = $this->session->get($this->prefix . 'listing_page');
-        $listing[$this->dataTypeDefinition->getName()] = $page;
+        $listing[$this->getCurrentContentTypeAccessHash()] = $page;
         $this->session->set($this->prefix . 'listing_page', $listing);
     }
 
@@ -419,9 +451,9 @@ class ContextManager
         if ($this->session->has($this->prefix . 'listing_page'))
         {
             $listing = $this->session->get($this->prefix . 'listing_page');
-            if (array_key_exists($this->dataTypeDefinition->getName(), $listing))
+            if (array_key_exists($this->getCurrentContentTypeAccessHash(), $listing))
             {
-                return $listing[$this->dataTypeDefinition->getName()];
+                return $listing[$this->getCurrentContentTypeAccessHash()];
             }
         }
 
@@ -432,7 +464,7 @@ class ContextManager
     public function setCurrentSearchTerm($searchTerm)
     {
         $searchTerms                                       = $this->session->get($this->prefix . 'searchterms');
-        $searchTerms[$this->dataTypeDefinition->getName()] = $searchTerm;
+        $searchTerms[$this->getCurrentContentTypeAccessHash()] = $searchTerm;
         $this->session->set($this->prefix . 'searchterms', $searchTerms);
     }
 
@@ -442,15 +474,39 @@ class ContextManager
         if ($this->session->has($this->prefix . 'searchterms'))
         {
             $searchTerms = $this->session->get($this->prefix . 'searchterms');
-            if (array_key_exists($this->dataTypeDefinition->getName(), $searchTerms))
+            if (array_key_exists($this->getCurrentContentTypeAccessHash(), $searchTerms))
             {
-                return $searchTerms[$this->dataTypeDefinition->getName()];
+                return $searchTerms[$this->getCurrentContentTypeAccessHash()];
             }
         }
 
         return '';
     }
 
+
+    public function setCurrentContentViewNr($type)
+    {
+        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        $contentViews                                       = $this->session->get($this->prefix . 'contentviews');
+        $contentViews[$contentTypeAccessHash] = $type;
+        $this->session->set($this->prefix . 'contentviews', $contentViews);
+    }
+
+
+    public function getCurrentContentViewNr()
+    {
+        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        if ($this->session->has($this->prefix . 'contentviews'))
+        {
+            $contentViews = $this->session->get($this->prefix . 'contentviews');
+            if (array_key_exists($contentTypeAccessHash, $contentViews))
+            {
+                return $contentViews[$contentTypeAccessHash];
+            }
+        }
+
+        return 1;
+    }
 
     public function getCurrentItemsPerPage()
     {
