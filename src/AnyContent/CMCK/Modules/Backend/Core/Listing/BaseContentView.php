@@ -4,6 +4,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\Repository;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
+use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
 use CMDL\Annotations\CustomAnnotation;
 use CMDL\ContentTypeDefinition;
@@ -49,6 +50,14 @@ class BaseContentView
 
 
     /**
+     * @return ContextManager
+     */
+    protected function getContext()
+    {
+        return $this->app['context'];
+    }
+
+    /**
      * @return LayoutManager
      */
     protected function getLayout()
@@ -81,6 +90,15 @@ class BaseContentView
     public function getContentTypeAccessHash()
     {
         return $this->contentTypeAccessHash;
+    }
+
+
+    /**
+     * @return CustomAnnotation
+     */
+    public function getCustomAnnotation()
+    {
+        return $this->customAnnotation;
     }
 
 
