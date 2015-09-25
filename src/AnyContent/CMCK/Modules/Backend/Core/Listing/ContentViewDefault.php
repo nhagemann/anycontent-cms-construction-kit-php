@@ -46,6 +46,8 @@ class ContentViewDefault extends BaseContentView
             $app['context']->setCurrentSortingOrder($request->query->get('s'));
         }
 
+
+
         if ($request->get('_route') == 'listRecordsReset')
         {
             $app['context']->setCurrentSortingOrder('id', false);
@@ -54,6 +56,7 @@ class ContentViewDefault extends BaseContentView
 
         $page = $app['context']->getCurrentListingPage();
         $itemsPerPage = $app['context']->getCurrentItemsPerPage();
+
 
         $filter = null;
 

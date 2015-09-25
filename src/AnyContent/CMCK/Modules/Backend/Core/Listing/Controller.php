@@ -33,6 +33,7 @@ class Controller
         $vars['repository']          = $repository;
         $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
         $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+        $vars['links']['filter']     = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
 

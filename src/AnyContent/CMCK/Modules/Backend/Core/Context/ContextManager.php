@@ -508,8 +508,28 @@ class ContextManager
         return 1;
     }
 
+
+    public function setCurrentItemsPerPage($c)
+    {
+        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        $itemsPerPage                                       = $this->session->get($this->prefix . 'itemsperpage');
+        $itemsPerPage[$contentTypeAccessHash] = $c;
+        $this->session->set($this->prefix . 'itemsperpage', $itemsPerPage);
+    }
+
+
     public function getCurrentItemsPerPage()
     {
+        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        if ($this->session->has($this->prefix . 'itemsperpage'))
+        {
+            $itemsPerPage = $this->session->get($this->prefix . 'itemsperpage');
+            if (array_key_exists($contentTypeAccessHash, $itemsPerPage))
+            {
+                return $itemsPerPage[$contentTypeAccessHash];
+            }
+        }
+
         return 10;
     }
 
