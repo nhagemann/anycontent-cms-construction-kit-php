@@ -94,14 +94,14 @@ class ContentViewDefault extends BaseContentView
                 return array( $sorting, null );
             }
 
-            return array( 'id', null );
+            return array( 'name', null );
         }
         if ($this->getContentTypeDefinition()->hasProperty(trim($sorting, '-')))
         {
-            return array( 'property', array( $sorting ) );
+            return array( 'property', array( $sorting, 'name' ) );
         }
 
-        return array( 'id', null );
+        return array( 'name', null );
 
     }
 

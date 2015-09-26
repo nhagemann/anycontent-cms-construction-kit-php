@@ -430,7 +430,7 @@ class ContextManager
             }
         }
 
-        return '.id';
+        return 'name';
     }
 
 
