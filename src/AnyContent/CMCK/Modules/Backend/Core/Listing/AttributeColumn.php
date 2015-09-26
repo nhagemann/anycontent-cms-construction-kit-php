@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\View\CustomList;
+namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\Record;
 use CMDL\FormElementDefinition;

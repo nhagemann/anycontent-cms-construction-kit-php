@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\View\CustomList;
+namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\Record;
 use CMDL\FormElementDefinition;
@@ -9,11 +9,7 @@ class ButtonColumn extends PropertyColumn
 {
     protected $type = 'Button';
 
-    protected $editButton = false;
 
-    protected $deleteButton = false;
-
-    protected $customButton = false;
 
 
     /**

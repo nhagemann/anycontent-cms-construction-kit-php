@@ -2,100 +2,23 @@
 
 namespace AnyContent\CMCK\Modules\Backend\View\CustomList;
 
-use AnyContent\CMCK\Modules\Backend\Core\Listing\BaseContentView;
+use AnyContent\CMCK\Modules\Backend\Core\Listing\AttributeColumn;
+
+use AnyContent\CMCK\Modules\Backend\Core\Listing\ButtonColumn;
 use AnyContent\CMCK\Modules\Backend\Core\Listing\ContentViewDefault;
-use AnyContent\CMCK\Modules\Backend\Core\Listing\FilterUtil;
-use AnyContent\CMCK\Modules\Backend\Core\Listing\ListingRecord;
-use AnyContent\CMCK\Modules\Backend\Core\Pager\PagingHelper;
+use AnyContent\CMCK\Modules\Backend\Core\Listing\PropertyColumn;
+use AnyContent\CMCK\Modules\Backend\Core\Listing\SelectionColumn;
+use AnyContent\CMCK\Modules\Backend\Core\Listing\StatusColumn;
+use AnyContent\CMCK\Modules\Backend\Core\Listing\SubtypeColumn;
+
 use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
 
-class ContentViewCustomList extends BaseContentView
+class ContentViewCustomList extends ContentViewDefault
 {
-
-    /** @var  CellRenderer */
-    protected $cellRenderer;
-
-
-    /**
-     * @return Request
-     */
-    protected function getRequest()
-    {
-        return $this->app['request'];
-    }
-
-
-    /**
-     * @return PagingHelper
-     */
-    protected function getPager()
-    {
-        return $this->app['pager'];
-    }
-
-
-    public function getTemplate()
-    {
-        return 'listing-contentview-list.twig';
-    }
-
 
     public function apply($vars)
     {
-        $this->getLayout()->addJsFile('listing.js');
-
-        // reset chained save operations (e.g. 'save-insert') to 'save' only upon listing of a content type
-        if (key($this->getContext()->getCurrentSaveOperation()) != 'save-list')
-        {
-            $this->getContext()->setCurrentSaveOperation('save', 'Save');
-        }
-
-        // store sorting order
-        if ($this->getRequest()->query->has('s'))
-        {
-            $this->getContext()->setCurrentSortingOrder($this->getRequest()->query->get('s'));
-        }
-
-        // store items per page
-        if ($this->getRequest()->query->has('c'))
-        {
-            $this->getContext()->setCurrentItemsPerPage($this->getRequest()->query->get('c'));
-        }
-
-        // reset sorting order and search query if listing button has been pressed inside a listing
-        if ($this->getRequest()->get('_route') == 'listRecordsReset')
-        {
-            $this->getContext()->setCurrentSortingOrder('name', false);
-            $this->getContext()->setCurrentSearchTerm('');
-        }
-
-        $vars['searchTerm']   = $this->getContext()->getCurrentSearchTerm();
-        $vars['itemsPerPage'] = $this->getContext()->getCurrentItemsPerPage();
-
-        $filter = $this->getFilter();
-
-        $vars['table']  = false;
-        $vars['pager']  = false;
-        $vars['filter'] = false;
-
-        $records = $this->getRecords($filter);
-
-        if (count($records) > 0)
-        {
-            $columns = $this->getColumnsDefinition();
-
-            $vars['table'] = $this->buildTable($columns, $records);
-
-            $count = $this->countRecords($filter);
-
-            $vars['pager'] = $this->getPager()->renderPager($count, $this->getContext()
-                                                                         ->getCurrentItemsPerPage(), $this->getContext()
-                                                                                                          ->getCurrentListingPage(), 'listRecords', array( 'contentTypeAccessHash' => $this->getContentTypeAccessHash() ));
-
-        }
-
-        // Ab hier nicht mehr Default
+        $vars = parent::apply($vars);
 
         if ($this->getCustomAnnotation()->hasList(2) && $this->getCustomAnnotation()->hasList(3))
         {
@@ -108,20 +31,6 @@ class ContentViewCustomList extends BaseContentView
         }
 
         return $vars;
-    }
-
-
-    protected function getFilter()
-    {
-        $filter = null;
-
-        $searchTerm = $this->getContext()->getCurrentSearchTerm();
-        if ($searchTerm != '')
-        {
-            $filter = FilterUtil::normalizeFilterQuery($this->app, $searchTerm, $this->getContentTypeDefinition());
-        }
-
-        return $filter;
     }
 
 
@@ -140,14 +49,26 @@ class ContentViewCustomList extends BaseContentView
             {
                 $formelementDefinition = $definition->getViewDefinition('default')->getFormElementDefinition($key);
 
-                switch ($formelementDefinition->getFormElementType())
+                if ($key == 'status' && $definition->hasStatusList())
                 {
-                    case 'selection':
-                        $column = new SelectionColumn();
-                        break;
-                    default:
-                        $column = new PropertyColumn();
-                        break;
+                    $column = new StatusColumn();
+                }
+                elseif ($key == 'subtype' && $definition->hasSubtypes())
+                {
+                    $column = new SubtypeColumn();
+                }
+                else
+                {
+
+                    switch ($formelementDefinition->getFormElementType())
+                    {
+                        case 'selection':
+                            $column = new SelectionColumn();
+                            break;
+                        default:
+                            $column = new PropertyColumn();
+                            break;
+                    }
                 }
                 $column->setProperty($key);
                 $column->setFormElementDefinition($formelementDefinition);
@@ -179,82 +100,6 @@ class ContentViewCustomList extends BaseContentView
         $columns[] = $buttonColumn;
 
         return $columns;
-    }
-
-
-    protected function buildTable($columns, $records)
-    {
-        $table = [ ];
-
-        foreach ($columns as $column)
-        {
-            $table['header'][] = $column;
-        }
-
-        foreach ($records as $record)
-        {
-            $line = [ ];
-            foreach ($columns as $column)
-            {
-                $line[] = $column->formatValue($record);
-            }
-            $table['body'][] = $line;
-        }
-
-        return $table;
-    }
-
-
-    /**
-     * @return CellRenderer
-     */
-    public function getCellRenderer()
-    {
-        if (!$this->cellRenderer)
-        {
-            $this->cellRenderer = new CellRenderer($this->app);
-        }
-
-        return $this->cellRenderer;
-    }
-
-
-    public function countRecords($filter)
-    {
-        $repository = $this->getRepository();
-
-        $page         = $this->getContext()->getCurrentListingPage();
-        $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
-        $viewName     = 'default';
-
-        $count = $repository->countRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
-                                                                                                       ->getCurrentLanguage(), $this->getContext()
-                                                                                                                                    ->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $this->getContext()
-                                                                                                                                                                                                                   ->getCurrentTimeShift());
-
-        return $count;
-    }
-
-
-    public function getRecords($filter)
-    {
-        $repository = $this->getRepository();
-
-        $page         = $this->getContext()->getCurrentListingPage();
-        $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
-        $viewName     = 'default';
-
-        return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
-                                                                                                   ->getCurrentLanguage(), $this->getContext()
-                                                                                                                                ->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $this->getContext()
-                                                                                                                                                                                                               ->getCurrentTimeShift());
-
-    }
-
-
-    public function doesProcessSearch()
-    {
-        return true;
     }
 
 }

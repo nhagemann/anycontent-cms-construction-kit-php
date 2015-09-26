@@ -1,17 +1,20 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\View\CustomList;
+namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\Record;
 use CMDL\FormElementDefinition;
 
-class SelectionColumn extends PropertyColumn
+class StatusColumn extends PropertyColumn
 {
-    protected $type = 'Selection';
+
+    protected $type = 'Status';
+
+    protected $badge = true;
 
     public function getValue(Record $record)
     {
-        $key = $record->getProperty($this->getProperty());
+        $key = $record->getProperty('status');
 
         $list = $this->getFormElementDefinition()->getList(1);
 
@@ -22,9 +25,5 @@ class SelectionColumn extends PropertyColumn
 
         return $key;
     }
-
-
-
-
 
 }

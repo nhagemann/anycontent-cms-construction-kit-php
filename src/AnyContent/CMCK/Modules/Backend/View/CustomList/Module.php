@@ -11,9 +11,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     {
         parent::init($app, $options);
 
-        $app->addTemplatesFolders(__DIR__ . '/views/');
-
-        $app['contentViews']->registerContentView('list', 'AnyContent\CMCK\Modules\Backend\View\CustomList\ContentViewCustomList');
+         $app['contentViews']->registerContentView('list', 'AnyContent\CMCK\Modules\Backend\View\CustomList\ContentViewCustomList');
 
     }
 

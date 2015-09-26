@@ -57,6 +57,7 @@ class BaseContentView
         return $this->app['context'];
     }
 
+
     /**
      * @return LayoutManager
      */
@@ -99,6 +100,24 @@ class BaseContentView
     public function getCustomAnnotation()
     {
         return $this->customAnnotation;
+    }
+
+
+    /**
+     * @return Request
+     */
+    protected function getRequest()
+    {
+        return $this->app['request'];
+    }
+
+
+    /**
+     * @return PagingHelper
+     */
+    protected function getPager()
+    {
+        return $this->app['pager'];
     }
 
 

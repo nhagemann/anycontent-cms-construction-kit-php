@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\View\CustomList;
+namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\Record;
 use AnyContent\Client\UserInfo;
@@ -62,14 +62,12 @@ class CellRenderer
         $vars                 = array();
         $vars['value']        = $column->getValue($record);
         $vars['link']         = false;
+        $vars['badge']        = $column->isBadge();
         $vars['editButton']   = false;
         $vars['deleteButton'] = false;
         $vars['customButton'] = false;
 
-        if ($column->isLinkToRecord())
-        {
-            $vars['link'] = $this->getEditLink($record);
-        }
+
 
         if ($column->getType() == 'Button')
         {
@@ -91,7 +89,6 @@ class CellRenderer
             {
                 case 'id':
                     $vars['value'] = $record->getID();
-                    $vars['link']   = $this->getEditLink($record);
                     break;
                 case 'revision':
                     $vars['value'] = $record->getRevision();
@@ -114,6 +111,11 @@ class CellRenderer
                     $vars     = $this->getUserInfoVars($record->getCreationUserInfo());
                     break;
             }
+        }
+
+        if ($column->isLinkToRecord())
+        {
+            $vars['link'] = $this->getEditLink($record);
         }
 
         return $this->getTwig()->render($template, $vars);

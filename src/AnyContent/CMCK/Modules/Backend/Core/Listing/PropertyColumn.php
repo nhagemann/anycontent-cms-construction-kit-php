@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\View\CustomList;
+namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
 use AnyContent\Client\Record;
 use CMDL\FormElementDefinition;
@@ -16,6 +16,7 @@ class PropertyColumn
 
     protected $width;
 
+    protected $badge = false;
 
     /**
      * @return string
@@ -125,6 +126,24 @@ class PropertyColumn
 
 
     /**
+     * @return boolean
+     */
+    public function isBadge()
+    {
+        return $this->badge;
+    }
+
+
+    /**
+     * @param boolean $badge
+     */
+    public function setBadge($badge)
+    {
+        $this->badge = $badge;
+    }
+
+
+    /**
      * @return CellRenderer
      */
     public function getRenderer()
@@ -158,5 +177,6 @@ class PropertyColumn
     {
         $this->linkToRecord = $linkToRecord;
     }
+
 
 }

@@ -2,13 +2,12 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
-use AnyContent\Client\Repository;
-use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
-use CMDL\Annotations\CustomAnnotation;
-use Symfony\Component\HttpFoundation\Request;
-
 class ContentViewDefault extends BaseContentView
 {
+
+    /** @var  CellRenderer */
+    protected $cellRenderer;
+
 
     public function getTemplate()
     {
@@ -24,98 +23,210 @@ class ContentViewDefault extends BaseContentView
 
     public function apply($vars)
     {
-        $app = $this->app;
-
-        /** @var Request $request */
-        $request = $app['request'];
-
-        $repository = $this->getRepository();
-
-        $contentTypeAccessHash = $this->getContentTypeAccessHash();
-
-        $contentTypeDefinition = $this->getContentTypeDefinition();
+        $this->getLayout()->addJsFile('listing.js');
 
         // reset chained save operations (e.g. 'save-insert') to 'save' only upon listing of a content type
-        if (key($app['context']->getCurrentSaveOperation()) != 'save-list')
+        if (key($this->getContext()->getCurrentSaveOperation()) != 'save-list')
         {
-            $app['context']->setCurrentSaveOperation('save', 'Save');
+            $this->getContext()->setCurrentSaveOperation('save', 'Save');
         }
 
-        if ($request->query->has('s'))
+        // store sorting order
+        if ($this->getRequest()->query->has('s'))
         {
-            $app['context']->setCurrentSortingOrder($request->query->get('s'));
+            $this->getContext()->setCurrentSortingOrder($this->getRequest()->query->get('s'));
         }
 
-
-
-        if ($request->get('_route') == 'listRecordsReset')
+        // store items per page
+        if ($this->getRequest()->query->has('c'))
         {
-            $app['context']->setCurrentSortingOrder('id', false);
-            $app['context']->setCurrentSearchTerm('');
+            $this->getContext()->setCurrentItemsPerPage($this->getRequest()->query->get('c'));
         }
 
-        $page = $app['context']->getCurrentListingPage();
-        $itemsPerPage = $app['context']->getCurrentItemsPerPage();
-
-
-        $filter = null;
-
-        $searchTerm         = $app['context']->getCurrentSearchTerm();
-        $vars['searchTerm'] = $searchTerm;
-        if ($searchTerm != '')
+        // reset sorting order and search query if listing button has been pressed inside a listing
+        if ($this->getRequest()->get('_route') == 'listRecordsReset')
         {
-            $filter = FilterUtil::normalizeFilterQuery($app, $searchTerm, $contentTypeDefinition);
+            $this->getContext()->setCurrentSortingOrder('name', false);
+            $this->getContext()->setCurrentSearchTerm('');
         }
 
-        $vars['records'] = $this->getRecords($app, $repository, $contentTypeAccessHash, null, 'default', $itemsPerPage, $page, $filter);
+        $vars['searchTerm']   = $this->getContext()->getCurrentSearchTerm();
+        $vars['itemsPerPage'] = $this->getContext()->getCurrentItemsPerPage();
 
-        $count = $repository->countRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $app['context']->getCurrentTimeShift());
+        $filter = $this->getFilter();
 
-        $vars['pager'] = $app['pager']->renderPager($count, $itemsPerPage, $page, 'listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
+        $vars['table']  = false;
+        $vars['pager']  = false;
+        $vars['filter'] = false;
 
+        $records = $this->getRecords($filter);
 
+        if (count($records) > 0)
+        {
+            $columns = $this->getColumnsDefinition();
 
+            $vars['table'] = $this->buildTable($columns, $records);
+
+            $count = $this->countRecords($filter);
+
+            $vars['pager'] = $this->getPager()->renderPager($count, $this->getContext()
+                                                                         ->getCurrentItemsPerPage(), $this->getContext()
+                                                                                                          ->getCurrentListingPage(), 'listRecords', array( 'contentTypeAccessHash' => $this->getContentTypeAccessHash() ));
+
+        }
 
         return $vars;
     }
 
 
-    protected function getRecords($app, Repository $repository, $contentTypeAccessHash, $orderBy = null, $viewName = 'default', $itemsPerPage = null, $page = 1, $filter = null, $subset = null)
+    protected function getFilter()
     {
-        $records = array();
+        $filter = null;
 
-        if (!$orderBy)
+        $searchTerm = $this->getContext()->getCurrentSearchTerm();
+        if ($searchTerm != '')
         {
-            $orderBy = $app['context']->getCurrentSortingOrder();
+            $filter = FilterUtil::normalizeFilterQuery($this->app, $searchTerm, $this->getContentTypeDefinition());
         }
 
-        /** @var Record $record */
-        foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), $viewName, $app['context']->getCurrentLanguage(), $orderBy, array(), $itemsPerPage, $page, $filter, $subset, $app['context']->getCurrentTimeShift()) AS $record)
-        {
-            $item                     = array();
-            $item['record']           = $record;
-            $item['name']             = $record->getName();
-            $item['id']               = $record->getID();
-            $item['editUrl']          = $app['url_generator']->generate('editRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
-            $item['deleteUrl']        = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $record->getID(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
-            $item['status']['label']  = $record->getStatusLabel();
-            $item['subtype']['label'] = $record->getSubtypeLabel();
-            $item['position']         = $record->getPosition();
-            $item['level']            = $record->getLevelWithinSortedTree();
-
-            /** @var UserInfo $userInfo */
-            $userInfo         = $record->getLastChangeUserInfo();
-            $item['username'] = $userInfo->getName();
-            $date             = new \DateTime();
-            $date->setTimestamp($userInfo->getTimestamp());
-            $item['lastChangeDate'] = $date->format('d.m.Y H:i:s');
-            $item['gravatar']       = '<img src="https://www.gravatar.com/avatar/' . md5(trim($userInfo->getUsername())) . '?s=40" height="40" width="40"/>';
-
-            $records[] = $item;
-        }
-
-        return $records;
+        return $filter;
     }
 
+
+    protected function getColumnsDefinition()
+    {
+        $contentTypeDefinition = $this->getContentTypeDefinition();
+
+        $columns = [ ];
+
+        $column = new AttributeColumn();
+        $column->setTitle('ID');
+        $column->setAttribute('id');
+        $column->setLinkToRecord(true);
+        $columns[] = $column;
+
+        if ($contentTypeDefinition->hasSubtypes())
+        {
+            $column = new SubtypeColumn();
+            $column->setTitle('Subtype');
+            $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
+                                                                    ->getFormElementDefinition('subtype'));
+            $columns[] = $column;
+        }
+
+        $column = new PropertyColumn();
+        $column->setTitle('Name');
+        $column->setProperty('name');
+        $column->setLinkToRecord(true);
+        $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
+                                                                ->getFormElementDefinition('name'));
+        $columns[] = $column;
+
+        $column = new AttributeColumn();
+        $column->setTitle('Last Change');
+        $column->setAttribute('lastchange');
+        $columns[] = $column;
+
+        if ($contentTypeDefinition->hasStatusList())
+        {
+            $column = new StatusColumn();
+            $column->setTitle('Status');
+            $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
+                                                                    ->getFormElementDefinition('status'));
+            $columns[] = $column;
+        }
+
+        if ($contentTypeDefinition->isSortable())
+        {
+            $column = new AttributeColumn();
+            $column->setTitle('Pos');
+            $column->setAttribute('position');
+            $columns[] = $column;
+        }
+
+        // Add Edit/Delete-Buttons
+        $buttonColumn = new ButtonColumn();
+        $buttonColumn->setEditButton(true);
+        $buttonColumn->setDeleteButton(true);
+        $buttonColumn->setRenderer($this->getCellRenderer());
+        $columns[] = $buttonColumn;
+
+        foreach ($columns as $column)
+        {
+            $column->setRenderer($this->getCellRenderer());
+        }
+
+        return $columns;
+    }
+
+
+    protected function buildTable($columns, $records)
+    {
+        $table = [ ];
+
+        foreach ($columns as $column)
+        {
+            $table['header'][] = $column;
+        }
+
+        foreach ($records as $record)
+        {
+            $line = [ ];
+            foreach ($columns as $column)
+            {
+                $line[] = $column->formatValue($record);
+            }
+            $table['body'][] = $line;
+        }
+
+        return $table;
+    }
+
+
+    /**
+     * @return CellRenderer
+     */
+    public function getCellRenderer()
+    {
+        if (!$this->cellRenderer)
+        {
+            $this->cellRenderer = new CellRenderer($this->app);
+        }
+
+        return $this->cellRenderer;
+    }
+
+
+    public function countRecords($filter)
+    {
+        $repository = $this->getRepository();
+
+        $page         = $this->getContext()->getCurrentListingPage();
+        $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
+        $viewName     = 'default';
+
+        $count = $repository->countRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
+                                                                                                       ->getCurrentLanguage(), $this->getContext()
+                                                                                                                                    ->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $this->getContext()
+                                                                                                                                                                                                                   ->getCurrentTimeShift());
+
+        return $count;
+    }
+
+
+    public function getRecords($filter)
+    {
+        $repository = $this->getRepository();
+
+        $page         = $this->getContext()->getCurrentListingPage();
+        $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
+        $viewName     = 'default';
+
+        return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
+                                                                                                   ->getCurrentLanguage(), $this->getContext()
+                                                                                                                                ->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $this->getContext()
+                                                                                                                                                                                                               ->getCurrentTimeShift());
+
+    }
 
 }
