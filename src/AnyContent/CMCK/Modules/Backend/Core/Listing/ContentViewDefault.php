@@ -31,18 +31,6 @@ class ContentViewDefault extends BaseContentView
             $this->getContext()->setCurrentSaveOperation('save', 'Save');
         }
 
-        // store sorting order
-        if ($this->getRequest()->query->has('s'))
-        {
-            $this->getContext()->setCurrentSortingOrder($this->getRequest()->query->get('s'));
-        }
-
-        // store items per page
-        if ($this->getRequest()->query->has('c'))
-        {
-            $this->getContext()->setCurrentItemsPerPage($this->getRequest()->query->get('c'));
-        }
-
         // reset sorting order and search query if listing button has been pressed inside a listing
         if ($this->getRequest()->get('_route') == 'listRecordsReset')
         {
@@ -58,6 +46,8 @@ class ContentViewDefault extends BaseContentView
         $vars['table']  = false;
         $vars['pager']  = false;
         $vars['filter'] = false;
+
+        $sorting = $this->getSortingOrder();
 
         $records = $this->getRecords($filter);
 
@@ -76,6 +66,43 @@ class ContentViewDefault extends BaseContentView
         }
 
         return $vars;
+    }
+
+
+    /**
+     * temp converting function, as long as the new .attribute syntax is not supported from repository
+     */
+    protected function getSortingOrder()
+    {
+
+        $sorting = $this->getContext()->getCurrentSortingOrder();
+        if (strpos($sorting, '.') === 0)
+        {
+            $sorting = substr($sorting, 1);
+
+            $map = [ 'lastchange' => 'change', 'lastchange-' => 'change-', 'position' => 'pos', 'position-' => 'pos' ];
+
+            if (array_key_exists($sorting, $map))
+            {
+                $sorting = $map[$sorting];
+            }
+
+            $valid = [ 'id', 'subtype', 'name', 'change', 'status', 'pos', 'creation' ];
+
+            if (in_array(trim($sorting, '-'), $valid))
+            {
+                return array( $sorting, null );
+            }
+
+            return array( 'id', null );
+        }
+        if ($this->getContentTypeDefinition()->hasProperty(trim($sorting, '-')))
+        {
+            return array( 'property', array( $sorting ) );
+        }
+
+        return array( 'id', null );
+
     }
 
 
@@ -205,10 +232,11 @@ class ContentViewDefault extends BaseContentView
         $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
         $viewName     = 'default';
 
+        $sorting = $this->getSortingOrder();
+
         $count = $repository->countRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
-                                                                                                       ->getCurrentLanguage(), $this->getContext()
-                                                                                                                                    ->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $this->getContext()
-                                                                                                                                                                                                                   ->getCurrentTimeShift());
+                                                                                                       ->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()
+                                                                                                                                                                                                   ->getCurrentTimeShift());
 
         return $count;
     }
@@ -222,11 +250,11 @@ class ContentViewDefault extends BaseContentView
         $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
         $viewName     = 'default';
 
-        return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
-                                                                                                   ->getCurrentLanguage(), $this->getContext()
-                                                                                                                                ->getCurrentSortingOrder(), array(), $itemsPerPage, $page, $filter, null, $this->getContext()
-                                                                                                                                                                                                               ->getCurrentTimeShift());
+        $sorting = $this->getSortingOrder();
 
+        return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
+                                                                                                   ->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()
+                                                                                                                                                                                               ->getCurrentTimeShift());
     }
 
 }

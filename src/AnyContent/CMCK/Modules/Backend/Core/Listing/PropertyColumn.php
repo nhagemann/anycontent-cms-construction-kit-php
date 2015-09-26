@@ -12,6 +12,8 @@ class PropertyColumn extends BaseColumn
 
     protected $property;
 
+    protected $sortable = true;
+
     /**
      * @var FormElementDefinition
      */
@@ -36,6 +38,12 @@ class PropertyColumn extends BaseColumn
     }
 
 
+    public function getValue(Record $record)
+    {
+        return ($record->getProperty($this->getProperty()));
+    }
+
+
     /**
      * @param FormElementDefinition $formElementDefinition
      */
@@ -57,6 +65,11 @@ class PropertyColumn extends BaseColumn
     public function getClass()
     {
         return 'col-listing-property-' . $this->getProperty();
+    }
+
+    public function getSortString()
+    {
+        return $this->getProperty();
     }
 
 }

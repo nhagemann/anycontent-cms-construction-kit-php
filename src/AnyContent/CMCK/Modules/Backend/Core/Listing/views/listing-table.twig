@@ -2,7 +2,12 @@
     <thead>
     <tr>
         {% for column in table.header %}
-            <th class="{{ column.class }}">{{ column.title }}</th>
+            <th class="{{ column.class }}">
+                {% if column.isSortable %}<a href="{{ links.self }}?s={{ column.sortString }}">{{ column.title }}</a>
+                {% else %}
+                    {{ column.title }}
+                {% endif %}
+            </th>
         {% endfor %}
     </tr>
     </thead>

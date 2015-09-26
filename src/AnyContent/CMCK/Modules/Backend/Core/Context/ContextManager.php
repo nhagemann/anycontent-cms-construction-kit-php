@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class ContextManager
 {
+
     /** @var  Application */
     protected $app;
 
@@ -39,7 +40,7 @@ class ContextManager
 
     public function __construct(Application $app)
     {
-        $this->app = $app;
+        $this->app     = $app;
         $this->session = $app['session'];
         $this->init();
     }
@@ -52,6 +53,7 @@ class ContextManager
     {
         return $this->app['repos'];
     }
+
 
     public function init()
     {
@@ -180,8 +182,10 @@ class ContextManager
      */
     public function getCurrentContentTypeAccessHash()
     {
-        return $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        return $this->getRepositoryManager()
+                    ->getAccessHash($this->getCurrentRepository(), $this->getCurrentContentType());
     }
+
 
     /**
      * @return ConfigTypeDefinition
@@ -395,29 +399,21 @@ class ContextManager
 
     public function setCurrentSortingOrder($order, $switch = true)
     {
-        $options = array( 'id', 'subtype', 'name', 'change', 'status', 'pos' );
-        if (in_array($order, $options))
+
+        if ($switch == true)
         {
-
-            if ($switch == true)
+            if ($this->getCurrentSortingOrder() == $order)
             {
-                if ($this->getCurrentSortingOrder() == $order)
-                {
-                    $order = $order . '-';
+                $order = $order . '-';
 
-                }
-                if ($this->getCurrentSortingOrder() == $order . '-')
-                {
-                    $order = trim($order, '-');
-                }
+            }
+            if ($this->getCurrentSortingOrder() == $order . '-')
+            {
+                $order = trim($order, '-');
             }
         }
-        else
-        {
-            $order = 'id';
-        }
 
-        $sorting                                       = $this->session->get($this->prefix . 'sorting');
+        $sorting                                           = $this->session->get($this->prefix . 'sorting');
         $sorting[$this->getCurrentContentTypeAccessHash()] = $order;
         $this->session->set($this->prefix . 'sorting', $sorting);
     }
@@ -434,13 +430,13 @@ class ContextManager
             }
         }
 
-        return 'id';
+        return '.id';
     }
 
 
     public function setCurrentListingPage($page)
     {
-        $listing                                       = $this->session->get($this->prefix . 'listing_page');
+        $listing                                           = $this->session->get($this->prefix . 'listing_page');
         $listing[$this->getCurrentContentTypeAccessHash()] = $page;
         $this->session->set($this->prefix . 'listing_page', $listing);
     }
@@ -463,7 +459,7 @@ class ContextManager
 
     public function setCurrentSearchTerm($searchTerm)
     {
-        $searchTerms                                       = $this->session->get($this->prefix . 'searchterms');
+        $searchTerms                                           = $this->session->get($this->prefix . 'searchterms');
         $searchTerms[$this->getCurrentContentTypeAccessHash()] = $searchTerm;
         $this->session->set($this->prefix . 'searchterms', $searchTerms);
     }
@@ -486,8 +482,9 @@ class ContextManager
 
     public function setCurrentContentViewNr($type)
     {
-        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
-        $contentViews                                       = $this->session->get($this->prefix . 'contentviews');
+        $contentTypeAccessHash                = $this->getRepositoryManager()
+                                                     ->getAccessHash($this->getCurrentRepository(), $this->getCurrentContentType());
+        $contentViews                         = $this->session->get($this->prefix . 'contentviews');
         $contentViews[$contentTypeAccessHash] = $type;
         $this->session->set($this->prefix . 'contentviews', $contentViews);
     }
@@ -495,7 +492,8 @@ class ContextManager
 
     public function getCurrentContentViewNr()
     {
-        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        $contentTypeAccessHash = $this->getRepositoryManager()
+                                      ->getAccessHash($this->getCurrentRepository(), $this->getCurrentContentType());
         if ($this->session->has($this->prefix . 'contentviews'))
         {
             $contentViews = $this->session->get($this->prefix . 'contentviews');
@@ -511,8 +509,9 @@ class ContextManager
 
     public function setCurrentItemsPerPage($c)
     {
-        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
-        $itemsPerPage                                       = $this->session->get($this->prefix . 'itemsperpage');
+        $contentTypeAccessHash                = $this->getRepositoryManager()
+                                                     ->getAccessHash($this->getCurrentRepository(), $this->getCurrentContentType());
+        $itemsPerPage                         = $this->session->get($this->prefix . 'itemsperpage');
         $itemsPerPage[$contentTypeAccessHash] = $c;
         $this->session->set($this->prefix . 'itemsperpage', $itemsPerPage);
     }
@@ -520,7 +519,8 @@ class ContextManager
 
     public function getCurrentItemsPerPage()
     {
-        $contentTypeAccessHash = $this->getRepositoryManager()->getAccessHash($this->getCurrentRepository(),$this->getCurrentContentType());
+        $contentTypeAccessHash = $this->getRepositoryManager()
+                                      ->getAccessHash($this->getCurrentRepository(), $this->getCurrentContentType());
         if ($this->session->has($this->prefix . 'itemsperpage'))
         {
             $itemsPerPage = $this->session->get($this->prefix . 'itemsperpage');

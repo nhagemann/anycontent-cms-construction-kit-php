@@ -7,9 +7,12 @@ use CMDL\FormElementDefinition;
 
 class AttributeColumn extends BaseColumn
 {
+
     protected $type = 'Attribute';
 
     protected $attribute;
+
+    protected $sortable = true;
 
 
     /**
@@ -26,9 +29,8 @@ class AttributeColumn extends BaseColumn
      */
     public function setAttribute($attribute)
     {
-        $this->attribute = trim($attribute,'.');
+        $this->attribute = trim($attribute, '.');
     }
-
 
 
     public function getClass()
@@ -37,6 +39,9 @@ class AttributeColumn extends BaseColumn
     }
 
 
-
+    public function getSortString()
+    {
+        return '.' . $this->getAttribute();
+    }
 
 }

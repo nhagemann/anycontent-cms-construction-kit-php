@@ -12,11 +12,13 @@ class BaseColumn
 
     protected $title;
 
-    protected $property;
-
     protected $class;
 
     protected $badge = false;
+
+    protected $sortable = false;
+
+    protected $sortString = '';
 
     /**
      * @return string
@@ -25,7 +27,6 @@ class BaseColumn
     {
         return $this->type;
     }
-
 
 
     /** @var  ColumnRenderer */
@@ -53,9 +54,6 @@ class BaseColumn
     {
         $this->title = $title;
     }
-
-
-
 
 
     /**
@@ -98,6 +96,30 @@ class BaseColumn
 
 
     /**
+     * @return boolean
+     */
+    public function isSortable()
+    {
+        return $this->sortable;
+    }
+
+
+    /**
+     * @param
+     */
+    public function setSortString($s)
+    {
+        $this->sortable = true;
+        $this->sortString = $s;
+    }
+
+    public function getSortString()
+    {
+        return $this->sortString;
+    }
+
+
+    /**
      * @return CellRenderer
      */
     public function getRenderer()
@@ -131,6 +153,5 @@ class BaseColumn
     {
         $this->linkToRecord = $linkToRecord;
     }
-
 
 }
