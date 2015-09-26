@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 use AnyContent\Client\Record;
 use CMDL\FormElementDefinition;
 
-class ButtonColumn extends PropertyColumn
+class ButtonColumn extends BaseColumn
 {
     protected $type = 'Button';
 
@@ -64,5 +64,11 @@ class ButtonColumn extends PropertyColumn
     {
         $this->customButton = $customButton;
     }
+
+    public function getClass()
+    {
+        return 'col-listing-buttons';
+    }
+
 
 }

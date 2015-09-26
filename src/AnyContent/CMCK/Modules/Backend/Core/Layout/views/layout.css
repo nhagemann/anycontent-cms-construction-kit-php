@@ -55,11 +55,11 @@ body.layout-default {
 }
 
 /* fixed sizes for record listings table */
-.col-listing-id {
-    width: 100px;
+.col-listing-attribute-id {
+    width: 60px;
 }
 
-.col-listing-position {
+.col-listing-attribute-position {
     width: 80px;
 }
 
@@ -71,7 +71,14 @@ body.layout-default {
     width: 120px;
 }
 
-.col-listing-lastchange {
+.col-listing-attribute-creation {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 250px;
+
+}
+
+.col-listing-attribute-lastchange {
     white-space: nowrap;
     overflow: hidden;
     width: 250px;
@@ -80,6 +87,11 @@ body.layout-default {
 
 .col-listing-buttons {
     width: 140px;
+}
+
+
+.listing-filter{
+    padding-bottom: 15px;
 }
 
 /* default background for gravatar images*/

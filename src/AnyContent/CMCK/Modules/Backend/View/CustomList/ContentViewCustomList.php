@@ -72,21 +72,26 @@ class ContentViewCustomList extends ContentViewDefault
                 }
                 $column->setProperty($key);
                 $column->setFormElementDefinition($formelementDefinition);
+
+                if ($key == 'name')
+                {
+                    $column->setLinkToRecord(true);
+                }
             }
             else
             {
                 $column = new AttributeColumn();
                 $column->setAttribute($key);
+
+                if (trim($key,'.') == 'id')
+                {
+                    $column->setLinkToRecord(true);
+                }
             }
 
             $column->setTitle($title);
 
             $column->setRenderer($this->getCellRenderer());
-
-            if ($key == 'name')
-            {
-                $column->setLinkToRecord(true);
-            }
 
             $columns[] = $column;
 

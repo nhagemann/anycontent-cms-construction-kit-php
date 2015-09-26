@@ -2,9 +2,8 @@
     <thead>
     <tr>
         {% for column in table.header %}
-            <th class="col-listing-id">{{ column.title }}</th>
+            <th class="{{ column.class }}">{{ column.title }}</th>
         {% endfor %}
-        <th class="col-listing-buttons"></th>
     </tr>
     </thead>
     <tbody>

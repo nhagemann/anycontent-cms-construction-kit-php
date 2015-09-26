@@ -26,4 +26,10 @@ class StatusColumn extends PropertyColumn
         return $key;
     }
 
+
+    public function getClass()
+    {
+        return 'col-listing-status';
+    }
+
 }

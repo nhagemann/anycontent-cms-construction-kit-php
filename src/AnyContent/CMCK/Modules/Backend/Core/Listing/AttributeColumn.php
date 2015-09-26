@@ -5,7 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 use AnyContent\Client\Record;
 use CMDL\FormElementDefinition;
 
-class AttributeColumn extends PropertyColumn
+class AttributeColumn extends BaseColumn
 {
     protected $type = 'Attribute';
 
@@ -31,6 +31,10 @@ class AttributeColumn extends PropertyColumn
 
 
 
+    public function getClass()
+    {
+        return 'col-listing-attribute-' . $this->getAttribute();
+    }
 
 
 

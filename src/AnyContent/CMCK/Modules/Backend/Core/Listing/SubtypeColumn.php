@@ -27,4 +27,9 @@ class SubtypeColumn extends PropertyColumn
         return $key;
     }
 
+
+    public function getClass()
+    {
+        return 'col-listing-subtype';
+    }
 }

@@ -50,12 +50,12 @@ class CellRenderer
 
 
     /**
-     * @param PropertyColumn $column
-     * @param Record         $record
+     * @param BaseColumn $column
+     * @param Record     $record
      *
      * @return string
      */
-    public function render(PropertyColumn $column, Record $record)
+    public function render(BaseColumn $column, Record $record)
     {
         $template = 'listing-cell.twig';
 
@@ -66,8 +66,6 @@ class CellRenderer
         $vars['editButton']   = false;
         $vars['deleteButton'] = false;
         $vars['customButton'] = false;
-
-
 
         if ($column->getType() == 'Button')
         {
