@@ -72,7 +72,7 @@ class ContentViewDefault extends BaseContentView
     /**
      * temp converting function, as long as the new .attribute syntax is not supported from repository
      */
-    protected function getSortingOrder()
+    public function getSortingOrder()
     {
 
         $sorting = $this->getContext()->getCurrentSortingOrder();
@@ -106,7 +106,7 @@ class ContentViewDefault extends BaseContentView
     }
 
 
-    protected function getFilter()
+    public function getFilter()
     {
         $filter = null;
 
@@ -120,7 +120,7 @@ class ContentViewDefault extends BaseContentView
     }
 
 
-    protected function getColumnsDefinition()
+    public function getColumnsDefinition()
     {
         $contentTypeDefinition = $this->getContentTypeDefinition();
 
@@ -187,7 +187,7 @@ class ContentViewDefault extends BaseContentView
     }
 
 
-    protected function buildTable($columns, $records)
+    public function buildTable($columns, $records)
     {
         $table = [ ];
 

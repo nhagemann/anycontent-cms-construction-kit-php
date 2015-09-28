@@ -34,7 +34,7 @@ class ContentViewCustomList extends ContentViewDefault
     }
 
 
-    protected function getColumnsDefinition()
+    public function getColumnsDefinition()
     {
         $annotation = $this->getCustomAnnotation();
         $definition = $this->getContentTypeDefinition();

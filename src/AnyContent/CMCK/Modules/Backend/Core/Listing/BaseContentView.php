@@ -43,7 +43,7 @@ class BaseContentView
     /**
      * @return UrlGenerator
      */
-    protected function getUrlGenerator()
+    public function getUrlGenerator()
     {
         return $this->app['url_generator'];
     }
@@ -52,7 +52,7 @@ class BaseContentView
     /**
      * @return ContextManager
      */
-    protected function getContext()
+    public function getContext()
     {
         return $this->app['context'];
     }
@@ -61,7 +61,7 @@ class BaseContentView
     /**
      * @return LayoutManager
      */
-    protected function getLayout()
+    public function getLayout()
     {
         return $this->app['layout'];
     }
@@ -106,7 +106,7 @@ class BaseContentView
     /**
      * @return Request
      */
-    protected function getRequest()
+    public function getRequest()
     {
         return $this->app['request'];
     }
@@ -115,7 +115,7 @@ class BaseContentView
     /**
      * @return PagingHelper
      */
-    protected function getPager()
+    public function getPager()
     {
         return $this->app['pager'];
     }
