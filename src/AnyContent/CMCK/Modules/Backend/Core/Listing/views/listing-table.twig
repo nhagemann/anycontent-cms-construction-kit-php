@@ -1,23 +1,26 @@
-<table class="table table-striped">
-    <thead>
-    <tr>
-        {% for column in table.header %}
-            <th class="{{ column.class }}">
-                {% if column.isSortable %}<a href="{{ links.self }}?s={{ column.sortString }}">{{ column.title }}</a>
-                {% else %}
-                    {{ column.title }}
-                {% endif %}
-            </th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for row in table.body %}
+{% if table %}
+    <table class="table table-striped">
+        <thead>
         <tr>
-            {% for cell in row %}
-                <td>{{ cell | raw }}</td>
+            {% for column in table.header %}
+                <th class="{{ column.class }}">
+                    {% if column.isSortable %}<a
+                        href="{{ links.self }}?s={{ column.sortString }}">{{ column.title }}</a>
+                    {% else %}
+                        {{ column.title }}
+                    {% endif %}
+                </th>
             {% endfor %}
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for row in table.body %}
+            <tr>
+                {% for cell in row %}
+                    <td>{{ cell | raw }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
