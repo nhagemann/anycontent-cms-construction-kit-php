@@ -196,6 +196,8 @@ class ContentViewDefault extends BaseContentView
             $table['header'][] = $column;
         }
 
+        $table['body'][] = [ ];
+
         foreach ($records as $record)
         {
             $line = [ ];
