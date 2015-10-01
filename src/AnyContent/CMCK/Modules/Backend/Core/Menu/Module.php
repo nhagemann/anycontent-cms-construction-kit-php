@@ -8,6 +8,9 @@ use AnyContent\CMCK\Modules\Backend\Core\Menu\MenuManager;
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
 
+    const EVENT_MENU_BUTTONGROUP_RENDER = 'event.menu.buttongroup.render';
+
+
     public function init(Application $app, $options = array())
     {
         parent::init($app, $options);
@@ -16,7 +19,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['menus'] = $app->share(function ($app)
         {
-            return new MenuManager($app,$app['repos'],$app['twig'],$app['layout'],$app['url_generator'],$app['cache'],$app['config']);
+            return new MenuManager($app, $app['repos'], $app['twig'], $app['layout'], $app['url_generator'], $app['cache'], $app['config']);
         });
 
     }

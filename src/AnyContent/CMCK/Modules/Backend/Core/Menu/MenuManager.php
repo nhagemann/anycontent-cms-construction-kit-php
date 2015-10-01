@@ -94,7 +94,7 @@ class MenuManager
         $url     = $this->urlGenerator->generate('logout');
         $items[] = array( 'type' => 'link', 'text' => 'Logout', 'url' => $url, 'glyphicon' => 'glyphicon-user' );
 
-        $html = $this->renderDropDown($items,'mainmenu');
+        $html = $this->renderDropDown($items, 'mainmenu');
 
         $this->cache->save($cacheToken, $html, $this->cacheSeconds);
 
@@ -102,9 +102,9 @@ class MenuManager
     }
 
 
-    public function renderDropDown($items,$id=null)
+    public function renderDropDown($items, $id = null)
     {
-        return $this->twig->render('core_menu_dropdown.twig', array( 'items' => $items,'id' => $id ));
+        return $this->twig->render('core_menu_dropdown.twig', array( 'items' => $items, 'id' => $id ));
     }
 
 
@@ -112,6 +112,13 @@ class MenuManager
     {
 
         ksort($buttons);
+
+        /** @var MenuButtonGroupRenderEvent $event */
+        $event = new MenuButtonGroupRenderEvent($this->app, $buttons);
+
+        $event = $this->app['dispatcher']->dispatch(Module::EVENT_MENU_BUTTONGROUP_RENDER, $event);
+
+        $buttons = $event->getButtons();
 
         return $this->twig->render('core_menu_buttongroup.twig', array( 'buttons' => $buttons ));
     }
