@@ -3,6 +3,9 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Application;
 
 use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
+use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
+use AnyContent\CMCK\Modules\Backend\Core\Menu\MenuManager;
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 use Silex\Application as SilexApplication;
 
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -12,6 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 use Knp\Provider\ConsoleServiceProvider;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class Application extends SilexApplication
 {
@@ -115,7 +119,6 @@ class Application extends SilexApplication
 
         // Init Cache
 
-
         $cacheConfiguration = $this['config']->getCacheConfiguration();
 
         switch ($cacheConfiguration['driver']['type'])
@@ -143,14 +146,13 @@ class Application extends SilexApplication
                 $this->setCacheDriver($cacheDriver);
                 break;
             case 'mysql':
-                $cacheDriver = new MySQLCache($cacheConfiguration['driver']['host'],$cacheConfiguration['driver']['dbname'],$cacheConfiguration['driver']['tablename'],$cacheConfiguration['driver']['user'],$cacheConfiguration['driver']['password'],$cacheConfiguration['driver']['port']);
+                $cacheDriver = new MySQLCache($cacheConfiguration['driver']['host'], $cacheConfiguration['driver']['dbname'], $cacheConfiguration['driver']['tablename'], $cacheConfiguration['driver']['user'], $cacheConfiguration['driver']['password'], $cacheConfiguration['driver']['port']);
                 $this->setCacheDriver($cacheDriver);
                 break;
             default:
                 throw new \Exception ('Unknown authentication adapter type ' . $cacheConfiguration['driver']['type'] . '.');
                 break;
         }
-
 
         // Now add the repositories
 
@@ -174,7 +176,6 @@ class Application extends SilexApplication
             $module['module']->preRender($this);
 
         }
-
 
         $vars['requestLog'] = false;
 
@@ -274,6 +275,42 @@ class Application extends SilexApplication
         }
 
         return substr(md5(uniqid()), 0, 8);
+    }
+
+
+    /**
+     * @return UrlGenerator
+     */
+    public function getUrlGenerator()
+    {
+        return $this['url_generator'];
+    }
+
+
+    /**
+     * @return LayoutManager
+     */
+    public function getLayoutManager()
+    {
+        return $this['layout'];
+    }
+
+
+    /**
+     * @return MenuManager
+     */
+    public function getMenuManager()
+    {
+        return $this['menus'];
+    }
+
+
+    /**
+     * @return RepositoryManager
+     */
+    public function getRepositoryManager()
+    {
+        return $this['repos'];
     }
 
 }
