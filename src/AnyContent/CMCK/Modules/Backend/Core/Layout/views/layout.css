@@ -89,6 +89,9 @@ body.layout-default {
     width: 140px;
 }
 
+.table-listing tr td:last-of-type{
+    text-align:right;
+}
 
 .listing-filter{
     padding-bottom: 15px;

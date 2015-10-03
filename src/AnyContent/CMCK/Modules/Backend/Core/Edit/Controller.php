@@ -5,6 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 use AnyContent\Client\ContentFilter;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
+use AnyContent\CMCK\Modules\Backend\Core\User\UserManager;
 use CMDL\ContentTypeDefinition;
 use CMDL\ViewDefinition;
 
@@ -25,6 +26,9 @@ class Controller
 
     public static function addRecord(Application $app, $contentTypeAccessHash, $recordId = null)
     {
+        /** @var UserManager $user */
+        $user = $app['user'];
+
         /** @var FormManager $formManager */
         $formManager = $app['form'];
 
@@ -37,10 +41,11 @@ class Controller
 
         if ($repository)
         {
-            $vars['repository']          = $repository;
-            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
-            $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
-            $vars['links']['listRecords']= $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage()));
+            $vars['repository']           = $repository;
+            $repositoryAccessHash         = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()
+                                                                                                   ->getUrl());
+            $vars['links']['repository']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+            $vars['links']['listRecords'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
@@ -58,7 +63,7 @@ class Controller
 
             $vars['definition'] = $contentTypeDefinition;
 
-            if ($contentTypeDefinition->hasInsertOperation())
+            if ($contentTypeDefinition->hasInsertOperation() && $user->canDo('add', $repository, $contentTypeDefinition))
             {
                 /* @var ViewDefinition */
 
@@ -104,6 +109,8 @@ class Controller
 
     public static function editRecord(Application $app, $contentTypeAccessHash, $recordId, $workspace, $language)
     {
+        /** @var UserManager $user */
+        $user = $app['user'];
 
         $vars = array();
 
@@ -116,11 +123,11 @@ class Controller
         if ($repository)
         {
 
-            $vars['repository']          = $repository;
-            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
-            $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
-            $vars['links']['listRecords']= $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage()));
-
+            $vars['repository']           = $repository;
+            $repositoryAccessHash         = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()
+                                                                                                   ->getUrl());
+            $vars['links']['repository']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+            $vars['links']['listRecords'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
             $app['context']->setCurrentRepository($repository);
 
@@ -147,13 +154,23 @@ class Controller
             $buttons      = array();
             $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-list' );
 
-            if ($contentTypeDefinition->isSortable())
+            if ($contentTypeDefinition->isSortable() && $user->canDo('sort', $repository, $contentTypeDefinition))
             {
                 $buttons[200] = array( 'label' => 'Sort Records', 'url' => $app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-move' );
             }
-            $buttons[400] = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-download', 'id' => 'listing_button_export' );
-            $buttons[500] = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-upload', 'id' => 'listing_button_import' );
-            $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-plus' );
+            if ($user->canDo('add', $repository, $contentTypeDefinition))
+            {
+                $buttons[300] = array( 'label' => 'Add Record', 'url' => $app['url_generator']->generate('addRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-plus' );
+            }
+
+            if ($user->canDo('export', $repository, $contentTypeDefinition))
+            {
+                $buttons[400] = array( 'label' => 'Export Records', 'url' => $app['url_generator']->generate('exportRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-download', 'id' => 'listing_button_export' );
+            }
+            if ($user->canDo('import', $repository, $contentTypeDefinition))
+            {
+                $buttons[500] = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-upload', 'id' => 'listing_button_import' );
+            }
 
             $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
 
@@ -162,9 +179,19 @@ class Controller
             $vars['save_operation']       = key($saveoperation);
             $vars['save_operation_title'] = array_shift($saveoperation);
 
-            $vars['links']['search']           = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name', 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
-            $vars['links']['delete']           = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
-            $vars['links']['transfer']         = $app['url_generator']->generate('transferRecordModal', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
+            $vars['links']['search'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 's' => 'name', 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
+            if ($user->canDo('edit', $repository, $contentTypeDefinition, $record))
+            {
+                $vars['links']['edit'] = true;
+            }
+            if ($user->canDo('delete', $repository, $contentTypeDefinition, $record->getID()))
+            {
+                $vars['links']['delete'] = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
+            }
+            if ($user->canDo('add', $repository, $contentTypeDefinition))
+            {
+                $vars['links']['transfer'] = $app['url_generator']->generate('transferRecordModal', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
+            }
             $vars['links']['timeshift']        = $app['url_generator']->generate('timeShiftEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['workspaces']       = $app['url_generator']->generate('changeWorkspaceEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
             $vars['links']['languages']        = $app['url_generator']->generate('changeLanguageEditRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId ));
@@ -201,6 +228,8 @@ class Controller
 
     public static function saveRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId = null)
     {
+        /** @var UserManager $user */
+        $user = $app['user'];
 
         $hidden = $request->get('$hidden');
 
@@ -238,7 +267,7 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
-        if ($repository)
+        if ($repository && $user->canDo('add', $repository, $repository->getContentTypeDefinition()))
         {
             $app['context']->setCurrentRepository($repository);
             $app['context']->setCurrentContentType($repository->getContentTypeDefinition());
@@ -380,11 +409,18 @@ class Controller
                 return new JsonResponse($response);
             }
         }
+
+        $response = array( 'success' => false, 'message' => '403 Forbidden' );
+
+        return new JsonResponse($response);
     }
 
 
     public function deleteRecord(Application $app, Request $request, $contentTypeAccessHash, $recordId, $workspace, $language)
     {
+        /** @var UserManager $user */
+        $user = $app['user'];
+
         $recordId = (int)$recordId;
 
         if ($recordId)
@@ -392,7 +428,7 @@ class Controller
             /** @var Repository $repository */
             $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
-            if ($repository)
+            if ($repository && $user->canDo('delete', $repository, $repository->getContentTypeDefinition(), $recordId))
             {
                 $app['context']->setCurrentRepository($repository);
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
@@ -415,10 +451,13 @@ class Controller
                 {
                     $app['context']->addErrorMessage('Could not delete record.');
                 }
+
+                return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
             }
 
-            return new RedirectResponse($app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage() )), 303);
         }
+
+        return $app->renderPage('forbidden.twig');
     }
 
 

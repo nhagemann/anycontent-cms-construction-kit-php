@@ -7,9 +7,11 @@ use CMDL\FormElementDefinition;
 
 class ButtonColumn extends BaseColumn
 {
+
     protected $type = 'Button';
 
-
+    protected $editButton = false;
+    protected $deleteButton = false;
 
 
     /**
@@ -48,27 +50,9 @@ class ButtonColumn extends BaseColumn
     }
 
 
-    /**
-     * @return boolean
-     */
-    public function isCustomButton()
-    {
-        return $this->customButton;
-    }
-
-
-    /**
-     * @param boolean $customButton
-     */
-    public function setCustomButton($customButton)
-    {
-        $this->customButton = $customButton;
-    }
-
     public function getClass()
     {
         return 'col-listing-buttons';
     }
-
 
 }

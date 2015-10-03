@@ -172,9 +172,13 @@ class ContentViewDefault extends BaseContentView
         }
 
         // Add Edit/Delete-Buttons
+
         $buttonColumn = new ButtonColumn();
         $buttonColumn->setEditButton(true);
-        $buttonColumn->setDeleteButton(true);
+        if ($this->canDo('delete', $this->getRepository(), $this->getContentTypeDefinition()))
+        {
+            $buttonColumn->setDeleteButton(true);
+        }
         $buttonColumn->setRenderer($this->getCellRenderer());
         $columns[] = $buttonColumn;
 

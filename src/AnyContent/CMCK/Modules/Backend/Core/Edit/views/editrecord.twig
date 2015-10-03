@@ -5,14 +5,18 @@
         <ol class="breadcrumb">
             <li><a href="/">Home</a></li>
             <li><a href="{{ links.repository }}">{{ repository.repositoryName }}</a></li>
-            <li><a href="{{ links.listRecords }}" title="{{ definition.name }}">{% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</a></li>
+            <li><a href="{{ links.listRecords }}"
+                   title="{{ definition.name }}">{% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</a>
+            </li>
         </ol>
         {% if record %}
 
 
 
-            <h3><span class="label label-info">#{{ record.id }}<small>.{{ record.revision }}</small></span> {{ record.name }}{% if definition.hasSubtypes() %} <span
-                        class="badge primary subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+            <h3><span class="label label-info">#{{ record.id }}
+                    <small>.{{ record.revision }}</small></span> {{ record.name }}{% if definition.hasSubtypes() %}
+                    <span
+                            class="badge primary subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
                     <span class="badge primary status">{{ record.statusLabel }}</span>{% endif %}</h3>
         {% else %}
             <h3><span class="label label-info">#new</span> New Record</h3>
@@ -26,10 +30,10 @@
                 {{ form | raw }}
             </fieldset>
 
-
-            <hr/>
-            <div class="controls">
-                <div class="btn-toolbar">
+            {% if links.edit is defined %}
+                <hr/>
+                <div class="controls">
+                    <div class="btn-toolbar">
 
                     <span class="btn-group" id="form_edit_button_save">
                         <input type="submit" class="btn btn-primary" href="#" value="{{ save_operation_title }}"
@@ -42,34 +46,42 @@
                         <ul class="dropdown-menu" id="form_edit_button_save_options">
                             <li><a href="#" data-operation="save">Save</a></li>
                             <li class="divider"></li>
-                            <li><a href="#" data-operation="save-insert">Save & Insert</a></li>
-                            {% if record %}
-                                <li><a href="#" data-operation="save-duplicate">Save & Duplicate</a></li>
+
+                            {% if links.transfer is defined %}
+                                <li><a href="#" data-operation="save-insert">Save & Insert</a></li>
+                                {% if record %}
+                                    <li><a href="#" data-operation="save-duplicate">Save & Duplicate</a></li>
+                                {% endif %}
+                                <li class="divider"></li>
                             {% endif %}
-                            <li class="divider"></li>
                             <li><a href="#" data-operation="save-list">Save & List</a></li>
                         </ul>
                     </span>
 
-                    {% if record %}
-                        <span class="btn-group">
+                        {% if record %}
+                            {% if links.delete is defined %}
+                                <span class="btn-group">
                         <a href="{{ links.delete }}" class="btn btn-danger button_delete">Delete</a>
                     </span>
 
-                        <span class="btn-group">
-                        <a href="{{ links.transfer }}" class="btn btn-success" role="button" id="form_edit_button_transfer">Transfer</a>
-                    </span>
-                    {% endif %}
+                                {% if links.transfer is defined %}
+                                    <span class="btn-group">
+                            <a href="{{ links.transfer }}" class="btn btn-success" role="button"
+                               id="form_edit_button_transfer">Transfer</a>
+                                </span>
+                                {% endif %}
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
-
-            </div>
+            {% endif %}
 
             <input type="hidden" name="$hidden[workspace]" value="{{ workspaces.current }}">
             <input type="hidden" name="$hidden[language]" value="{{ languages.current }}">
         </form>
-
-
 
 
     </div>

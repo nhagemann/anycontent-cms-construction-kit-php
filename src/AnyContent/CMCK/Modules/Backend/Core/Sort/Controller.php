@@ -13,7 +13,7 @@ use AnyContent\Client\Repository;
 use AnyContent\Client\Record;
 use AnyContent\Client\UserInfo;
 
-class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controller
+class Controller
 {
 
     public static function sortRecords(Application $app, Request $request, $contentTypeAccessHash)
@@ -22,10 +22,13 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
+        $app['context']->setCurrentRepository($repository);
 
         $vars['repository']          = $repository;
         $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
         $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
+
+
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
@@ -47,7 +50,9 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
 
         $vars['links']['sort'] = $app['url_generator']->generate('postSortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
-        $records       = self::getRecords($app, $repository, $contentTypeAccessHash, 'pos');
+
+        //$records       = self::getRecords($app, $repository, $contentTypeAccessHash, 'pos');
+        $records = $repository->getRecords($app['context']->getCurrentWorkspace(), 'default',$app['context']->getCurrentLanguage(), 'pos', null,null,1, null, null, $app['context']->getCurrentTimeShift());
         $records_left  = array();
         $records_right = array();
 
@@ -55,7 +60,7 @@ class Controller extends \AnyContent\CMCK\Modules\Backend\Core\Listing\Controlle
         foreach ($records as $record)
         {
 
-            if ($record['record']->getParentRecordID() !== null)
+            if ($record->getParentRecordID() !== null)
             {
                 $records_left[] = $record;
             }

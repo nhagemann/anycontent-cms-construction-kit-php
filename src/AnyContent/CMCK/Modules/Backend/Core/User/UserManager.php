@@ -6,6 +6,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 
 class UserManager
 {
+
     protected $app;
 
     protected $cache = null;
@@ -15,12 +16,13 @@ class UserManager
 
     protected $config;
 
+    /** @var  BaseAuthenticationAdapter */
     protected $adapter;
 
 
     public function __construct($app, $context, $config, $session)
     {
-        $this->app = $app;
+        $this->app     = $app;
         $this->context = $context;
         $this->config  = $config;
         $this->session = $session;
@@ -77,6 +79,12 @@ class UserManager
     public function getFullName()
     {
         return $this->adapter->getFullName();
+    }
+
+
+    public function canDo($action, $object1 = null, $object2 = null, $object3 = null)
+    {
+        return $this->adapter->canDo($this->app, $action, $object1, $object2, $object3);
     }
 
 

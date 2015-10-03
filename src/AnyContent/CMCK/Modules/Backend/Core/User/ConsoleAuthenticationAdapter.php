@@ -4,7 +4,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\User;
 
 use AnyContent\CMCK\Modules\Backend\Core\Context;
 
-class ConsoleAuthenticationAdapter
+class ConsoleAuthenticationAdapter extends BaseAuthenticationAdapter
 {
 
     protected $session;
@@ -56,12 +56,6 @@ class ConsoleAuthenticationAdapter
     public function getLastName()
     {
         return 'Doe';
-    }
-
-
-    public function getFullName()
-    {
-        return trim($this->getFirstName() . ' ' . $this->getLastName());
     }
 
 }

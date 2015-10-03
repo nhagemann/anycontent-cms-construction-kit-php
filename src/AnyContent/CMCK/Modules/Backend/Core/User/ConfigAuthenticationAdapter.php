@@ -4,7 +4,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\User;
 
 use AnyContent\CMCK\Modules\Backend\Core\Context;
 
-class ConfigAuthenticationAdapter
+class ConfigAuthenticationAdapter extends BaseAuthenticationAdapter
 {
 
     protected $session;
@@ -120,10 +120,7 @@ class ConfigAuthenticationAdapter
     }
 
 
-    public function getFullName()
-    {
-        return trim($this->getFirstName() . ' ' . $this->getLastName());
-    }
+
 
 
 }
