@@ -65,6 +65,8 @@ class Controller
 
             if ($contentTypeDefinition->hasInsertOperation() && $user->canDo('add', $repository, $contentTypeDefinition))
             {
+                $vars['links']['edit'] = true;
+
                 /* @var ViewDefinition */
 
                 $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
