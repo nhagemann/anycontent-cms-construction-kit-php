@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "29d1ad09e704f969f74e56c54d60f7e6",
+    "hash": "798c1253a387da7080d9f563d9ff7b40",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -290,22 +290,22 @@
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "0.12.1",
+            "version": "0.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "3438038178db04578e66c01c99519a01b054b2f5"
+                "reference": "c7e0e8644d984dd8e9c0dd1258033d1ab7ae9bd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/3438038178db04578e66c01c99519a01b054b2f5",
-                "reference": "3438038178db04578e66c01c99519a01b054b2f5",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/c7e0e8644d984dd8e9c0dd1258033d1ab7ae9bd0",
+                "reference": "c7e0e8644d984dd8e9c0dd1258033d1ab7ae9bd0",
                 "shasum": ""
             },
             "require": {
                 "doctrine/cache": "1.3.*",
                 "guzzle/guzzle": "3.9.*",
-                "nhagemann/cmdl-parser-php": "0.12.*",
+                "nhagemann/cmdl-parser-php": "0.13.*",
                 "php": ">=5.3"
             },
             "require-dev": {
@@ -329,20 +329,20 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-08-28 07:47:17"
+            "time": "2015-10-06 16:08:56"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
-            "version": "0.12",
+            "version": "0.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "2455a9e31b88c190773df7221c2c0c826e233efe"
+                "reference": "55154923f17efd81a4b6dee7ded35a9955d89e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/2455a9e31b88c190773df7221c2c0c826e233efe",
-                "reference": "2455a9e31b88c190773df7221c2c0c826e233efe",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/55154923f17efd81a4b6dee7ded35a9955d89e2f",
+                "reference": "55154923f17efd81a4b6dee7ded35a9955d89e2f",
                 "shasum": ""
             },
             "require": {
@@ -370,7 +370,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-04-04 10:13:06"
+            "time": "2015-10-06 16:06:49"
         },
         {
             "name": "nitra/php-min",
@@ -646,16 +646,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.7.3",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
-                "reference": "d6cf02fe73634c96677e428f840704bfbcaec29e"
+                "url": "https://github.com/symfony/console.git",
+                "reference": "06cb17c013a82f94a3d840682b49425cd00a2161"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/d6cf02fe73634c96677e428f840704bfbcaec29e",
-                "reference": "d6cf02fe73634c96677e428f840704bfbcaec29e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/06cb17c013a82f94a3d840682b49425cd00a2161",
+                "reference": "06cb17c013a82f94a3d840682b49425cd00a2161",
                 "shasum": ""
             },
             "require": {
@@ -699,20 +699,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-28 15:18:12"
+            "time": "2015-09-25 08:32:23"
         },
         {
             "name": "symfony/debug",
-            "version": "v2.7.3",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Debug.git",
-                "reference": "9daa1bf9f7e615fa2fba30357e479a90141222e3"
+                "url": "https://github.com/symfony/debug.git",
+                "reference": "c79c361bca8e5ada6a47603875a3c964d03b67b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Debug/zipball/9daa1bf9f7e615fa2fba30357e479a90141222e3",
-                "reference": "9daa1bf9f7e615fa2fba30357e479a90141222e3",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/c79c361bca8e5ada6a47603875a3c964d03b67b1",
+                "reference": "c79c361bca8e5ada6a47603875a3c964d03b67b1",
                 "shasum": ""
             },
             "require": {
@@ -724,13 +724,8 @@
             },
             "require-dev": {
                 "symfony/class-loader": "~2.2",
-                "symfony/http-foundation": "~2.1",
                 "symfony/http-kernel": "~2.3.24|~2.5.9|~2.6,>=2.6.2",
                 "symfony/phpunit-bridge": "~2.7"
-            },
-            "suggest": {
-                "symfony/http-foundation": "",
-                "symfony/http-kernel": ""
             },
             "type": "library",
             "extra": {
@@ -759,7 +754,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-09 16:07:40"
+            "time": "2015-09-14 08:41:38"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1117,16 +1112,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.21.1",
+            "version": "v1.22.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23"
+                "reference": "79249fc8c9ff62e41e217e0c630e2e00bcadda6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
-                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/79249fc8c9ff62e41e217e0c630e2e00bcadda6a",
+                "reference": "79249fc8c9ff62e41e217e0c630e2e00bcadda6a",
                 "shasum": ""
             },
             "require": {
@@ -1139,7 +1134,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.21-dev"
+                    "dev-master": "1.22-dev"
                 }
             },
             "autoload": {
@@ -1174,7 +1169,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-08-26 08:58:31"
+            "time": "2015-09-22 13:59:32"
         }
     ],
     "packages-dev": [
