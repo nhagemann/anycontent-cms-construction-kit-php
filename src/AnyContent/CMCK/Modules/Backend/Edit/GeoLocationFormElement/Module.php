@@ -21,10 +21,13 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
         $app
-            ->get('/edit/modal/geolocation/{name}', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
+            ->get('/edit/modal/geolocation/{tempId}//', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
             ->value('module', $this);
         $app
-            ->get('/edit/modal/geolocation/{name}/{lat}/{long}', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
+            ->get('/edit/modal/geolocation/{tempId}/{lat}/', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
+            ->value('module', $this);
+        $app
+            ->get('/edit/modal/geolocation/{tempId}/{lat}/{long}', 'AnyContent\CMCK\Modules\Backend\Edit\GeoLocationFormElement\Controller::modal')
             ->value('module', $this);
 
     }

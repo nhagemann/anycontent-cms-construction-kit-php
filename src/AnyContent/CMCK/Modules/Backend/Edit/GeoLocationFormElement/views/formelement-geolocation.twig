@@ -7,7 +7,7 @@
 
             <span class="input-group-addon">Latitude</span>
 
-            <input type="text" class="form-control" id="{{ id }}_lat" name="{{ name }}[]"
+            <input type="text" class="form-control" id="{{ tempid }}_lat" name="{{ name }}[]"
                    placeholder="{{ definition.placeholder }}" value="{{ lat }}">
 
                 <span class="input-group-addon"><span
@@ -20,7 +20,7 @@
 
             <span class="input-group-addon">Longitude</span>
 
-            <input type="text" class="form-control" id="{{ id }}_long" name="{{ name }}[]"
+            <input type="text" class="form-control" id="{{ tempid }}_long" name="{{ name }}[]"
                    placeholder="{{ definition.placeholder }}" value="{{ long }}">
 
                 <span class="input-group-addon"><span
@@ -32,7 +32,7 @@
     <div class="col-xs-4">
 
 
-    <a data-input="#{{ id }}" href="{{ url_modal }}" name="{{ name }}"
+    <a data-input="#{{ tempid }}" href="{{ url_modal }}" name="{{ name }}"
        class="btn btn-default formelement-geolocation-modal-button"><span
                 class="glyphicon glyphicon-map-marker"></span> Select</a>
 

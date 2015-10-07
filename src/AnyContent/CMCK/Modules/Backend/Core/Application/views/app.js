@@ -11,6 +11,9 @@ function cmck_modal_id(id, url, onShown) {
     });
 
     $(id).removeData();
+    $(id+' .modal-header').html('');
+    $(id+' .modal-body').html('');
+    $(id+' .modal-footer').html('');
     $(id).appendTo("body");
 
     $(id).modal({
@@ -32,6 +35,9 @@ function cmck_modal_id_hide(id) {
 
     $(id).modal('hide');
     $(id).removeData();
+    $(id+' .modal-header').html('');
+    $(id+' .modal-body').html('');
+    $(id+' .modal-footer').html('');
 }
 
 

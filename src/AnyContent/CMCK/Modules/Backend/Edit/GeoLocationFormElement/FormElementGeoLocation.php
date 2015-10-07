@@ -20,17 +20,18 @@ class FormElementGeoLocation extends \AnyContent\CMCK\Modules\Backend\Core\Edit\
         $position = explode(',', (string)$this->value);
         if (count($position) == 2)
         {
-            $this->vars['lat']       = $position[0];
-            $this->vars['long']      = $position[1];
-            $this->vars['url_modal'] = '/edit/modal/geolocation/' . $this->name . '/' . $position[0] . '/' . $position[1];
+            $this->vars['lat']  = $position[0];
+            $this->vars['long'] = $position[1];
         }
         else
         {
-            $this->vars['lat']       = '';
-            $this->vars['long']      = '';
-            $this->vars['url_modal'] = '/edit/modal/geolocation/' . $this->name;
-
+            $this->vars['lat']  = '';
+            $this->vars['long'] = '';
         }
+
+        $tempId                  = md5(uniqid());
+        $this->vars['tempid']    = $tempId;
+        $this->vars['url_modal'] = '/edit/modal/geolocation/' . $tempId;
 
         return $this->twig->render('formelement-geolocation.twig', $this->vars);
 

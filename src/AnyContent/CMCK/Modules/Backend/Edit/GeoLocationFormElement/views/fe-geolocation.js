@@ -15,19 +15,13 @@
 
 
                     // get the input field, which shall contain latitude and longitude upon selection
-                    var lat = $($(this).attr('data-input') + '_lat');
-                    var long = $($(this).attr('data-input') + '_long');
+                    var lat = $($(this).attr('data-input') + '_lat').val();
+                    var long = $($(this).attr('data-input') + '_long').val();
 
-                    var options = {lat: lat, long: long};
-
-
-                    // when showing the modal, call the function within the just loaded modal and provide pointer to the input fields
-                    var onShown = function () {
-                        parent.cmck_fe_geolocation_modal_shown(options);
-                    };
+                    var url = $(this).attr('href') + '/' + lat + '/' + long;
 
                     // start modal on top level
-                    parent.cmck_modal($(this).attr('href'), onShown);
+                    parent.cmck_modal(url);
                     return false;
                 });
                 break;
