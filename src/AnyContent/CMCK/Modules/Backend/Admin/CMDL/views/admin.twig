@@ -24,81 +24,93 @@
 
         <div class="row">
 
-            <div class="col-xs-6">
+            {% block admin_content_types_list %}
+                <div class="col-xs-6">
 
-                {% if repository.content_types %}
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Content Type Name</th>
-                            <th></th>
-                        <tr/>
-                        </thead>
-                        <tbody>
-                        {% for contenttype in repository.content_types %}
+                    {% if repository.content_types %}
+                        <table class="table table-striped">
+                            <thead>
                             <tr>
-                                <td><a href="{{ contenttype.edit }}">{{ contenttype.name }}</a>{% if contenttype.name != contenttype.title %}&nbsp;&nbsp;<small>({{ contenttype.title }})</small>{% endif %}</td>
-                                <td class="text-right"><a href="{{ contenttype.edit }}" class="btn btn-primary"
-                                                          role="button"><span class="glyphicon glyphicon-pencil"></span>
-                                        Configure</a>&nbsp;
-                                    <a href="{{ contenttype.delete }}"
-                                       class="btn btn-danger admin_button_delete_content_type"><span
-                                                class="glyphicon glyphicon-remove"></span> Delete</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                                <th>Content Type Name</th>
+                                <th></th>
+                            <tr/>
+                            </thead>
+                            <tbody>
+                            {% for contenttype in repository.content_types %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ contenttype.edit }}">{{ contenttype.name }}</a>{% if contenttype.name != contenttype.title %}&nbsp;&nbsp;
+                                        <small>({{ contenttype.title }})</small>{% endif %}</td>
+                                    <td class="text-right"><a href="{{ contenttype.edit }}" class="btn btn-primary"
+                                                              role="button"><span
+                                                    class="glyphicon glyphicon-pencil"></span>
+                                            Configure</a>&nbsp;
+                                        <a href="{{ contenttype.delete }}"
+                                           class="btn btn-danger admin_button_delete_content_type"><span
+                                                    class="glyphicon glyphicon-remove"></span> Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
 
-            </div>
+                </div>
+            {% endblock %}
 
+            {% block admin_config_types_list %}
+                <div class="col-xs-6">
 
-            <div class="col-xs-6">
-
-                {% if repository.config_types %}
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Config Type Name</th>
-                            <th></th>
-                        <tr/>
-                        </thead>
-                        <tbody>
-                        {% for configtype in repository.config_types %}
+                    {% if repository.config_types %}
+                        <table class="table table-striped">
+                            <thead>
                             <tr>
-                                <td><a href="{{ configtype.edit }}">{{ configtype.name }}</a>{% if configtype.name != configtype.title %}&nbsp;&nbsp;<small>({{ configtype.title }})</small>{% endif %}</td>
-                                <td class="text-right"><a href="{{ configtype.edit }}" class="btn btn-primary"
-                                                          role="button"><span class="glyphicon glyphicon-pencil"></span>
-                                        Configure</a>&nbsp;
-                                    <a href="{{ configtype.delete }}"
-                                       class="btn btn-danger admin_button_delete_config_type"><span
-                                                class="glyphicon glyphicon-remove"></span> Delete</a></td>
+                                <th>Config Type Name</th>
+                                <th></th>
+                            <tr/>
+                            </thead>
+                            <tbody>
+                            {% for configtype in repository.config_types %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ configtype.edit }}">{{ configtype.name }}</a>{% if configtype.name != configtype.title %}&nbsp;&nbsp;
+                                        <small>({{ configtype.title }})</small>{% endif %}</td>
+                                    <td class="text-right"><a href="{{ configtype.edit }}" class="btn btn-primary"
+                                                              role="button"><span
+                                                    class="glyphicon glyphicon-pencil"></span>
+                                            Configure</a>&nbsp;
+                                        <a href="{{ configtype.delete }}"
+                                           class="btn btn-danger admin_button_delete_config_type"><span
+                                                    class="glyphicon glyphicon-remove"></span> Delete</a></td>
 
-                            </tr>
-                        {% endfor %}
+                                </tr>
+                            {% endfor %}
 
-                        </tbody>
-                    </table>
-                {% endif %}
+                            </tbody>
+                        </table>
+                    {% endif %}
 
-            </div>
+                </div>
+            {% endblock %}
 
         </div>
         <div class="row">
 
-            <div class="col-xs-6">
-                <a href="{{ repository.links.add_content_type }}"
-                   class="btn btn-default admin_button_create_content_type"
-                   role="button"><span class="glyphicon glyphicon-plus"></span> Add Content Type</a>
-            </div>
+            {% block admin_content_types_add %}
+                <div class="col-xs-6">
+                    <a href="{{ repository.links.add_content_type }}"
+                       class="btn btn-default admin_button_create_content_type"
+                       role="button"><span class="glyphicon glyphicon-plus"></span> Add Content Type</a>
+                </div>
+            {% endblock %}
 
-            <div class="col-xs-6">
-                <a href="{{ repository.links.add_config_type }}"
-                   class="btn btn-default admin_button_create_config_type"
-                   role="button"><span class="glyphicon glyphicon-plus"></span> Add Config Type</a>
-            </div>
-
+            {% block admin_config_types_add %}
+                <div class="col-xs-6">
+                    <a href="{{ repository.links.add_config_type }}"
+                       class="btn btn-default admin_button_create_config_type"
+                       role="button"><span class="glyphicon glyphicon-plus"></span> Add Config Type</a>
+                </div>
+            {% endblock %}
         </div>
         <div class="row">
             <br/>
