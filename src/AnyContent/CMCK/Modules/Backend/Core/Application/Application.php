@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Application;
 
+use AnyContent\Client\MySQLCache;
 use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
 use AnyContent\CMCK\Modules\Backend\Core\Menu\MenuManager;
