@@ -34,10 +34,6 @@ function cmck_modal_id_hide(id) {
     id = '#' + id;
 
     $(id).modal('hide');
-    $(id).removeData();
-    $(id+' .modal-header').html('');
-    $(id+' .modal-body').html('');
-    $(id+' .modal-footer').html('');
 }
 
 
