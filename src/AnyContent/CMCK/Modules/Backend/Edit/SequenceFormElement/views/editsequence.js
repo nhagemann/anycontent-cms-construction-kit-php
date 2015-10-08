@@ -14,11 +14,26 @@ function cmck_sequence_trigger_change(object)
         var firstRun = true;
 
         var calcHeight = function () {
-            c = $('div.sequence-item').length;
-            init = 200 + c * 50;
 
-            current = 150 + $('.sequence-accordion').height();
-            h = Math.max(current, init)
+            // find highest item
+            init = 0;
+            $('.sequence-item').each(function(){
+                if ($(this).height() > init) { init = $(this).height(); }
+            });
+
+            // add 35 pixel for every item
+            c = $('div.sequence-item').length;
+            init = init + c * 35;
+
+            // add 40 pixel for every possible sequence element
+            c = $('ul.sequence-add-item').first().find('li').length;
+            init = init + c * 40;
+
+            // generic buffer of 50 pixel
+            init = init + 50;
+
+            // minimum height of 200 pixel
+            h = Math.max(200, init);
 
             iframe = '#form_edit_sequence_' + $('#form_sequence').attr('data-property') + '_iframe';
 
@@ -79,7 +94,7 @@ function cmck_sequence_trigger_change(object)
 
 
                     $(".sequence-add-item li a").click(function () {
-                        insert = $(this).attr('data-insert')
+                        insert = $(this).attr('data-insert');
                         item = $(this).closest('ul').attr('data-item');
 
                         $.event.trigger('cmck', {type: 'sequenceForm.add', insert: insert, item: item});

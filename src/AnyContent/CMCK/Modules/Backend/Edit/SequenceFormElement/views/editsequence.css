@@ -5,3 +5,10 @@
 .layout-plain {
     background-color: #f5f5f5;
 }
+
+.sequence-add-item
+{
+    position: inherit;
+    margin-top: 33px;
+    float: none;
+}
