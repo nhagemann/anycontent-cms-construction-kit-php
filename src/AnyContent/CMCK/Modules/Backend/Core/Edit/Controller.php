@@ -186,7 +186,7 @@ class Controller
             {
                 $vars['links']['edit'] = true;
             }
-            if ($user->canDo('delete', $repository, $contentTypeDefinition, $record->getID()))
+            if ($user->canDo('delete', $repository, $contentTypeDefinition, $recordId))
             {
                 $vars['links']['delete'] = $app['url_generator']->generate('deleteRecord', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'recordId' => $recordId, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
             }
