@@ -11,6 +11,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Listing\SelectionColumn;
 use AnyContent\CMCK\Modules\Backend\Core\Listing\StatusColumn;
 use AnyContent\CMCK\Modules\Backend\Core\Listing\SubtypeColumn;
 
+use CMDL\CMDLParserException;
 use Silex\Application;
 
 class ContentViewCustomList extends ContentViewDefault
@@ -47,7 +48,17 @@ class ContentViewCustomList extends ContentViewDefault
         {
             if ($definition->hasProperty($key))
             {
-                $formelementDefinition = $definition->getViewDefinition('default')->getFormElementDefinition($key);
+                $formelementDefinition = null;
+                $column                = new PropertyColumn();
+
+                try
+                {
+                    $formelementDefinition = $definition->getViewDefinition('default')->getFormElementDefinition($key);
+                }
+                catch (CMDLParserException $e)
+                {
+                    // If view does not have a form element definition, but still knows the property
+                }
 
                 if ($key == 'status' && $definition->hasStatusList())
                 {
@@ -60,17 +71,24 @@ class ContentViewCustomList extends ContentViewDefault
                 else
                 {
 
-                    switch ($formelementDefinition->getFormElementType())
+                    if ($formelementDefinition)
                     {
-                        case 'selection':
-                            $column = new SelectionColumn();
-                            break;
-                        default:
-                            $column = new PropertyColumn();
-                            break;
+                        switch ($formelementDefinition->getFormElementType())
+                        {
+                            case 'selection':
+                                $column = new SelectionColumn();
+                                break;
+                            default:
+                                $column = new PropertyColumn();
+                                break;
+                        }
                     }
+
                 }
+
                 $column->setProperty($key);
+
+
                 $column->setFormElementDefinition($formelementDefinition);
 
                 if ($key == 'name')
@@ -83,7 +101,7 @@ class ContentViewCustomList extends ContentViewDefault
                 $column = new AttributeColumn();
                 $column->setAttribute($key);
 
-                if (trim($key,'.') == 'id')
+                if (trim($key, '.') == 'id')
                 {
                     $column->setLinkToRecord(true);
                 }

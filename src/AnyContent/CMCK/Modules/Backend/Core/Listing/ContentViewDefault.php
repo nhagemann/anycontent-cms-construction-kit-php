@@ -2,6 +2,8 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
+use CMDL\CMDLParserException;
+
 class ContentViewDefault extends BaseContentView
 {
 
@@ -143,8 +145,16 @@ class ContentViewDefault extends BaseContentView
         $column->setTitle('Name');
         $column->setProperty('name');
         $column->setLinkToRecord(true);
-        $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
-                                                                ->getFormElementDefinition('name'));
+        try
+        {
+            $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
+                                                                    ->getFormElementDefinition('name'));
+        }
+        catch (CMDLParserException $e)
+        {
+            // If default view does not have a name form element
+        }
+
         $columns[] = $column;
 
         $column = new AttributeColumn();
