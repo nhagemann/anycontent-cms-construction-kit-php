@@ -136,8 +136,6 @@ class ContentViewDefault extends BaseContentView
         {
             $column = new SubtypeColumn();
             $column->setTitle('Subtype');
-            $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
-                                                                    ->getFormElementDefinition('subtype'));
             $columns[] = $column;
         }
 
@@ -158,8 +156,6 @@ class ContentViewDefault extends BaseContentView
         {
             $column = new StatusColumn();
             $column->setTitle('Status');
-            $column->setFormElementDefinition($contentTypeDefinition->getViewDefinition('default')
-                                                                    ->getFormElementDefinition('status'));
             $columns[] = $column;
         }
 
