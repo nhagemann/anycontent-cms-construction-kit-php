@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyContent\CMCK\Modules\Backend\Core\Layout;
+namespace AnyContent\CMCK\Modules\Backend\Core\Menu;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use Symfony\Component\EventDispatcher\Event;
