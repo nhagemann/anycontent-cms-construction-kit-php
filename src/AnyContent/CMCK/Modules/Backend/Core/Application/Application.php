@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use Knp\Provider\ConsoleServiceProvider;
 use Symfony\Component\Routing\Generator\UrlGenerator;
