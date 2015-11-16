@@ -2,6 +2,8 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Menu;
 
+use AnyContent\CMCK\Modules\Backend\Core\Layout\MenuMainMenuRenderEvent;
+
 class MenuManager
 {
 
@@ -104,7 +106,16 @@ class MenuManager
 
     public function renderDropDown($items, $id = null)
     {
-        return $this->twig->render('core_menu_dropdown.twig', array( 'items' => $items, 'id' => $id ));
+        $vars = array( 'items' => $items, 'id' => $id );
+
+        $event = new MenuMainMenuRenderEvent($this->app, 'core_menu_dropdown.twig', $vars);
+
+        /** @var MenuMainMenuRenderEvent $event */
+        $event = $this->app['dispatcher']->dispatch(Module::EVENT_MENU_MAINMENU_RENDER, $event);
+        $template = $event->getTemplate();
+        $vars = $event->getVars();
+
+        return $this->twig->render($template, $vars);
     }
 
 

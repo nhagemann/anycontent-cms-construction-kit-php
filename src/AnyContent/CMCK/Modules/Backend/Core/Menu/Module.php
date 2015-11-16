@@ -9,7 +9,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
 
     const EVENT_MENU_BUTTONGROUP_RENDER = 'event.menu.buttongroup.render';
-
+    const EVENT_MENU_MAINMENU_RENDER = 'event.menu.mainmenu.render';
 
     public function init(Application $app, $options = array())
     {
