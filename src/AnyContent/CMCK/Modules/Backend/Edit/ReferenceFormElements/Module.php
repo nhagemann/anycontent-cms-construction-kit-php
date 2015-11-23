@@ -9,8 +9,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
     public function init(Application $app, $options = array())
     {
-        //$app->addTemplatesFolders(__DIR__ . '/views/');
-
+        $app->addTemplatesFolders(__DIR__ . '/views/');
     }
 
 
