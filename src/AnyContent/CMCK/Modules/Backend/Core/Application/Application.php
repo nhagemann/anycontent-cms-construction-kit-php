@@ -158,7 +158,11 @@ class Application extends SilexApplication
 
         // Now add the repositories
 
-        $this['repos']->init($this['config']);
+        $app = $this;
+        require_once (APPLICATION_PATH .'/config/repositories.php');
+
+
+        //$this['repos']->init($this['config']);
 
         foreach ($this->modules as $module)
         {
@@ -185,14 +189,6 @@ class Application extends SilexApplication
         $contextManager = $this['context'];
 
         $repository = $contextManager->getCurrentRepository();
-
-        if ($repository)
-        {
-            $client = $repository->getClient();
-
-            $vars['requestLog'] = $client->getLog();
-
-        }
 
         return $this['layout']->render($templateFilename, $vars, $displayMessages);
     }

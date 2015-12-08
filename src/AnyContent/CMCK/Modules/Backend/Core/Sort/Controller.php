@@ -25,7 +25,7 @@ class Controller
         $app['context']->setCurrentRepository($repository);
 
         $vars['repository']          = $repository;
-        $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+        $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
         $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
 
 

@@ -32,6 +32,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
     public function preRender(Application $app)
     {
+
         $date = new \DateTime();
 
         $timeshift              = $app['layout']->getVar('timeshift', array());

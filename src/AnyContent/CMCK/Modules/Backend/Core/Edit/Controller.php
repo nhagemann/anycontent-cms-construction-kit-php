@@ -42,8 +42,7 @@ class Controller
         if ($repository)
         {
             $vars['repository']           = $repository;
-            $repositoryAccessHash         = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()
-                                                                                                   ->getUrl());
+            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
             $vars['links']['repository']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
             $vars['links']['listRecords'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
@@ -126,8 +125,7 @@ class Controller
         {
 
             $vars['repository']           = $repository;
-            $repositoryAccessHash         = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()
-                                                                                                   ->getUrl());
+            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
             $vars['links']['repository']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
             $vars['links']['listRecords'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
@@ -212,7 +210,9 @@ class Controller
                 /* @var ViewDefinition */
                 $viewDefinition = $contentTypeDefinition->getViewDefinition('default');
 
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
+                // TODO: Attributes ??
+                //$vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), []);
 
                 return $app->renderPage('editrecord.twig', $vars);
             }
@@ -312,7 +312,9 @@ class Controller
                     $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
                 }
 
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
+                //TODO Attributes ??
+                //$values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), []);
 
                 foreach ($values as $property => $value)
                 {

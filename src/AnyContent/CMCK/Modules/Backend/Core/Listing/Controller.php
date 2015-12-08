@@ -34,7 +34,7 @@ class Controller
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
         $vars['repository']          = $repository;
-        $repositoryAccessHash        = $app['repos']->getRepositoryAccessHashByUrl($repository->getClient()->getUrl());
+        $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
         $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
         $vars['links']['self']       = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
