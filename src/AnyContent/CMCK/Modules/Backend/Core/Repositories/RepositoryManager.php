@@ -21,14 +21,22 @@ class RepositoryManager
 
     protected $contentTypeAccessHashes = [ ];
 
+    /** @var  UserInfo */
+    protected $userInfo;
+
 
     public function addRepository($name, Repository $repository, $title = null)
     {
         $repository->setName($name);
         $repository->setTitle($title);
 
-        $this->repositories[$repository->getName()] = $repository;
+        $userInfo = $repository->getCurrentUserInfo();
+        if ($userInfo->getName() == '' && $this->userInfo != null)
+        {
+            $repository->setUserInfo($this->userInfo);
+        }
 
+        $this->repositories[$repository->getName()] = $repository;
 
         foreach ($repository->getContentTypeNames() as $contentTypeName)
         {
@@ -70,6 +78,10 @@ class RepositoryManager
     public function setUserInfo(UserInfo $userInfo)
     {
         $this->userInfo = $userInfo;
+        foreach ($this->repositories as $repository)
+        {
+            $repository->setUserInfo($userInfo);
+        }
     }
 
 
