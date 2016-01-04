@@ -63,16 +63,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.5.2",
+            "version": "v1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "47c7128262da274f590ae6f86eb137a7a64e82af"
+                "reference": "47cdc76ceb95cc591d9c79a36dc3794975b5d136"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/47c7128262da274f590ae6f86eb137a7a64e82af",
-                "reference": "47c7128262da274f590ae6f86eb137a7a64e82af",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/47cdc76ceb95cc591d9c79a36dc3794975b5d136",
+                "reference": "47cdc76ceb95cc591d9c79a36dc3794975b5d136",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +129,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-12-03 10:50:37"
+            "time": "2015-12-19 05:03:47"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -289,6 +289,56 @@
                 "stream"
             ],
             "time": "2014-10-12 19:18:40"
+        },
+        {
+            "name": "katzgrau/klogger",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/katzgrau/KLogger.git",
+                "reference": "87735262be7c3bd210740b5cd4831dee3d827c46"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/katzgrau/KLogger/zipball/87735262be7c3bd210740b5cd4831dee3d827c46",
+                "reference": "87735262be7c3bd210740b5cd4831dee3d827c46",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "psr/log": "1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Katzgrau\\KLogger\\": "src/"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kenny Katzgrau",
+                    "email": "katzgrau@gmail.com"
+                },
+                {
+                    "name": "Dan Horrigan",
+                    "email": "dan@dhorrigan.com"
+                }
+            ],
+            "description": "A Simple Logging Class",
+            "keywords": [
+                "logging"
+            ],
+            "time": "2015-11-04 22:43:22"
         },
         {
             "name": "knplabs/console-service-provider",
@@ -457,23 +507,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-php.git",
-                "reference": "9042a3d879ddbdd4fdd84b576761e909c7eb0de9"
+                "reference": "58856654475ec7e3faf6b684b15d1ffd6499aa94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/9042a3d879ddbdd4fdd84b576761e909c7eb0de9",
-                "reference": "9042a3d879ddbdd4fdd84b576761e909c7eb0de9",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/58856654475ec7e3faf6b684b15d1ffd6499aa94",
+                "reference": "58856654475ec7e3faf6b684b15d1ffd6499aa94",
                 "shasum": ""
             },
             "require": {
                 "cpliakas/git-wrapper": "1.*",
                 "doctrine/cache": "1.5.*",
                 "guzzlehttp/guzzle": "5.*",
+                "katzgrau/klogger": "1.2.*",
                 "ktamas77/firebase-php": "2.*",
                 "nhagemann/cmdl-parser-php": "0.13.*",
                 "php": ">=5.4",
                 "psr/log": "1.*",
-                "symfony/filesystem": "2.*"
+                "symfony/filesystem": "2.*",
+                "symfony/finder": "2.*"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7.0"
@@ -481,7 +533,9 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "AnyContent": "src/"
+                    "AnyContent": "src/",
+                    "HahnAir": "src/",
+                    "KVMLogger": "src/"
                 }
             },
             "license": [
@@ -499,7 +553,7 @@
                 "source": "https://github.com/nhagemann/anycontent-php/tree/master",
                 "issues": "https://github.com/nhagemann/anycontent-php/issues"
             },
-            "time": "2015-12-08 09:36:44"
+            "time": "2016-01-04 11:01:53"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
@@ -860,16 +914,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "d232bfc100dfd32b18ccbcab4bcc8f28697b7e41"
+                "reference": "2e06a5ccb19dcf9b89f1c6a677a39a8df773635a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/d232bfc100dfd32b18ccbcab4bcc8f28697b7e41",
-                "reference": "d232bfc100dfd32b18ccbcab4bcc8f28697b7e41",
+                "url": "https://api.github.com/repos/symfony/console/zipball/2e06a5ccb19dcf9b89f1c6a677a39a8df773635a",
+                "reference": "2e06a5ccb19dcf9b89f1c6a677a39a8df773635a",
                 "shasum": ""
             },
             "require": {
@@ -916,20 +970,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-30 12:35:10"
+            "time": "2015-12-22 10:25:57"
         },
         {
             "name": "symfony/debug",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "d371ecb85254a8dff7f6d843bf49d1197e7d533e"
+                "reference": "83e51a0e8940ed5e85788ba6bfa022634aa07869"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/d371ecb85254a8dff7f6d843bf49d1197e7d533e",
-                "reference": "d371ecb85254a8dff7f6d843bf49d1197e7d533e",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/83e51a0e8940ed5e85788ba6bfa022634aa07869",
+                "reference": "83e51a0e8940ed5e85788ba6bfa022634aa07869",
                 "shasum": ""
             },
             "require": {
@@ -973,7 +1027,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-27 05:45:55"
+            "time": "2015-12-26 13:37:56"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1080,6 +1134,55 @@
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
             "time": "2015-01-03 21:04:44"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v2.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "dd41ae57f4f737be271d944a0cc5f5f21203a7c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/dd41ae57f4f737be271d944a0cc5f5f21203a7c6",
+                "reference": "dd41ae57f4f737be271d944a0cc5f5f21203a7c6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Finder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "https://symfony.com",
+            "time": "2015-12-05 11:09:21"
         },
         {
             "name": "symfony/http-foundation",
@@ -1215,20 +1318,23 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "0b6a8940385311a24e060ec1fe35680e17c74497"
+                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/0b6a8940385311a24e060ec1fe35680e17c74497",
-                "reference": "0b6a8940385311a24e060ec1fe35680e17c74497",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
+                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance"
             },
             "type": "library",
             "extra": {
@@ -1267,20 +1373,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2015-11-04 20:28:58"
+            "time": "2015-11-20 09:19:13"
         },
         {
             "name": "symfony/process",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "1b988a88e3551102f3c2d9e1d47a18c3a78d6312"
+                "reference": "62c254438b5040bc2217156e1570cf2206e8540c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/1b988a88e3551102f3c2d9e1d47a18c3a78d6312",
-                "reference": "1b988a88e3551102f3c2d9e1d47a18c3a78d6312",
+                "url": "https://api.github.com/repos/symfony/process/zipball/62c254438b5040bc2217156e1570cf2206e8540c",
+                "reference": "62c254438b5040bc2217156e1570cf2206e8540c",
                 "shasum": ""
             },
             "require": {
@@ -1316,7 +1422,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-30 12:35:10"
+            "time": "2015-12-23 11:03:46"
         },
         {
             "name": "symfony/routing",

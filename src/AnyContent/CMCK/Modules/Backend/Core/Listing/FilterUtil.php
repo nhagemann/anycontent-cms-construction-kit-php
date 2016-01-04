@@ -2,8 +2,8 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Listing;
 
-use AnyContent\Client\ContentFilter;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
+use AnyContent\Filter\PropertyFilter;
 use CMDL\ContentTypeDefinition;
 use CMDL\Util;
 
@@ -12,48 +12,41 @@ class FilterUtil
 
     public static function normalizeFilterQuery(Application $app, $query, ContentTypeDefinition $contentTypeDefinition)
     {
+        $query = str_replace('><', '*=', $query);
 
-        $query = self::escape($query);
-
-        $filter = new ContentFilter($contentTypeDefinition);
-
-        $blocks = explode('+', $query);
-
-        foreach ($blocks as $block)
+        try
         {
-            $filter->nextConditionsBlock();
+            $condition = self::parseCondition($query);
+            if (is_array($condition) && count($condition) == 3)
+            {
+                $property = Util::generateValidIdentifier($condition[0]);
+                if (!$contentTypeDefinition->hasProperty($property))
+                {
+                    $app['context']->addAlertMessage('Cannot filter by property ' . $property . '.');
+                    $query = '';
+                }
 
-            $conditions = explode(',', $block);
-            foreach ($conditions as $conditionString)
+            }
+            else
             {
 
-                $condition = self::parseCondition($conditionString);
-                if (is_array($condition) && count($condition) == 3)
-                {
-                    $property = Util::generateValidIdentifier($condition[0]);
-                    if ($contentTypeDefinition->hasProperty($property))
-                    {
-                        $filter->addCondition($property, $condition[1], $condition[2]);
-                    }
-                    else
-                    {
+                $query = 'name *= ' . $query;
 
-                        $app['context']->addAlertMessage('Cannot filter by property ' . $property . '. Query has been adjusted.');
-                    }
-
-                }
-                else
-                {
-
-                    $filter->addCondition('name', '><', trim($conditionString));
-
-                }
             }
+
+            $filter = new PropertyFilter($query);
+        }
+        catch (\Exception $e)
+        {
+            $app['context']->addAlertMessage('Could not parse query.');
+            $query  = '';
+            $filter = '';
         }
 
-
+        $app['context']->setCurrentSearchTerm($query);
 
         return $filter;
+
     }
 
 
@@ -99,7 +92,7 @@ class FilterUtil
     protected static function parseCondition($s)
     {
 
-        $match = preg_match("/([^>=|<=|<>|><|>|<|=)]*)(>=|<=|<>|><|>|<|=)(.*)/", $s, $matches);
+        $match = preg_match("/([^>=|<=|!=|>|<|=|\*=)]*)(>=|<=|!=|>|<|=|\*=)(.*)/", $s, $matches);
 
         if ($match)
         {

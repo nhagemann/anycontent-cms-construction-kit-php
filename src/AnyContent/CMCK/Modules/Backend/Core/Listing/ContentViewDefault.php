@@ -40,10 +40,10 @@ class ContentViewDefault extends BaseContentView
             $this->getContext()->setCurrentSearchTerm('');
         }
 
+        $filter = $this->getFilter();
+
         $vars['searchTerm']   = $this->getContext()->getCurrentSearchTerm();
         $vars['itemsPerPage'] = $this->getContext()->getCurrentItemsPerPage();
-
-        $filter = $this->getFilter();
 
         $vars['table']  = false;
         $vars['pager']  = false;
@@ -76,6 +76,8 @@ class ContentViewDefault extends BaseContentView
      */
     public function getSortingOrder()
     {
+        //TODO: Finish
+        return 'name';
 
         $sorting = $this->getContext()->getCurrentSortingOrder();
         if (strpos($sorting, '.') === 0)
@@ -242,13 +244,15 @@ class ContentViewDefault extends BaseContentView
 
         $page         = $this->getContext()->getCurrentListingPage();
         $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
-        $viewName     = 'default';
+        //$viewName     = 'default';
 
         $sorting = $this->getSortingOrder();
 
-        $count = $repository->countRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
-                                                                                                       ->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()
-                                                                                                                                                                                                   ->getCurrentTimeShift());
+        //$count = $repository->countRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
+        //->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()->getCurrentTimeShift());
+
+        $count = $repository->countRecords($filter);
+
 
         return $count;
     }
@@ -260,13 +264,14 @@ class ContentViewDefault extends BaseContentView
 
         $page         = $this->getContext()->getCurrentListingPage();
         $itemsPerPage = $this->getContext()->getCurrentItemsPerPage();
-        $viewName     = 'default';
+        //$viewName     = 'default';
 
         $sorting = $this->getSortingOrder();
 
-        return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
-                                                                                                   ->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()
-                                                                                                                                                                                               ->getCurrentTimeShift());
-    }
+        return $repository->getRecords($filter, $page, $itemsPerPage, $sorting);
 
+        //return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
+        //->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()
+    }
 }
+

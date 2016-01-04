@@ -52,6 +52,7 @@ class Controller
 
 
         //$records       = self::getRecords($app, $repository, $contentTypeAccessHash, 'pos');
+        //TODO Adjust
         $records = $repository->getRecords($app['context']->getCurrentWorkspace(), 'default',$app['context']->getCurrentLanguage(), 'pos', null,null,1, null, null, $app['context']->getCurrentTimeShift());
         $records_left  = array();
         $records_right = array();

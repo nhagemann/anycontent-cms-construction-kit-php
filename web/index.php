@@ -42,6 +42,7 @@ if ($app['env']=='test' || $app['env']=='console')
 
 $app->run();
 
+\KVMLogger\KVMLoggerFactory::instance()->logResources();
 
 
 

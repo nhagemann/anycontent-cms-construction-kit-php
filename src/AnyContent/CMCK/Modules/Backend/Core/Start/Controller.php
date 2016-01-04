@@ -30,11 +30,11 @@ class Controller
         $repositoryManager = $app['repos'];
 
         $items = array();
-        foreach ($repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
+        foreach ($repositoryManager->listRepositories() as $repositoryName => $repositoryItem)
         {
             try
             {
-                $items[] = self::extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, false);
+                $items[] = self::extractRepositoryInfos($app, $repositoryName, $repositoryItem, false);
             }
             catch (\Exception $e)
             {
@@ -58,11 +58,11 @@ class Controller
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
 
-        foreach ($repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
+        foreach ($repositoryManager->listRepositories() as $repositoryName => $repositoryItem)
         {
             if ($repositoryAccessHash == $repositoryItem['accessHash'])
             {
-                $item               = self::extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, true);
+                $item               = self::extractRepositoryInfos($app, $repositoryName, $repositoryItem, true);
                 $vars['repository'] = $item;
             }
         }
@@ -71,43 +71,37 @@ class Controller
     }
 
 
-    protected static function extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, $definition = false)
+    protected static function extractRepositoryInfos($app, $repositoryName, $repositoryItem, $definition = false)
     {
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
 
-        if ($definition)
-        {
-            $repository = $repositoryManager->getRepositoryByRepositoryAccessHash($repositoryItem['accessHash']);
-        }
+        $repository = $repositoryManager->getRepositoryByRepositoryAccessHash($repositoryItem['accessHash']);
 
         $item          = array();
         $item['title'] = $repositoryItem['title'];
-        $item['url']   = $repositoryUrl;
+        $item['url']   = $repository->getPublicUrl();
         $item['link']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
         $item['files'] = false;
 
         $item['content_types'] = array();
 
-        foreach ($repositoryManager->listContentTypes($repositoryUrl) as $contentTypeName => $contentTypeItem)
+        foreach ($repositoryManager->listContentTypes($repositoryName) as $contentTypeName => $contentTypeItem)
         {
 
             $info = array( 'name' => $contentTypeItem['name'], 'title' => $contentTypeItem['title'], 'link' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'], 'page' => 1 )) );
-
 
             if ($definition)
             {
                 $info['definition'] = $repository->getContentTypeDefinition($contentTypeName);
             }
 
-
             $item['content_types'][] = $info;
         }
 
-
         $item['config_types'] = array();
 
-        foreach ($repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
+        foreach ($repositoryManager->listConfigTypes($repositoryName) as $configTypeName => $configTypeItem)
         {
             $info = array( 'name' => $configTypeItem['name'], 'title' => $configTypeItem['title'], 'link' => $app['url_generator']->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )) );
 
@@ -119,7 +113,7 @@ class Controller
             $item['config_types'][] = $info;
         }
 
-        if ($repositoryManager->hasFiles($repositoryUrl))
+        if ($repositoryManager->hasFiles($repositoryName))
         {
             $item['files'] = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryItem['accessHash'], 'path' => '' ));
         }

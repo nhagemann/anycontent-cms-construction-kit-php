@@ -164,8 +164,8 @@ class Controller
 
         // set workspace, language and timeshift of repository object to make sure content views are accessing the right content dimensions
 
-        $repository->setWorkspace($app['context']->getCurrentWorkspace());
-        $repository->setLanguage($app['context']->getCurrentLanguage());
+        $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+        $repository->selectLanguage($app['context']->getCurrentLanguage());
         $repository->setTimeshift($app['context']->getCurrentTimeShift());
 
 

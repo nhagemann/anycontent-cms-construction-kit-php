@@ -45,10 +45,15 @@ class Importer
 
         $repository->selectContentType($contentTypeName);
 
+
         // Select view and fallback if necessary
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $viewDefinition        = $contentTypeDefinition->getExchangeViewDefinition($viewName);
         $viewName              = $viewDefinition->getName();
+
+        $repository->selectWorkspace($workspace);
+        $repository->selectLanguage($language);
+        $repository->selectView($viewName);
 
         $data = json_decode($data, true);
 
@@ -57,7 +62,7 @@ class Importer
             $this->writeln('Error parsing JSON data.');
             $this->error = true;
 
-            return;
+            return -1;
         }
 
         if (array_key_exists('records', $data))
@@ -96,7 +101,7 @@ class Importer
             {
                 $this->writeln('Starting bulk import');
                 $this->writeln('');
-                $msg = $this->saveRecords($repository, $workspace, $viewName, $language);
+                $msg = $this->saveRecords($repository);
                 $this->writeln($msg);
                 $this->writeln('');
             }
@@ -119,6 +124,10 @@ class Importer
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $viewDefinition        = $contentTypeDefinition->getExchangeViewDefinition($viewName);
         $viewName              = $viewDefinition->getName();
+
+        $repository->selectWorkspace($workspace);
+        $repository->selectLanguage($language);
+        $repository->selectView($viewName);
 
         $objPHPExcel = \PHPExcel_IOFactory::load($filename);
 
@@ -225,20 +234,20 @@ class Importer
     }
 
 
-    protected function stashRecord(Repository $repository, Record $record, $workspace, $viewName, $language)
+    protected function stashRecord(Repository $repository, Record $record)
     {
 
         $msg = trim('Preparing record ' . $record->getID()) . ' - ' . $record->getName();
 
         if ($this->isNewerRevisionUpdateProtection())
         {
-            if ($this->gotNewerRevision($repository, $record, $workspace, $viewName, $language))
+            if ($this->gotNewerRevision($repository, $record))
             {
                 return 'Skipping record ' . $record->getID() . ' - ' . $record->getName() . (' (Newer Revision)');
             }
         }
 
-        if ($this->isPropertyChangesCheck() == false || $this->hasChanged($repository, $record, $workspace, $viewName, $language))
+        if ($this->isPropertyChangesCheck() == false || $this->hasChanged($repository, $record))
         {
             $this->stash[] = $record;
             $this->count++;
@@ -251,9 +260,9 @@ class Importer
         return $msg;
     }
 
-    protected function saveRecords(Repository $repository, $workspace, $viewName, $language)
+    protected function saveRecords(Repository $repository)
     {
-        $result =$repository->saveRecords($this->stash,$workspace,$viewName,$language);
+        $result =$repository->saveRecords($this->stash);
 
         if ($result)
         {
@@ -271,14 +280,15 @@ class Importer
         }
     }
 
-    protected function hasChanged(Repository $repository, Record $record, $workspace, $viewName, $language)
+    protected function hasChanged(Repository $repository, Record $record)
     {
         if ($record->getID() != null)
         {
-            $records = $this->getRecords($repository, $workspace, $viewName, $language);
+            $records = $this->getRecords($repository);
 
             if (isset ($records[$record->getID()]))
             {
+                /** @var Record $effectiveRecord */
                 $effectiveRecord = $records[$record->getID()];
                 foreach ($record->getProperties() as $property => $value)
                 {
@@ -296,11 +306,11 @@ class Importer
     }
 
 
-    protected function gotNewerRevision(Repository $repository, Record $record, $workspace, $viewName, $language)
+    protected function gotNewerRevision(Repository $repository, Record $record)
     {
         if ($record->getID() != null && $record->getRevision() != null)
         {
-            $records = $this->getRecords($repository, $workspace, $viewName, $language);
+            $records = $this->getRecords($repository);
 
             if (isset ($records[$record->getID()]))
             {
@@ -342,14 +352,14 @@ class Importer
     /**
      * @return null
      */
-    protected function getRecords(Repository $repository, $workspace, $viewName, $language)
+    protected function getRecords(Repository $repository)
     {
         if (!$this->records)
         {
             $this->writeln('');
             $this->writeln('Start fetching current effective records');
             $this->writeln('');
-            $this->records = $repository->getRecords($workspace, $viewName, $language);
+            $this->records = $repository->getRecords();
             if ($this->records===false)
             {
                 throw new \Exception('Error fetching current effective records.');

@@ -17,36 +17,38 @@ class RepositoryManager
      */
     protected $repositories = [ ];
 
+    protected $repositoryAccessHashes = [ ];
+
     protected $contentTypeAccessHashes = [ ];
 
 
-    public function addRepository(Repository $repository, $shortcut = null)
+    public function addRepository($name, Repository $repository, $title = null)
     {
-        $repository = new RepositoryWrapper($repository->getReadConnection());
+        $repository->setName($name);
+        $repository->setTitle($title);
 
-        // TODO: Temp ID !!
-        $repository->setId($shortcut);
-        $repository->setShortcut($shortcut);
+        $this->repositories[$repository->getName()] = $repository;
 
-        $this->repositories[$repository->getId()] = $repository;
 
         foreach ($repository->getContentTypeNames() as $contentTypeName)
         {
-            $this->contentTypeAccessHashes[$this->getContentTypeAccessHash($repository, $contentTypeName)] = [ 'repositoryId' => $repository->getId(), 'contentTypeName' => $contentTypeName ];
+            $this->contentTypeAccessHashes[$this->getContentTypeAccessHash($repository, $contentTypeName)] = [ 'repositoryId' => $repository->getName(), 'contentTypeName' => $contentTypeName ];
         }
+
+        $this->repositoryAccessHashes[$this->getRepositoryAccessHash($repository)] = [ 'repositoryId' => $repository->getName() ];
 
     }
 
 
     public function getRepositoryAccessHash(Repository $repository)
     {
-        return md5($repository->getId());
+        return md5($repository->getName());
     }
 
 
     public function getContentTypeAccessHash(Repository $repository, $contentTypeName)
     {
-        return md5($repository->getId() . '-contentType-' . $contentTypeName);
+        return md5($repository->getName() . '-contentType-' . $contentTypeName);
     }
 
 
@@ -80,9 +82,10 @@ class RepositoryManager
             $title = $repository->getTitle();
             if ($title == '')
             {
-                $title = $repository->getId();
+                $title = $repository->getName();
             }
-            $repositories[$repository->getId()] = array( 'title' => $title, 'accessHash' => $this->getRepositoryAccessHash($repository), 'shortcut' => $repository->getShortcut() );
+            //$repositories[$repository->getName()] = array( 'title' => $title, 'accessHash' => $this->getRepositoryAccessHash($repository), 'shortcut' => $repository->getShortcut() );
+            $repositories[$repository->getName()] = array( 'title' => $title, 'accessHash' => $this->getRepositoryAccessHash($repository) );
         }
 
         return $repositories;
@@ -135,6 +138,19 @@ class RepositoryManager
         if (array_key_exists($id, $this->repositories))
         {
             return $this->repositories[$id];
+        }
+
+        return false;
+    }
+
+
+    public function getRepositoryByRepositoryAccessHash($hash)
+    {
+        if (array_key_exists($hash, $this->repositoryAccessHashes))
+        {
+            $id = $this->repositoryAccessHashes[$hash]['repositoryId'];
+
+            return $this->getRepositoryById($id);
         }
 
         return false;

@@ -24,8 +24,12 @@ class Exporter
         $this->writeln('Connecting repository');
         $this->writeln('');
 
-        /** @var Record $record */
-        $records = $repository->getRecords($workspace, $viewName, $language, 'id', array(), null, 1, null, null, 0);
+        $repository->selectWorkspace($workspace);
+        $repository->selectLanguage($language);
+        $repository->selectView($viewName);
+
+        /** @var Record[] $records */
+        $records = $repository->getRecords('',1,null,'id');
 
         if ($records!==false)
         {
@@ -68,8 +72,12 @@ class Exporter
         $this->writeln('Connecting repository');
         $this->writeln('');
 
-        /** @var Record $record */
-        $records = $repository->getRecords($workspace, $viewName, $language, 'id', array(), null, 1, null, null, 0);
+        $repository->selectWorkspace($workspace);
+        $repository->selectLanguage($language);
+        $repository->selectView($viewName);
+
+        /** @var Record[] $records */
+        $records = $repository->getRecords('',1,null,'id');
 
         if ($records!==false)
         {

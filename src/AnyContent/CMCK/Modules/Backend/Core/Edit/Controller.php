@@ -42,7 +42,7 @@ class Controller
         if ($repository)
         {
             $vars['repository']           = $repository;
-            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
+            $repositoryAccessHash         = $app['repos']->getRepositoryAccessHash($repository);
             $vars['links']['repository']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
             $vars['links']['listRecords'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
@@ -125,7 +125,7 @@ class Controller
         {
 
             $vars['repository']           = $repository;
-            $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
+            $repositoryAccessHash         = $app['repos']->getRepositoryAccessHash($repository);
             $vars['links']['repository']  = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
             $vars['links']['listRecords'] = $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => 1, 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() ));
 
@@ -144,8 +144,13 @@ class Controller
                 $app['context']->setCurrentLanguage($language);
             }
 
+            $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+            $repository->selectLanguage($app['context']->getCurrentLanguage());
+            $repository->setTimeShift($app['context']->getCurrentTimeShift());
+            $repository->selectView('default');
+
             /** @var Record $record */
-            $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+            $record = $repository->getRecord($recordId);
 
             //$app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('edit.js');
@@ -212,7 +217,7 @@ class Controller
 
                 // TODO: Attributes ??
                 //$vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
-                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), []);
+                $vars['form'] = $app['form']->renderFormElements('form_edit', $viewDefinition->getFormElementDefinitions(), $record->getProperties(), [ ]);
 
                 return $app->renderPage('editrecord.twig', $vars);
             }
@@ -281,20 +286,28 @@ class Controller
             $app['context']->setCurrentWorkspace($hidden['workspace']);
             $app['context']->setCurrentLanguage($hidden['language']);
 
+            $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+            $repository->selectLanguage($app['context']->getCurrentLanguage());
+            $repository->setTimeShift($app['context']->getCurrentTimeShift());
+            $repository->selectView('default');
+
             if ($recordId)
             {
                 /** @var Record $record */
-                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                //$record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                $record = $repository->getRecord($recordId);
 
                 if (!$record) // if we don't have a record with the given id (there never was one, or it has been deleted), create a new one with the given id.
                 {
-                    $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+                    $record = $repository->createRecord('New Record');
+                    //$record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
                     $record->setId($recordId);
                 }
             }
             else
             {
-                $record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+                $record = $repository->createRecord('New Record');
+                //$record = new Record($repository->getContentTypeDefinition(), 'New Record', 'default', $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
             }
 
             if ($record)
@@ -314,7 +327,7 @@ class Controller
 
                 //TODO Attributes ??
                 //$values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), $record->getAttributes());
-                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), []);
+                $values = $app['form']->extractFormElementValuesFromPostRequest($request, $viewDefinition->getFormElementDefinitions(), $record->getProperties(), [ ]);
 
                 foreach ($values as $property => $value)
                 {
@@ -332,10 +345,13 @@ class Controller
                     {
                         if ($formElementDefinition->isUnique() && $record->getProperty($formElementDefinition->getName()) != '')
                         {
-                            $filter = new ContentFilter($contentTypeDefinition);
-                            $filter->addCondition($formElementDefinition->getName(), '=', $record->getProperty($formElementDefinition->getName()));
+                            //$filter = new ContentFilter($contentTypeDefinition);
+                            //$filter->addCondition($formElementDefinition->getName(), '=', $record->getProperty($formElementDefinition->getName()));
 
-                            $records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 2, 1, $filter);
+                            $filter = $formElementDefinition->getName() . ' = ' . $record->getProperty($formElementDefinition->getName());
+
+                            //$records = $repository->getRecords($app['context']->getCurrentWorkspace(), $viewDefinition->getName(), $app['context']->getCurrentLanguage(), 'id', array(), 2, 1, $filter);
+                            $records = $repository->getRecords($filter);
 
                             if (count($records) > 1)
                             {
@@ -363,7 +379,7 @@ class Controller
 
                 if ($save)
                 {
-                    $recordId = $repository->saveRecord($record, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage());
+                    $recordId = $repository->saveRecord($record);
 
                     $app['context']->resetTimeShift();
                     if ($recordId)
@@ -504,8 +520,14 @@ class Controller
                     $app['context']->setCurrentLanguage($language);
                 }
 
+                $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+                $repository->selectLanguage($app['context']->getCurrentLanguage());
+                $repository->setTimeShift($app['context']->getCurrentTimeShift());
+                $repository->selectView('default');
+
                 /** @var Record $record */
-                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                //$record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                $record = $repository->getRecord($recordId);
 
                 if ($record)
                 {
@@ -518,7 +540,10 @@ class Controller
                     $vars['definition'] = $contentTypeDefinition;
 
                     $records = array();
-                    foreach ($repository->getRecords($app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage()) as $record)
+
+                    $repository->setTimeShift(0);
+
+                    foreach ($repository->getRecords() as $record)
                     {
                         $records[$record->getID()] = '#' . $record->getID() . ' ' . $record->getName();
                     }
@@ -559,30 +584,35 @@ class Controller
                     $app['context']->setCurrentLanguage($language);
                 }
 
+                $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+                $repository->selectLanguage($app['context']->getCurrentLanguage());
+                $repository->setTimeShift($app['context']->getCurrentTimeShift());
+                $repository->selectView($contentTypeDefinition->getExchangeViewDefinition()->getName());
+
                 /** @var Record $record */
-                $record = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), $contentTypeDefinition
-                    ->getExchangeViewDefinition()
-                    ->getName(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                $record = $repository->getRecord($recordId);
 
                 if ($record)
                 {
                     $record->setID((int)$request->get('id'));
-                    $workspace = $app['context']->getCurrentWorkspace();
+
                     if ($request->request->has('target_workspace'))
                     {
                         $workspace = $request->get('target_workspace');
                         $app['context']->setCurrentWorkspace($workspace);
                     }
-                    $language = $app['context']->getCurrentLanguage();
+
                     if ($request->request->has('target_language'))
                     {
                         $language = $request->get('target_language');
                         $app['context']->setCurrentLanguage($language);
                     }
 
-                    $recordId = $repository->saveRecord($record, $workspace, $contentTypeDefinition
-                        ->getExchangeViewDefinition()
-                        ->getName(), $language);
+                    $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+                    $repository->selectLanguage($app['context']->getCurrentLanguage());
+                    $repository->setTimeShift(0);
+
+                    $recordId = $repository->saveRecord($record);
                     $app['context']->resetTimeShift();
 
                     $app['context']->addSuccessMessage('Record ' . $recordId . ' transfered.');

@@ -31,7 +31,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Glossary');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\CustomList');
 
 
-$app->registerModule('AnyContent\Dev');
+//$app->registerModule('AnyContent\Dev');
 
 // Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
 
@@ -45,3 +45,10 @@ if (!function_exists('apc_exists'))
         return $result;
     }
 }
+
+
+\KVMLogger\KVMLoggerFactory::createWithKLogger('../');
+
+\KVMLogger\KVMLoggerFactory::instance()->logRequest();
+\KVMLogger\KVMLoggerFactory::instance()->enablePHPExceptionLogging();
+\KVMLogger\KVMLoggerFactory::instance()->enablePHPErrorLogging();
