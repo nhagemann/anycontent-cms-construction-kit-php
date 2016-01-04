@@ -40,11 +40,10 @@ class Importer
     {
         $this->count   = 0;
         $this->records = null;
-        $this->stash = array();
+        $this->stash   = array();
         $this->error   = false;
 
         $repository->selectContentType($contentTypeName);
-
 
         // Select view and fallback if necessary
         $contentTypeDefinition = $repository->getContentTypeDefinition();
@@ -97,12 +96,12 @@ class Importer
             $this->writeln('Found ' . $this->count . ' records to import');
             $this->writeln('');
 
-            if ($this->count !=0)
+            if ($this->count != 0)
             {
                 $this->writeln('Starting bulk import');
                 $this->writeln('');
-                $msg = $this->saveRecords($repository);
-                $this->writeln($msg);
+                $this->saveRecords($repository);
+                $this->writeln('');
                 $this->writeln('');
             }
         }
@@ -115,7 +114,7 @@ class Importer
     {
         $this->count   = 0;
         $this->records = null;
-        $this->stash = array();
+        $this->stash   = array();
         $this->error   = false;
 
         $repository->selectContentType($contentTypeName);
@@ -153,14 +152,15 @@ class Importer
                 $value = trim($objWorksheet->getCellByColumnAndRow($i, 1)->getValue());
                 if ($value != '')
                 {
-                    if (substr($value,0,1)=='.')
+                    if (substr($value, 0, 1) == '.')
                     {
                         if ($value == '.id')
                         {
                             $idColumnIndex = $i;
                         }
                     }
-                    else{
+                    else
+                    {
                         $value = Util::generateValidIdentifier($value);
                         if ($contentTypeDefinition->hasProperty($value, $viewName))
                         {
@@ -169,14 +169,13 @@ class Importer
                         }
                     }
 
-
                 }
 
             }
 
             $this->writeln('');
 
-            if (count($propertiesColumnIndices)!=0)
+            if (count($propertiesColumnIndices) != 0)
             {
 
                 for ($row = 2; $row <= $highestRow; ++$row)
@@ -210,16 +209,17 @@ class Importer
                 $this->writeln('Found ' . $this->count . ' records to import');
                 $this->writeln('');
 
-                if ($this->count !=0)
+                if ($this->count != 0)
                 {
                     $this->writeln('Starting bulk import');
                     $this->writeln('');
-                    $msg = $this->saveRecords($repository, $workspace, $viewName, $language);
-                    $this->writeln($msg);
+                    $this->saveRecords($repository);
+                    $this->writeln('');
                     $this->writeln('');
                 }
             }
-            else{
+            else
+            {
                 $this->writeln('Excel does not contain matching property columns.');
             }
 
@@ -260,25 +260,27 @@ class Importer
         return $msg;
     }
 
+
     protected function saveRecords(Repository $repository)
     {
-        $result =$repository->saveRecords($this->stash);
+        $result = $repository->saveRecords($this->stash);
 
         if ($result)
         {
             foreach ($result as $k => $v)
             {
-                if ($v!=null)
+                if ($v != null)
                 {
-                    $this->writeln('Imported record number ' . ($k+1) . '. Id ' . $v.' has been asigned.');
+                    $this->writeln('Imported record number ' . ($k + 1) . '. Id ' . $v . ' has been asigned.');
                 }
                 else
                 {
-                    $this->writeln('Import of record number '. ($k+1) .' failed.');
+                    $this->writeln('Import of record number ' . ($k + 1) . ' failed.');
                 }
             }
         }
     }
+
 
     protected function hasChanged(Repository $repository, Record $record)
     {
@@ -332,9 +334,11 @@ class Importer
     protected function deleteEffectiveRecords(Repository $repository, $workspace, $viewName, $language)
     {
         $this->writeln('');
-        $this->writeln('Deleting all records in workspace '.$workspace. ' with language '.$language);
+        $this->writeln('Deleting all records in workspace ' . $repository->getCurrentDataDimensions()
+                                                                         ->getWorkspace() . ' with language ' . $repository->getCurrentDataDimensions()
+                                                                                                                           ->getLanguage());
 
-        $repository->deleteRecords($workspace,$language);
+        $repository->deleteAllRecords();
 
         $this->records = null;
     }
@@ -360,7 +364,7 @@ class Importer
             $this->writeln('Start fetching current effective records');
             $this->writeln('');
             $this->records = $repository->getRecords();
-            if ($this->records===false)
+            if ($this->records === false)
             {
                 throw new \Exception('Error fetching current effective records.');
             }
