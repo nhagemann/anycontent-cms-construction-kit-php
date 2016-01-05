@@ -36,7 +36,7 @@ class ContentViewDefault extends BaseContentView
         // reset sorting order and search query if listing button has been pressed inside a listing
         if ($this->getRequest()->get('_route') == 'listRecordsReset')
         {
-            $this->getContext()->setCurrentSortingOrder('name', false);
+            $this->getContext()->setCurrentSortingOrder('.info.lastchange.timestamp-', false);
             $this->getContext()->setCurrentSearchTerm('');
         }
 
@@ -72,41 +72,23 @@ class ContentViewDefault extends BaseContentView
 
 
     /**
-     * temp converting function, as long as the new .attribute syntax is not supported from repository
+     * backwards compatible converting of sorting instructions
      */
     public function getSortingOrder()
     {
-        //TODO: Finish
-        return 'name';
-
         $sorting = $this->getContext()->getCurrentSortingOrder();
-        if (strpos($sorting, '.') === 0)
+
+        $map = [ '.lastchange' => '.info.lastchange.timestamp', '.lastchange+' => '.info.lastchange.timestamp', '.lastchange-' => '.info.lastchange.timestamp-',
+                 'change'      => '.info.lastchange.timestamp', 'change+' => '.info.lastchange.timestamp', 'change-' => '.info.lastchange.timestamp-',
+                 'pos'         => 'position', 'pos+' => 'position', 'pos-' => 'position-'
+        ];
+
+        if (array_key_exists($sorting, $map))
         {
-            $sorting = substr($sorting, 1);
-
-            $map = [ 'lastchange' => 'change', 'lastchange-' => 'change-', 'position' => 'pos', 'position-' => 'pos' ];
-
-            if (array_key_exists($sorting, $map))
-            {
-                $sorting = $map[$sorting];
-            }
-
-            $valid = [ 'id', 'subtype', 'name', 'change', 'status', 'pos', 'creation' ];
-
-            if (in_array(trim($sorting, '-'), $valid))
-            {
-                return array( $sorting, null );
-            }
-
-            return array( 'name', null );
-        }
-        if ($this->getContentTypeDefinition()->hasProperty(trim($sorting, '-')))
-        {
-            return array( 'property', array( $sorting, 'name' ) );
+            $sorting = $map[$sorting];
         }
 
-        return array( 'name', null );
-
+        return $sorting;
     }
 
 
@@ -252,7 +234,6 @@ class ContentViewDefault extends BaseContentView
         //->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()->getCurrentTimeShift());
 
         $count = $repository->countRecords($filter);
-
 
         return $count;
     }

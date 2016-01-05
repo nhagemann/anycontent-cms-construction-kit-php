@@ -16,7 +16,6 @@
         "silex/silex": "1.2.*",
         "twig/twig": "1.x",
         "nitra/php-min": "dev-master",
-        "nhagemann/cmdl-parser-php": "0.13.*",
         "phpoffice/phpexcel": "1.8.*",
         "symfony/filesystem": "2.5.*",
         "symfony/yaml": "2.5.*",
@@ -41,5 +40,6 @@
             "AnyContent": "src/"
         }
     },
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

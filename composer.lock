@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cf5d4f7c0e690f5d9c551daa910b8bbf",
+    "hash": "b3bf1f369ba62e3ece7b264ccf1f3f05",
     "packages": [
         {
             "name": "cpliakas/git-wrapper",
@@ -507,12 +507,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-php.git",
-                "reference": "24dd0228ab1cdc4882d6ad5e52d09e48cc5ae450"
+                "reference": "039344967fd181cc734cfc12172987c5ebe1cf9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/24dd0228ab1cdc4882d6ad5e52d09e48cc5ae450",
-                "reference": "24dd0228ab1cdc4882d6ad5e52d09e48cc5ae450",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/039344967fd181cc734cfc12172987c5ebe1cf9b",
+                "reference": "039344967fd181cc734cfc12172987c5ebe1cf9b",
                 "shasum": ""
             },
             "require": {
@@ -521,7 +521,7 @@
                 "guzzlehttp/guzzle": "5.*",
                 "katzgrau/klogger": "1.2.*",
                 "ktamas77/firebase-php": "2.*",
-                "nhagemann/cmdl-parser-php": "0.13.*",
+                "nhagemann/cmdl-parser-php": "2.0.x-dev",
                 "php": ">=5.4",
                 "psr/log": "1.*",
                 "symfony/filesystem": "2.*",
@@ -553,20 +553,20 @@
                 "source": "https://github.com/nhagemann/anycontent-php/tree/master",
                 "issues": "https://github.com/nhagemann/anycontent-php/issues"
             },
-            "time": "2016-01-04 18:47:20"
+            "time": "2016-01-05 17:42:08"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
-            "version": "0.13.1",
+            "version": "2.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "55154923f17efd81a4b6dee7ded35a9955d89e2f"
+                "reference": "0974af910410f4aa858eb1ee17bea63cab3d8c00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/55154923f17efd81a4b6dee7ded35a9955d89e2f",
-                "reference": "55154923f17efd81a4b6dee7ded35a9955d89e2f",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/0974af910410f4aa858eb1ee17bea63cab3d8c00",
+                "reference": "0974af910410f4aa858eb1ee17bea63cab3d8c00",
                 "shasum": ""
             },
             "require": {
@@ -594,7 +594,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2015-10-06 16:06:49"
+            "time": "2016-01-05 17:38:48"
         },
         {
             "name": "nitra/php-min",
@@ -1967,7 +1967,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "nitra/php-min": 20,
         "nhagemann/anycontent-php": 20
