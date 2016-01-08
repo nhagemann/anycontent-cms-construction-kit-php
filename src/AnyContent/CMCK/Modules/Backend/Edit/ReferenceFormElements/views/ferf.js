@@ -1,5 +1,6 @@
 (function ($) {
 
+
     $('.formelement-reference select').on('change', function () {
         value = $(this).val();
         button = $('#' + ($(this).attr('id')) + '_edit_button');

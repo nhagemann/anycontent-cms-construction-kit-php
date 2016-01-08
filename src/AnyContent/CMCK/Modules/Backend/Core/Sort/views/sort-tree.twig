@@ -27,16 +27,16 @@
 
                         {% set level = 1 %}
                         {% for record in records_left %}
-                        {% if record.levelWithinSortedTree > level %}
+                        {% if record.level > level %}
                         <ol>
                             {% endif %}
-                            {% if record.levelWithinSortedTree < level %}
+                            {% if record.level < level %}
                 </li>
                 {% for i in 1 .. (level-record.level) %}
             </ol>
             {% endfor %}
             {% endif %}
-            {% if record.levelWithinSortedTree < level %}
+            {% if record.level < level %}
                 </li>
             {% endif %}
 
@@ -49,7 +49,7 @@
                             <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span></div>
 
 
-                {% set level = record.levelWithinSortedTree %}
+                {% set level = record.level %}
                 {% endfor %}
             </li>
             <!--<?php while ($level > 1): ?>-->

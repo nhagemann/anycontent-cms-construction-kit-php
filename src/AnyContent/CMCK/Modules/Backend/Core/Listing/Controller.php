@@ -54,6 +54,13 @@ class Controller
             $app['context']->setCurrentLanguage($language);
         }
 
+        // set workspace, language and timeshift of repository object to make sure content views are accessing the right content dimensions
+
+        $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+        $repository->selectLanguage($app['context']->getCurrentLanguage());
+        $repository->setTimeshift($app['context']->getCurrentTimeShift());
+
+
         // Jump to record if existing id has been entered into the search field
 
         if ($request->query->has('q'))
@@ -161,13 +168,6 @@ class Controller
             $buttons[500] = array( 'label' => 'Import Records', 'url' => $app['url_generator']->generate('importRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 'glyphicon' => 'glyphicon-cloud-upload', 'id' => 'listing_button_import' );
         }
         $vars['buttons'] = $app['menus']->renderButtonGroup($buttons);
-
-        // set workspace, language and timeshift of repository object to make sure content views are accessing the right content dimensions
-
-        $repository->selectWorkspace($app['context']->getCurrentWorkspace());
-        $repository->selectLanguage($app['context']->getCurrentLanguage());
-        $repository->setTimeshift($app['context']->getCurrentTimeShift());
-
 
         $vars = $currentContentView->apply($vars);
 

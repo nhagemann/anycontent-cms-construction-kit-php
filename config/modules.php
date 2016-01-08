@@ -49,6 +49,6 @@ if (!function_exists('apc_exists'))
 
 \KVMLogger\KVMLoggerFactory::createWithKLogger('../');
 
-\KVMLogger\KVMLoggerFactory::instance()->logRequest();
-\KVMLogger\KVMLoggerFactory::instance()->enablePHPExceptionLogging();
-\KVMLogger\KVMLoggerFactory::instance()->enablePHPErrorLogging();
+//\KVMLogger\KVMLoggerFactory::instance()->logRequest();
+//\KVMLogger\KVMLoggerFactory::instance()->enablePHPExceptionLogging();
+//\KVMLogger\KVMLoggerFactory::instance()->enablePHPErrorLogging();

@@ -28,8 +28,6 @@ class Controller
         $repositoryAccessHash        = $app['repos']->getRepositoryAccessHash($repository);
         $vars['links']['repository'] = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryAccessHash ));
 
-
-
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
         $vars['definition'] = $contentTypeDefinition;
@@ -51,28 +49,14 @@ class Controller
         $vars['links']['sort'] = $app['url_generator']->generate('postSortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash ));
 
 
-        //$records       = self::getRecords($app, $repository, $contentTypeAccessHash, 'pos');
-        //TODO Adjust
-        $records = $repository->getRecords($app['context']->getCurrentWorkspace(), 'default',$app['context']->getCurrentLanguage(), 'pos', null,null,1, null, null, $app['context']->getCurrentTimeShift());
-        $records_left  = array();
-        $records_right = array();
+        // set workspace, language and timeshift of repository object to make sure content views are accessing the right content dimensions
 
-        /** @var Record $record */
-        foreach ($records as $record)
-        {
+        $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+        $repository->selectLanguage($app['context']->getCurrentLanguage());
+        $repository->setTimeshift($app['context']->getCurrentTimeShift());
 
-            if ($record->getParentRecordID() !== null)
-            {
-                $records_left[] = $record;
-            }
-            else
-            {
-                $records_right[] = $record;
-            }
-        }
-
-        $vars['records_left']  = $records_left;
-        $vars['records_right'] = $records_right;
+        $vars['records_left']  = $repository->getSortedRecords(0);
+        $vars['records_right'] = array_diff_key($repository->getRecords(),$vars['records_left']);
 
         return $app->renderPage('sort-tree.twig', $vars);
     }
@@ -87,16 +71,27 @@ class Controller
 
         $contentTypeDefinition = $repository->getContentTypeDefinition();
         $app['context']->setCurrentContentType($contentTypeDefinition);
-
         $app['context']->setCurrentWorkspace($hidden['workspace']);
         $app['context']->setCurrentLanguage($hidden['language']);
+
+        // set workspace, language and timeshift of repository object to make sure content views are accessing the right content dimensions
+
+        $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+        $repository->selectLanguage($app['context']->getCurrentLanguage());
+        $repository->setTimeshift($app['context']->getCurrentTimeShift());
 
         if ($request->request->has('list'))
         {
             $app['context']->resetTimeShift();
-            $list = json_decode($request->get('list'), true);
 
-            $result = $repository->sortRecords($list, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage());
+            $list = [];
+
+            foreach (json_decode($request->get('list'), true) as $item)
+            {
+                $list[$item['id']]=$item['parent_id'];
+            }
+
+            $repository->sortRecords($list);
 
             return new RedirectResponse($app['url_generator']->generate('sortRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash )), 303);
         }

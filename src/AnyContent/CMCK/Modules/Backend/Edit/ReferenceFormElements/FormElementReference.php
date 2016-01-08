@@ -1,6 +1,7 @@
 <?php
 namespace AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements;
 
+use AnyContent\Client\DataDimensions;
 use AnyContent\Client\Repository;
 use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 
@@ -22,16 +23,23 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
         {
             $contentTypeDefinition = $repository->getContentTypeDefinition();
 
-            $workspace = $this->definition->getWorkspace();
-            $viewName  = $contentTypeDefinition->getListViewDefinition()->getName();
-            $language  = $this->definition->getLanguage();
-            $order     = $this->definition->getOrder();
-            $timeshift = $this->definition->getTimeShift();
+            $currentDataDimensions = $repository->getCurrentDataDimensions();
 
-            $repository->stashDimensions()->setWorkspace($workspace)->setViewName($viewName)->setLanguage($language)
-                       ->setOrder($order)->setTimeshift($timeshift);
+            $workspace =$this->definition->getWorkspace();
+            $language = $this->definition->getLanguage();
 
-            $records = $repository->getRecordsAsIDNameList();
+            $referenceDataDimensions = new DataDimensions();
+            $referenceDataDimensions->setWorkspace($workspace);
+            $referenceDataDimensions->setLanguage($language);
+            $referenceDataDimensions->setViewName($contentTypeDefinition->getListViewDefinition()->getName());
+            $referenceDataDimensions->setTimeShift($this->definition->getTimeShift());
+
+
+            $records=[];
+            foreach ($repository->getRecords('',1,null,$this->definition->getOrder()) as $record)
+            {
+                $records[$record->getId()]=$record->getName();
+            }
 
             /** @var RepositoryManager $repositoryManager */
             $repositoryManager = $app['repos'];
@@ -52,7 +60,7 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
 
             $this->vars['editUrlPattern'] = $editUrlPattern;
 
-            $repository->unStashDimensions();
+            $repository->setDataDimensions($currentDataDimensions);
 
             foreach ($records as $id => $name)
             {
