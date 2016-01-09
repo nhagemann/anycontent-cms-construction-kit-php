@@ -31,7 +31,6 @@ class MenuManager
 
     public function renderMainMenu()
     {
-        $this->layout->addCssFile('menu.css');
 
         $cacheToken = 'cmck_menu_main_' . $this->session->getId();
 

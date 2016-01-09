@@ -13,9 +13,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app->addTemplatesFolders(__DIR__ . '/views/');
         $app->get('/content/sort/{contentTypeAccessHash}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Sort\Controller::sortRecords')
-            ->bind('sortRecords')->value('workspace',null)->value('language',null);
+            ->bind('sortRecords')->value('workspace', null)->value('language', null);
         $app->post('/content/sort/{contentTypeAccessHash}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Sort\Controller::postSortRecords')
-            ->bind('postSortRecords')->value('workspace',null)->value('language',null);
+            ->bind('postSortRecords')->value('workspace', null)->value('language', null);
 
     }
 
@@ -23,6 +23,5 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     public function run(Application $app)
     {
         $app['layout']->addJsFile('sort.js');
-        $app['layout']->addCssFile('sort.css');
     }
 }

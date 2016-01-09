@@ -88,7 +88,6 @@ class FormElementSourceCode extends \AnyContent\CMCK\Modules\Backend\Edit\TextFo
         $this->addCodeMirrorModeJavaScriptFiles($layout);
 
         $layout->addJsFile('feso.js');
-        $layout->addCssFile('feso.css');
 
         return $this->twig->render('formelement-sourcecode.twig', $this->vars);
 

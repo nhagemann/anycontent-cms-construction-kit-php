@@ -110,7 +110,6 @@ class LayoutManager
     {
         $app = $this->getApplication();
 
-        $this->addCssFile('layout.css');
         $this->addJsFile('messages.js');
 
         $vars = array_merge($this->vars, $vars);

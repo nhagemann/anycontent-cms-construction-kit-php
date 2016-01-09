@@ -20,7 +20,6 @@ class Controller
 
     public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode = 'page')
     {
-        $app['layout']->addCssFile('files');
         $app['layout']->addJsFile('files');
 
         $vars         = array();

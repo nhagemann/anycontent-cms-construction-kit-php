@@ -14,8 +14,6 @@ class FormElementFile extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
     {
         $layout->addJsFile('fe-file.js');
 
-        $layout->addCssFile('fe-file.css');
-
         //$this->vars['types'] = $this->definition->getFileTypes();
 
         $info = pathinfo($this->getValue());

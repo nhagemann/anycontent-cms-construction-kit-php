@@ -70,7 +70,6 @@ class FormElementTable extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEl
             $this->vars['rows']  = $rows;
             $this->vars['count'] = count($rows);
 
-            $this->app['layout']->addCssFile('formelement-table.css');
             $this->app['layout']->addJsFile('formelement-table.js');
 
             return $this->twig->render('formelement-table.twig', $this->vars);

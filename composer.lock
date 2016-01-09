@@ -507,12 +507,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-php.git",
-                "reference": "361f054aa3045f04b4d2c7e03ec02886dce3c9f4"
+                "reference": "824e60c66ae4e6ce71634e9c87f82385386f901b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/361f054aa3045f04b4d2c7e03ec02886dce3c9f4",
-                "reference": "361f054aa3045f04b4d2c7e03ec02886dce3c9f4",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/824e60c66ae4e6ce71634e9c87f82385386f901b",
+                "reference": "824e60c66ae4e6ce71634e9c87f82385386f901b",
                 "shasum": ""
             },
             "require": {
@@ -553,7 +553,7 @@
                 "source": "https://github.com/nhagemann/anycontent-php/tree/master",
                 "issues": "https://github.com/nhagemann/anycontent-php/issues"
             },
-            "time": "2016-01-08 09:40:14"
+            "time": "2016-01-08 13:00:43"
         },
         {
             "name": "nhagemann/cmdl-parser-php",

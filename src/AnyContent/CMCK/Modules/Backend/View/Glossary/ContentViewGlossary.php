@@ -27,7 +27,6 @@ class ContentViewGlossary extends BaseContentView
 
     public function apply($vars)
     {
-        $this->getLayout()->addCssFile('cvgl.css');
 
         $glossary = array();
 

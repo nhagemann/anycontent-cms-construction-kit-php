@@ -14,7 +14,6 @@ class FormElementRichtext extends \AnyContent\CMCK\Modules\Backend\Edit\TextForm
         //$layout->addJsLinkToHead('/js/tinymce/tinymce.min.js');
 
         $layout->addJsFile('feri.js');
-        $layout->addCssFile('feri.css');
 
         return $this->twig->render('formelement-richtext.twig', $this->vars);
     }

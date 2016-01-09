@@ -26,8 +26,6 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
         $app['form']->registerFormElement('tab-next', 'AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements\FormElementTabNext');
         $app['form']->registerFormElement('tab-end', 'AnyContent\CMCK\Modules\Backend\Edit\PartitionFormElements\FormElementTabEnd');
 
-        $app['layout']->addCssFile('formelement-tab.css');
-        $app['layout']->addCssFile('formelement-section.css');
     }
 
 }
