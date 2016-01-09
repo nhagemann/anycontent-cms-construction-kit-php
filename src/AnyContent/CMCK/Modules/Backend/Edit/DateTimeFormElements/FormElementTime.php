@@ -10,7 +10,6 @@ class FormElementTime extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
 
     public function render($layout)
     {
-        $layout->addJsFile('fe-datetime.js');
 
         $this->vars['hour']   = '';
         $this->vars['minute'] = '';

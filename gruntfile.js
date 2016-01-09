@@ -5,9 +5,13 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         concat: {
-            dist: {
-                src: ['src/AnyContent/CMCK/Modules/Backend/*/*/grunt/*.css','src/AnyContent/CMCK/Modules/Backend/*/*/*/grunt/*.css'],
+            dist1: {
+                src: ['src/AnyContent/CMCK/Modules/Backend/*/*/grunt/*.css', 'src/AnyContent/CMCK/Modules/Backend/*/*/*/grunt/*.css'],
                 dest: 'tmp/concat.css'
+            },
+            dist2: {
+                src: ['src/AnyContent/CMCK/Modules/Backend/*/*/grunt/*.js', 'src/AnyContent/CMCK/Modules/Backend/*/*/*/grunt/*.js'],
+                dest: 'tmp/concat.js'
             }
         },
 
@@ -16,8 +20,8 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: 'tmp/concat.css',
-                dest: 'web/css/anycontent.css>.min.js'
+                src: 'tmp/concat.js',
+                dest: 'web/js/anycontent.min.js'
             }
         },
 
@@ -35,8 +39,8 @@ module.exports = function (grunt) {
 
         watch: {
             scripts: {
-                files: ['src/AnyContent/CMCK/Modules/Backend/*/*/grunt/*.css','src/AnyContent/CMCK/Modules/Backend/*/*/*/grunt/*.css'],
-                tasks: ['concat'],
+                files: ['src/AnyContent/CMCK/Modules/Backend/*/*/grunt/*.css', 'src/AnyContent/CMCK/Modules/Backend/*/*/*/grunt/*.css', 'src/AnyContent/CMCK/Modules/Backend/*/*/grunt/*.js', 'src/AnyContent/CMCK/Modules/Backend/*/*/*/grunt/*.js'],
+                tasks: ['dist'],
                 options: {
                     spawn: false,
                 },
@@ -59,8 +63,9 @@ module.exports = function (grunt) {
     // Load the plugin that provides the "cssmin" task.
     grunt.loadNpmTasks('grunt-contrib-watch');
 
+    grunt.registerTask('dist', ['concat:dist1', 'concat:dist2', 'cssmin','uglify']);
 
     // Default task(s).
-    grunt.registerTask('default', ['concat','cssmin']);
+    grunt.registerTask('default', ['dist']);
 
 };

@@ -77,6 +77,16 @@ class LayoutManager
         {
             $this->jsFiles[] = $filename;
         }
+
+        $path = APPLICATION_PATH . '/web/js/add/' . $filename;
+
+        if ($this->app['debug'] == true)
+        {
+            $data = $this->app['twig']->render($filename);
+            file_put_contents($path, $data);
+        }
+
+        $this->addJsLinkToEndOfBody('/js/add/' . $filename . '?' . filemtime($path));
     }
 
 
@@ -120,17 +130,7 @@ class LayoutManager
     {
         $app = $this->getApplication();
 
-        $this->addJsFile('messages.js');
-
         $vars = array_merge($this->vars, $vars);
-
-        $jsurl = $app->getRevision() . '/';
-        foreach ($this->jsFiles as $jsFilename)
-        {
-            $jsurl .= pathinfo($jsFilename, PATHINFO_FILENAME) . '/';
-        }
-        $jsurl         = trim($jsurl, '/');
-        $vars['jsurl'] = $jsurl;
 
         $jsheadlinks = '';
         foreach ($this->jsLinks['head'] as $link)

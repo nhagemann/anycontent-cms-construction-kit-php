@@ -8,7 +8,6 @@ $(document).on("cmck", function (e, params) {
             $('.formelement-tooltip').popover({html: true});
             break;
     }
-    ;
 });
 
 

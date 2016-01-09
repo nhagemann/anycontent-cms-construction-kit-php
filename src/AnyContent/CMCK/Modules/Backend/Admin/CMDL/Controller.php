@@ -24,7 +24,6 @@ class Controller
     public static function admin(Application $app)
     {
 
-        //$app['layout']->addJsFile('app.js');
         $app['layout']->addJsFile('admin.js');
 
         $vars = array();
@@ -62,7 +61,6 @@ class Controller
 
         if ($repository)
         {
-            //$app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('admin.js');
 
             $vars['record'] = false;
@@ -95,7 +93,6 @@ class Controller
 
         if ($repository)
         {
-            //$app['layout']->addJsFile('app.js');
             $app['layout']->addJsFile('admin.js');
 
             $vars['record'] = false;

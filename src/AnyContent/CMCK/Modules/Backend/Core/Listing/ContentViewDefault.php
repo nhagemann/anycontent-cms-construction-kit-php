@@ -25,8 +25,6 @@ class ContentViewDefault extends BaseContentView
 
     public function apply($vars)
     {
-        $this->getLayout()->addJsFile('listing.js');
-
         // reset chained save operations (e.g. 'save-insert') to 'save' only upon listing of a content type
         if (key($this->getContext()->getCurrentSaveOperation()) != 'save-list')
         {

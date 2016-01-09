@@ -22,7 +22,7 @@ abstract class Module
 
     public function run(Application $app)
     {
-        $app['layout']->addJsFile('app.js');
+
     }
 
 

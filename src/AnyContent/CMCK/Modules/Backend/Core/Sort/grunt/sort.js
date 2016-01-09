@@ -29,7 +29,7 @@ $(document).ready(function () {
             startDepthCount: -1
         });
 
-        tree = new Array();
+        tree = [];
         $.each(nested, function (k, node) {
 
             if (node.depth > 0) {

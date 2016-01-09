@@ -51,10 +51,6 @@ class Controller
 
             $formManager->setDataTypeDefinition($repository->getContentTypeDefinition());
 
-            //$app['layout']->addJsFile('app.js');
-            $app['layout']->addJsFile('edit.js');
-            $app['layout']->addJsFile('editrecord.js');
-
             $vars['record'] = false;
 
             /** @var ContentTypeDefinition $contentTypeDefinition */
@@ -151,10 +147,6 @@ class Controller
 
             /** @var Record $record */
             $record = $repository->getRecord($recordId);
-
-            //$app['layout']->addJsFile('app.js');
-            $app['layout']->addJsFile('edit.js');
-            $app['layout']->addJsFile('editrecord.js');
 
             $buttons      = array();
             $buttons[100] = array( 'label' => 'List Records', 'url' => $app['url_generator']->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeAccessHash, 'page' => $app['context']->getCurrentListingPage(), 'workspace' => $app['context']->getCurrentWorkspace(), 'language' => $app['context']->getCurrentLanguage() )), 'glyphicon' => 'glyphicon-list' );

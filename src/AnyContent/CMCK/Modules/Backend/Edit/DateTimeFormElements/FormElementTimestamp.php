@@ -10,8 +10,6 @@ class FormElementTimestamp extends \AnyContent\CMCK\Modules\Backend\Core\Edit\Fo
 
     public function render($layout)
     {
-        $layout->addJsFile('fe-datetime.js');
-
         $value = $this->getValue();
 
         // new record, respect the init param

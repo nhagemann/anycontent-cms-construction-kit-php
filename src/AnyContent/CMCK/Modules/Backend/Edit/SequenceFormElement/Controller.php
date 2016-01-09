@@ -111,7 +111,6 @@ class Controller
 
                     }
 
-                    $app['layout']->addJsFile('edit.js');
                     $app['layout']->addJsFile('editsequence.js');
 
 
