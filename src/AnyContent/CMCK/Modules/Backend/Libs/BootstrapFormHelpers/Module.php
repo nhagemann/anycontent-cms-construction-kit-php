@@ -20,7 +20,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     public function run(Application $app)
     {
         $app['layout']->addCssFile('bootstrap-formhelpers.min.css');
-        $app['layout']->addJsFile('bootstrap-formhelpers.js');
+        $app['layout']->addJsFile('bootstrap-formhelpers.min.js');
     }
 
 }

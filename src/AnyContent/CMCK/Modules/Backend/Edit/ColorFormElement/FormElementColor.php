@@ -8,9 +8,9 @@ class FormElementColor extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEl
     public function render($layout)
     {
 
-        $layout->addJsFile('jquery.minicolors.min.js');
+        $layout->addJsFile('jquery.minicolors.min.js'); // from related library module Libs/jQueryMiniColors
         $layout->addJsFile('feco.js');
-        $layout->addCssLinkToHead('/css/jquery-minicolors/jquery.minicolors.css');
+        $layout->addCssLinkToHead('/css/jquery-minicolors/jquery.minicolors.css');  // from related library module Libs/jQueryMiniColors
 
         return $this->twig->render('formelement-color.twig', $this->vars);
     }

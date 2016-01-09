@@ -58,13 +58,13 @@ class LayoutManager
 
             $path = APPLICATION_PATH . '/web/css/add/' . $filename;
 
-            if ($this->app['debug'] == true)
+            if ($this->app['debug'] == true || ! file_exists($path))
             {
                 $data = $this->app['twig']->render($filename);
                 file_put_contents($path, $data);
             }
 
-            $this->addCssLinkToHead('/css/add/' . $filename . '?' . filemtime($path));
+            $this->addCssLinkToHead('/css/add/' . $filename . '?' . @filemtime($path));
         }
 
     }
@@ -80,13 +80,13 @@ class LayoutManager
 
         $path = APPLICATION_PATH . '/web/js/add/' . $filename;
 
-        if ($this->app['debug'] == true)
+        if ($this->app['debug'] == true || ! file_exists($path))
         {
             $data = $this->app['twig']->render($filename);
             file_put_contents($path, $data);
         }
 
-        $this->addJsLinkToEndOfBody('/js/add/' . $filename . '?' . filemtime($path));
+        $this->addJsLinkToEndOfBody('/js/add/' . $filename . '?' . @filemtime($path));
     }
 
 

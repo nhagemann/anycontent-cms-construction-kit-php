@@ -7,7 +7,6 @@ class FormElementEmail extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEl
 
     public function render($layout)
     {
-        $layout->addJsFile('fe-em.js');
         return $this->twig->render('formelement-email.twig', $this->vars);
     }
 }

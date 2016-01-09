@@ -111,9 +111,6 @@ class Controller
 
                     }
 
-                    $app['layout']->addJsFile('editsequence.js');
-
-
                     return $app->renderPage('editsequence.twig', $vars);
                 }
             }

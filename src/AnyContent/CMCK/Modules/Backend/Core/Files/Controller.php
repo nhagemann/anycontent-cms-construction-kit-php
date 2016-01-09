@@ -20,8 +20,6 @@ class Controller
 
     public static function listFiles(Application $app, Request $request, $repositoryAccessHash, $path = '', $mode = 'page')
     {
-        $app['layout']->addJsFile('files');
-
         $vars         = array();
         $vars['root'] = false;
 
@@ -29,7 +27,6 @@ class Controller
         {
             $listFilesRouteName    = 'listFilesSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
-            $app['layout']->addJsFile('files-modal');
         }
         else
         {

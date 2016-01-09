@@ -51,8 +51,6 @@ class FormElementSequence extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
 
         $this->vars['src'] = $url;
 
-        $this->app['layout']->addJsFile('formelement-sequence.js');
-
         return $this->twig->render('formelement-sequence.twig', $this->vars);
 
     }

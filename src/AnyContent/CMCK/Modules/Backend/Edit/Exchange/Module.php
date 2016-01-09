@@ -48,7 +48,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
     public function run(Application $app)
     {
-        $app['layout']->addJsFile('exchange.js');
+
     }
 
 }

@@ -12,8 +12,6 @@ class FormElementPassword extends \AnyContent\CMCK\Modules\Backend\Core\Edit\For
 
     public function render($layout)
     {
-        $layout->addJsFile('fe-pa.js');
-
         return $this->twig->render('formelement-password.twig', $this->vars);
     }
 

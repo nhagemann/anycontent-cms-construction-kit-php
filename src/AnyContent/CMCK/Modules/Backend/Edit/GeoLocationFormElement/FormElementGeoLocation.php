@@ -15,8 +15,6 @@ class FormElementGeoLocation extends \AnyContent\CMCK\Modules\Backend\Core\Edit\
     public function render($layout)
     {
 
-        $layout->addJsFile('fe-geolocation.js');
-
         $position = explode(',', (string)$this->value);
         if (count($position) == 2)
         {

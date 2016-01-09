@@ -7,7 +7,6 @@ class FormElementLink extends \AnyContent\CMCK\Modules\Backend\Core\Edit\FormEle
 
     public function render($layout)
     {
-        $layout->addJsFile('fe-link.js');
         return $this->twig->render('formelement-link.twig', $this->vars);
     }
 }

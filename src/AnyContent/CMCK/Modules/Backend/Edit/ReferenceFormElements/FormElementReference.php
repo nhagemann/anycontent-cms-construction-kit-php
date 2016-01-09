@@ -78,8 +78,6 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
 
     public function render($layout)
     {
-        $layout->addJsFile('ferf.js');
-
         return $this->twig->render('formelement-reference.twig', $this->vars);
     }
 

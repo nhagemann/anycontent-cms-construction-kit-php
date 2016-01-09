@@ -66,7 +66,6 @@ $(document).on("cmck", function (e, params) {
 
             break;
     }
-    ;
 });
 
 $(document).ready(function () {
