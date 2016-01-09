@@ -10,29 +10,6 @@ use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 class Controller
 {
 
-    public static function css(Application $app, Request $request, $revision, $files)
-    {
-
-        $response = new Response();
-
-        $response->headers->add(array( 'Content-Type' => 'text/css' ));
-
-        $content = '';
-        foreach (explode('/', $files) as $file)
-        {
-            if (trim($file) != '')
-            {
-                $content .= $app['twig']->render(trim($file) . '.css');
-            }
-        }
-
-        $response->setContent($content);
-
-        $response->setPublic();
-        $response->setMaxAge(3600 * 24 * 7);
-
-        return $response;
-    }
 
 
     public static function js(Application $app, Request $request, $revision, $files)

@@ -55,6 +55,16 @@ class LayoutManager
         if (!in_array($filename, $this->cssFiles))
         {
             $this->cssFiles[] = $filename;
+
+            $path = APPLICATION_PATH . '/web/css/add/' . $filename;
+
+            if ($this->app['debug'] == true)
+            {
+                $data = $this->app['twig']->render($filename);
+                file_put_contents($path, $data);
+            }
+
+            $this->addCssLinkToHead('/css/add/' . $filename . '?' . filemtime($path));
         }
 
     }
@@ -114,15 +124,7 @@ class LayoutManager
 
         $vars = array_merge($this->vars, $vars);
 
-        $cssurl = $app->getRevision().'/';
-        foreach ($this->cssFiles as $cssFilename)
-        {
-            $cssurl .= pathinfo($cssFilename, PATHINFO_FILENAME) . '/';
-        }
-        $cssurl         = trim($cssurl, '/');
-        $vars['cssurl'] = $cssurl;
-
-        $jsurl = $app->getRevision().'/';
+        $jsurl = $app->getRevision() . '/';
         foreach ($this->jsFiles as $jsFilename)
         {
             $jsurl .= pathinfo($jsFilename, PATHINFO_FILENAME) . '/';
@@ -173,7 +175,7 @@ class LayoutManager
         $event = $app['dispatcher']->dispatch(Module::EVENT_LAYOUT_TEMPLATE_RENDER, $event);
 
         $templateFilename = $event->getTemplate();
-        $vars = $event->getVars();
+        $vars             = $event->getVars();
 
         return $this->twig->render($templateFilename, $vars);
     }
@@ -186,6 +188,5 @@ class LayoutManager
     {
         return $this->app;
     }
-
 
 }
