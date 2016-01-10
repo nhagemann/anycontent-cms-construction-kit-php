@@ -10,6 +10,7 @@
             case 'sequenceForm.init':
             case 'sequenceForm.refresh':
 
+                $('.formelement-file-modal-button').off();
                 $('.formelement-file-modal-button').click(function () {
 
                     // get the input field
@@ -22,6 +23,7 @@
                     return false;
                 });
 
+                $('.formelement-file-modal-button-view').off();
                 $('.formelement-file-modal-button-view').click(function () {
 
                     var id = $(this).attr('data-input');
@@ -47,6 +49,7 @@
                     return false;
                 });
 
+                $('.formelement-file-modal-button-download').off();
                 $('.formelement-file-modal-button-download').click(function () {
 
                     var id = $(this).attr('data-input');

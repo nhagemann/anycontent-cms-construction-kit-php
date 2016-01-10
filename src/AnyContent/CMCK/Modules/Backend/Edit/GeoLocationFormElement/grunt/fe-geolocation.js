@@ -11,8 +11,8 @@
             case 'sequenceForm.init':
             case 'sequenceForm.refresh':
 
+                $('.formelement-geolocation-modal-button').off();
                 $('.formelement-geolocation-modal-button').click(function () {
-
 
                     // get the input field, which shall contain latitude and longitude upon selection
                     var lat = $($(this).attr('data-input') + '_lat').val();

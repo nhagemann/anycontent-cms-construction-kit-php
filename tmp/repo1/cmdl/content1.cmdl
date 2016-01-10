@@ -1,4 +1,14 @@
 name* = textfield
 
+a = geolocation
+b = sequence (c)
+
+e = richtext
+
++++ c +++
+d = geolocation
+f = richtext
+
 @workspaces (default,test)
 @languages (default,en)
+@sortable
