@@ -27,6 +27,7 @@ class Controller
         {
             $listFilesRouteName    = 'listFilesSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
+            $app['layout']->addJsFile('files-modal.js');
         }
         else
         {
