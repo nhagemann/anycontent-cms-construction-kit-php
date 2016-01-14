@@ -21,6 +21,8 @@ class RepositoryManager
 
     protected $contentTypeAccessHashes = [ ];
 
+    protected $configTypeAccessHashes = [ ];
+
     /** @var  UserInfo */
     protected $userInfo;
 
@@ -43,6 +45,11 @@ class RepositoryManager
             $this->contentTypeAccessHashes[$this->getContentTypeAccessHash($repository, $contentTypeName)] = [ 'repositoryId' => $repository->getName(), 'contentTypeName' => $contentTypeName ];
         }
 
+        foreach ($repository->getConfigTypeNames() as $configTypeName)
+        {
+            $this->configTypeAccessHashes[$this->getConfigTypeAccessHash($repository, $configTypeName)] = [ 'repositoryId' => $repository->getName(), 'configTypeName' => $configTypeName ];
+        }
+
         $this->repositoryAccessHashes[$this->getRepositoryAccessHash($repository)] = [ 'repositoryId' => $repository->getName() ];
 
     }
@@ -57,6 +64,12 @@ class RepositoryManager
     public function getContentTypeAccessHash(Repository $repository, $contentTypeName)
     {
         return md5($repository->getName() . '-contentType-' . $contentTypeName);
+    }
+
+
+    public function getConfigTypeAccessHash(Repository $repository, $configTypeName)
+    {
+        return md5($repository->getName() . '-contentType-' . $configTypeName);
     }
 
 
@@ -113,7 +126,7 @@ class RepositoryManager
         {
             $repository = $this->repositories[$id];
 
-            foreach ($repository->getContentTypes() as $contentType)
+            foreach ($repository->getContentTypeDefinitions() as $contentType)
             {
 
                 $contentTypes[$contentType->getName()] = array( 'name' => $contentType->getName(), 'title' => $contentType->getTitle(), 'accessHash' => $this->getContentTypeAccessHash($repository, $contentType->getName()) );
@@ -128,13 +141,34 @@ class RepositoryManager
     public function listConfigTypes($id)
     {
 
-        return [ ];
+        $configTypes = [ ];
+
+        if (array_key_exists($id, $this->repositories))
+        {
+            $repository = $this->repositories[$id];
+
+            foreach ($repository->getConfigTypeDefinitions() as $configType)
+            {
+
+                $configTypes[$configType->getName()] = array( 'name' => $configType->getName(), 'title' => $configType->getTitle(), 'accessHash' => $this->getConfigTypeAccessHash($repository, $configType->getName()) );
+            }
+
+        }
+
+        return $configTypes;
     }
 
 
     public function hasFiles($id)
     {
-        return true;
+        if (array_key_exists($id, $this->repositories))
+        {
+            $repository = $this->repositories[$id];
+
+            return $repository->hasFiles();
+        }
+
+        return false;
     }
 
 
@@ -185,6 +219,43 @@ class RepositoryManager
 
         return false;
     }
+
+
+    public function getRepositoryByConfigTypeAccessHash($hash)
+    {
+
+        if (array_key_exists($hash, $this->configTypeAccessHashes))
+        {
+            $id         = $this->configTypeAccessHashes[$hash]['repositoryId'];
+            $repository = $this->getRepositoryById($id);
+
+            return $repository;
+        }
+
+        return false;
+    }
+
+
+    public function getConfigTypeDefinitionByConfigTypeAccessHash($hash)
+    {
+
+        if (array_key_exists($hash, $this->configTypeAccessHashes))
+        {
+            $id             = $this->configTypeAccessHashes[$hash]['repositoryId'];
+            $configTypeName = $this->configTypeAccessHashes[$hash]['configTypeName'];
+            $repository     = $this->getRepositoryById($id);
+
+            if ($repository->hasConfigType($configTypeName))
+            {
+                return $repository->getConfigTypeDefinition($configTypeName);
+            }
+
+        }
+
+        return false;
+    }
+
+
 //
 //    protected $cache = null;
 //
@@ -419,7 +490,7 @@ class RepositoryManager
 //            {
 //                $repository = $this->repositoryObjects[$repositoryInfo['url']];
 //
-//                foreach ($repository->getConfigTypes() as $configTypeName => $configTypeTitle)
+//                foreach ($repository->getConfigTypeDefinitions() as $configTypeName => $configTypeTitle)
 //                {
 //                    if (array_key_exists('*', $repositoryInfo['configTypes']) OR array_key_exists($configTypeName, $repositoryInfo['configTypes']))
 //                    {
