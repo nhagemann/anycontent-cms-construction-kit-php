@@ -105,7 +105,10 @@ class Controller
                     $record->setProperty($property, $value);
                 }
 
-                $result = $repository->saveConfig($record, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage());
+                $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+                $repository->selectLanguage($app['context']->getCurrentLanguage());
+
+                $result = $repository->saveConfig($record);
 
                 $app['context']->resetTimeShift();
                 if ($result)
