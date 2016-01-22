@@ -19,7 +19,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['menus'] = $app->share(function ($app)
         {
-            return new MenuManager($app, $app['repos'], $app['twig'], $app['layout'], $app['url_generator'], $app['cache'], $app['config']);
+            return new MenuManager($app);
         });
 
     }

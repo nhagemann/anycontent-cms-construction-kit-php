@@ -2,41 +2,43 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Menu;
 
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class MenuManager
 {
 
     protected $app;
+    /**
+     * @var RepositoryManager
+     */
     protected $repositoryManager;
     protected $twig;
     protected $layout;
     protected $urlGenerator;
-    protected $cache;
-    protected $cacheSeconds = 0;
+    /**
+     * @var Session
+     */
     protected $session;
 
 
-    public function __construct($app, $repositoryManager, $twig, $layout, $urlGenerator, $cache, $config)
+    public function __construct($app)
     {
         $this->app               = $app;
         $this->session           = $app['session'];
-        $this->repositoryManager = $repositoryManager;
-        $this->twig              = $twig;
-        $this->layout            = $layout;
-        $this->urlGenerator      = $urlGenerator;
-        $this->cache             = $cache;
-        $cacheConfiguration      = $config->getCacheConfiguration();
-        $this->cacheSeconds      = $cacheConfiguration['seconds_caching_menu'];
+        $this->repositoryManager = $app['repos'];
+        $this->twig              = $app['twig'];
+        $this->layout            = $app['layout'];
+        $this->urlGenerator      = $app['url_generator'];
+
     }
 
 
     public function renderMainMenu()
     {
-
-        $cacheToken = 'cmck_menu_main_' . $this->session->getId();
-
-        if ($this->cacheSeconds > 0 && $this->cache->contains($cacheToken))
+        if ($this->session->has('menu_main'))
         {
-            return $this->cache->fetch($cacheToken);
+            return $this->session->get('menu_main');
         }
 
         $items = array();
@@ -95,7 +97,7 @@ class MenuManager
 
         $html = $this->renderDropDown($items, 'mainmenu');
 
-        $this->cache->save($cacheToken, $html, $this->cacheSeconds);
+        $this->session->set('menu_main', $html);
 
         return $html;
     }
@@ -134,7 +136,6 @@ class MenuManager
 
     public function clearCache()
     {
-        $cacheToken = 'cmck_menu_main_' . $this->session->getId();
-        $this->cache->delete($cacheToken);
+        $this->session->clear('menu_main');
     }
 }
