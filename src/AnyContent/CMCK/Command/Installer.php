@@ -29,6 +29,7 @@ class Installer
 
         $filesystem->copy($packageDir . '/config/config.example.yml', $baseDir . '/config/config.example.yml');
         $filesystem->copy($packageDir . '/config/modules.example.php', $baseDir . '/config/modules.example.php');
+        $filesystem->copy($packageDir . '/config/repositories.example.php', $baseDir . '/config/repositories.example.php');
 
         echo "Creating cache folder, deleting eventually current cache files.\n";
 
