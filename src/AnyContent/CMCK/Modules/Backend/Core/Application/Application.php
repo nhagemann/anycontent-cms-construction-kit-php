@@ -2,11 +2,15 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Application;
 
+use AnyContent\Client\Client;
 use AnyContent\Client\MySQLCache;
+use AnyContent\Client\Repository;
+use AnyContent\Client\RepositoryFactory;
 use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
 use AnyContent\CMCK\Modules\Backend\Core\Menu\MenuManager;
 use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
+use Doctrine\Common\Cache\ArrayCache;
 use Silex\Application as SilexApplication;
 
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -21,6 +25,9 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class Application extends SilexApplication
 {
+
+    /** @var  Client */
+    protected $client;
 
     protected $modules = array();
 
@@ -40,6 +47,29 @@ class Application extends SilexApplication
         {
             return new ConfigService($this);
         });
+    }
+
+
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        if (!$this->client)
+        {
+            $this->client = new Client();
+        }
+
+        return $this->client;
+    }
+
+
+    /**
+     * @param Client $client
+     */
+    public function setClient($client)
+    {
+        $this->client = $client;
     }
 
 
@@ -124,6 +154,7 @@ class Application extends SilexApplication
         switch ($cacheConfiguration['driver']['type'])
         {
             case 'none':
+                $cacheDriver = new ArrayCache();
                 break;
             case 'apc':
                 $cacheDriver = new  \Doctrine\Common\Cache\ApcCache();
@@ -156,27 +187,33 @@ class Application extends SilexApplication
 
         // Now add the repositories
 
-        if (file_exists(APPLICATION_PATH .'/config/repositories.php'))
+        $client = $this->getClient();
+        $client->setCacheProvider($cacheDriver);
+
+        $repositoryFactory = new RepositoryFactory();
+
+        $config = $this['config']->getConfigurationSection('repositories');
+
+        foreach ($config as $k => $v)
         {
-            require_once(APPLICATION_PATH . '/config/repositories.php');
-
-            foreach ($repositories as $repository)
-            {
-                $this->getRepositoryManager()->addRepository($repository->getName(), $repository, $repository->getTitle());
-            }
+            $repository = $repositoryFactory->createRestLikeRepository($k, $v);
+            $this->addRepository($repository);
         }
-
-
-
 
         foreach ($this->modules as $module)
         {
             $module['module']->run($this);
-
         }
 
         $this['repos']->setUserInfo($this['user']->getClientUserInfo());
 
+    }
+
+
+    public function addRepository(Repository $repository)
+    {
+        $repository = $this->getClient()->addRepository($repository);
+        $this->getRepositoryManager()->addRepository($repository->getName(), $repository, $repository->getTitle());
     }
 
 

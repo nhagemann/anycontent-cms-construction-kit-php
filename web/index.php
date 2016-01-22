@@ -40,6 +40,11 @@ if ($app['env']=='test' || $app['env']=='console')
     return $app;
 }
 
+if (file_exists(APPLICATION_PATH .'/config/repositories.php'))
+{
+    require_once(APPLICATION_PATH . '/config/repositories.php');
+}
+
 $app->run();
 
 \KVMLogger\KVMLogger::instance()->logResources();

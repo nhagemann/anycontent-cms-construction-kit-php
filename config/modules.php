@@ -26,25 +26,10 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryAutosize');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Libs\jQueryMiniColors');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Admin\CMDL');
 
-
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Glossary');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\CustomList');
 
-
 //$app->registerModule('AnyContent\Dev');
-
-// Uncomment next lines if you use APC Cache and your PHP version doesn't have the apc_exists function
-
-if (!function_exists('apc_exists'))
-{
-    function apc_exists($keys)
-    {
-        $result = null;
-        apc_fetch($keys, $result);
-
-        return $result;
-    }
-}
 
 
 \KVMLogger\KVMLoggerFactory::createWithKLogger('../');
