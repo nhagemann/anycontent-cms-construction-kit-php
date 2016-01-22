@@ -56,6 +56,13 @@ class LayoutManager
         {
             $this->cssFiles[] = $filename;
 
+            $path = APPLICATION_PATH . '/web/css/add';
+
+            if (!file_exists($path))
+            {
+                mkdir($path);
+            }
+
             $path = APPLICATION_PATH . '/web/css/add/' . $filename;
 
             if ($this->app['debug'] == true || ! file_exists($path))
@@ -76,6 +83,13 @@ class LayoutManager
         if (!in_array($filename, $this->jsFiles))
         {
             $this->jsFiles[] = $filename;
+        }
+
+        $path = APPLICATION_PATH . '/web/js/add';
+
+        if (!file_exists($path))
+        {
+            mkdir($path);
         }
 
         $path = APPLICATION_PATH . '/web/js/add/' . $filename;

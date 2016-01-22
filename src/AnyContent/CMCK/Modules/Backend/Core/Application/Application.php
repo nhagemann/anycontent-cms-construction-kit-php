@@ -156,11 +156,18 @@ class Application extends SilexApplication
 
         // Now add the repositories
 
-        $app = $this;
-        require_once (APPLICATION_PATH .'/config/repositories.php');
+        if (file_exists(APPLICATION_PATH .'/config/repositories.php'))
+        {
+            require_once(APPLICATION_PATH . '/config/repositories.php');
+
+            foreach ($repositories as $repository)
+            {
+                $this->getRepositoryManager()->addRepository($repository->getName(), $repository, $repository->getTitle());
+            }
+        }
 
 
-        //$this['repos']->init($this['config']);
+
 
         foreach ($this->modules as $module)
         {
