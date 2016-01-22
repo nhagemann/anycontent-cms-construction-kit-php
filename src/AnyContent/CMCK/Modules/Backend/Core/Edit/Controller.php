@@ -455,7 +455,10 @@ class Controller
                     $app['context']->setCurrentLanguage($language);
                 }
 
-                if ($repository->deleteRecord($recordId, $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage()))
+                $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+                $repository->selectLanguage($app['context']->getCurrentLanguage());
+
+                if ($repository->deleteRecord($recordId))
                 {
                     $app['context']->addSuccessMessage('Record ' . $recordId . ' deleted.');
                 }
