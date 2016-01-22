@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b3bf1f369ba62e3ece7b264ccf1f3f05",
+    "hash": "4afa1a91b34192ac7c3697cab2141fac",
     "packages": [
         {
             "name": "cpliakas/git-wrapper",
@@ -502,26 +502,26 @@
             "time": "2015-10-14 12:51:02"
         },
         {
-            "name": "nhagemann/anycontent-php",
-            "version": "dev-master",
+            "name": "nhagemann/anycontent-client-php",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nhagemann/anycontent-php.git",
-                "reference": "9e51956779d4f0b22340b6db3bafefedc7e405cb"
+                "url": "https://github.com/nhagemann/anycontent-client-php.git",
+                "reference": "2418fadd9189988469b59e4162d4332acbe0cda1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-php/zipball/9e51956779d4f0b22340b6db3bafefedc7e405cb",
-                "reference": "9e51956779d4f0b22340b6db3bafefedc7e405cb",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/2418fadd9189988469b59e4162d4332acbe0cda1",
+                "reference": "2418fadd9189988469b59e4162d4332acbe0cda1",
                 "shasum": ""
             },
             "require": {
                 "cpliakas/git-wrapper": "1.*",
                 "doctrine/cache": "1.5.*",
                 "guzzlehttp/guzzle": "5.*",
-                "katzgrau/klogger": "1.2.*",
                 "ktamas77/firebase-php": "2.*",
-                "nhagemann/cmdl-parser-php": "2.0.x-dev",
+                "nhagemann/cmdl-parser-php": "2.*",
+                "nhagemann/kvmlogger": "1.*",
                 "php": ">=5.4",
                 "psr/log": "1.*",
                 "symfony/filesystem": "2.*",
@@ -533,11 +533,10 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "AnyContent": "src/",
-                    "HahnAir": "src/",
-                    "KVMLogger": "src/"
+                    "AnyContent": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -549,28 +548,24 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "support": {
-                "source": "https://github.com/nhagemann/anycontent-php/tree/master",
-                "issues": "https://github.com/nhagemann/anycontent-php/issues"
-            },
-            "time": "2016-01-14 13:53:25"
+            "time": "2016-01-22 11:04:32"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
-            "version": "2.0.x-dev",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "0974af910410f4aa858eb1ee17bea63cab3d8c00"
+                "reference": "0e83b350a6624851f38fe72ea03dd3733cb76ff3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/0974af910410f4aa858eb1ee17bea63cab3d8c00",
-                "reference": "0974af910410f4aa858eb1ee17bea63cab3d8c00",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/0e83b350a6624851f38fe72ea03dd3733cb76ff3",
+                "reference": "0e83b350a6624851f38fe72ea03dd3733cb76ff3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3"
+                "php": ">=5.4"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7.0"
@@ -594,7 +589,49 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2016-01-05 17:38:48"
+            "time": "2016-01-22 10:38:39"
+        },
+        {
+            "name": "nhagemann/kvmlogger",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nhagemann/kvmlogger.git",
+                "reference": "5b5c7789977f01a54b056329318a90204a3463e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nhagemann/kvmlogger/zipball/5b5c7789977f01a54b056329318a90204a3463e2",
+                "reference": "5b5c7789977f01a54b056329318a90204a3463e2",
+                "shasum": ""
+            },
+            "require": {
+                "katzgrau/klogger": "1.2.*",
+                "php": ">=5.4",
+                "psr/log": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "KVMLogger": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Hagemann",
+                    "email": "mail@nilshagemann.de",
+                    "homepage": "http://www.nilshagemann.de"
+                }
+            ],
+            "homepage": "http://www.nilshagemann.de",
+            "time": "2016-01-18 14:10:04"
         },
         {
             "name": "nitra/php-min",
@@ -1969,13 +2006,12 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "nitra/php-min": 20,
-        "nhagemann/anycontent-php": 20
+        "nitra/php-min": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3,<6.0"
+        "php": ">=5.4,<6.0"
     },
     "platform-dev": []
 }
