@@ -126,15 +126,9 @@ class RepositoryManager
         {
             $repository = $this->repositories[$id];
 
-            foreach ($repository->getContentTypeDefinitions() as $contentType)
+            foreach ($repository->getContentTypeList() as $name => $title)
             {
-
-                $title = $contentType->getTitle();
-                if ($title == '')
-                {
-                    $title = $contentType->getName();
-                }
-                $contentTypes[$contentType->getName()] = array( 'name' => $contentType->getName(), 'title' => $title, 'accessHash' => $this->getContentTypeAccessHash($repository, $contentType->getName()) );
+                $contentTypes[$name] = array( 'name' => $name, 'title' => $title, 'accessHash' => $this->getContentTypeAccessHash($repository, $name) );
             }
 
         }
@@ -152,14 +146,10 @@ class RepositoryManager
         {
             $repository = $this->repositories[$id];
 
-            foreach ($repository->getConfigTypeDefinitions() as $configType)
+            foreach ($repository->getConfigTypeList() as $name => $title)
             {
-                $title = $configType->getTitle();
-                if ($title == '')
-                {
-                    $title = $configType->getName();
-                }
-                $configTypes[$configType->getName()] = array( 'name' => $configType->getName(), 'title' => $title, 'accessHash' => $this->getConfigTypeAccessHash($repository, $configType->getName()) );
+
+                $configTypes[$name] = array( 'name' => $name, 'title' => $title, 'accessHash' => $this->getConfigTypeAccessHash($repository, $name) );
             }
 
         }
