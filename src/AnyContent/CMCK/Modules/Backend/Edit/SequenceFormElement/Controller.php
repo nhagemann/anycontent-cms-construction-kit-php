@@ -4,6 +4,8 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\SequenceFormElement;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
+use CMDL\ConfigTypeDefinition;
 use CMDL\ContentTypeDefinition;
 use CMDL\ViewDefinition;
 use CMDL\FormElementDefinition;
@@ -30,11 +32,16 @@ class Controller
         $vars['property'] = $property;
 
         /** @var Repository $repository */
-        $repository         = self::getRepository($app, $dataType, $dataTypeAccessHash);
-        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType);
+        $repository = self::getRepository($app, $dataType, $dataTypeAccessHash);
+
+        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType, $dataTypeAccessHash);
 
         if ($repository && $dataTypeDefinition)
         {
+            $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+            $repository->selectLanguage($app['context']->getCurrentLanguage());
+            $repository->setTimeShift($app['context']->getCurrentTimeShift());
+            $repository->selectView($viewName);
 
             $vars['definition'] = $dataTypeDefinition;
 
@@ -51,7 +58,7 @@ class Controller
                     if ($dataType === 'content' && $recordId)
                     {
                         /** @var Record $record */
-                        $record   = $repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+                        $record   = $repository->getRecord($recordId);
                         $sequence = $record->getProperty($property, array());
 
                         $sequence = @json_decode($sequence, true);
@@ -63,7 +70,7 @@ class Controller
 
                     if ($dataType === 'config')
                     {
-                        $config = $repository->getConfig();
+                        $config = $repository->getConfig($dataTypeDefinition->getName());
 
                         $sequence = $config->getProperty($property, array());
 
@@ -127,7 +134,7 @@ class Controller
 
         /** @var Repository $repository */
         $repository         = self::getRepository($app, $dataType, $dataTypeAccessHash);
-        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType);
+        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType, $dataTypeAccessHash);
 
         if ($repository && $dataTypeDefinition)
         {
@@ -184,7 +191,7 @@ class Controller
     {
         /** @var Repository $repository */
         $repository         = self::getRepository($app, $dataType, $dataTypeAccessHash);
-        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType);
+        $dataTypeDefinition = self::getDataTypeDefinition($app, $repository, $dataType, $dataTypeAccessHash);
 
         if ($repository && $dataTypeDefinition)
         {
@@ -241,8 +248,11 @@ class Controller
     }
 
 
-    protected static function getDataTypeDefinition(Application $app, Repository $repository, $dataType)
+    protected static function getDataTypeDefinition(Application $app, Repository $repository, $dataType, $dataTypeAccessHash)
     {
+        /** @var RepositoryManager $repositoryManager */
+        $repositoryManager = $app['repos'];
+
         if ($repository)
         {
             if ($dataType == 'content')
@@ -255,7 +265,8 @@ class Controller
             else
             {
                 /** @var ConfigTypeDefinition $dataTypeDefinition */
-                $dataTypeDefinition = $repository->getConfigTypeDefinition();
+                $dataTypeDefinition = $repositoryManager->getConfigTypeDefinitionByConfigTypeAccessHash($dataTypeAccessHash);
+
                 $app['context']->setCurrentConfigType($dataTypeDefinition);
             }
 

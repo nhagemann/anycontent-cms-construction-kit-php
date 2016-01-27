@@ -1,3 +1,5 @@
+getRecords bei form multi reference
+getRecords bei content view glossary
 
 http://www.online-excel.de/excel/singsel.php?f=128
 http://stackoverflow.com/questions/11172644/php-convert-the-full-excel-date-serial-format-to-unix-timestamp
