@@ -13,6 +13,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 use Doctrine\Common\Cache\ArrayCache;
 use Silex\Application as SilexApplication;
 
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -47,6 +48,15 @@ class Application extends SilexApplication
         {
             return new ConfigService($this);
         });
+    }
+
+
+    /**
+     * @return Session
+     */
+    protected function getSession()
+    {
+        return $this['session'];
     }
 
 
@@ -196,7 +206,29 @@ class Application extends SilexApplication
 
         foreach ($config as $k => $v)
         {
-            $repository = $repositoryFactory->createRestLikeRepository($k, $v);
+            $options = [ ];
+
+            $cacheKeyContentTypes = 'sessioncache.repository.' . $k . '.contenttypes';
+            $cacheKeyConfigTypes  = 'sessioncache.repository.' . $k . '.configtypes';
+            if ($this->getSession()->has($cacheKeyContentTypes))
+            {
+                $options['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
+            }
+            if ($this->getSession()->has($cacheKeyConfigTypes))
+            {
+                $options['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
+            }
+
+            $repository = $repositoryFactory->createRestLikeRepository($k, $v, $options);
+
+            if (!$this->getSession()->has($cacheKeyContentTypes))
+            {
+                $this->getSession()->set($cacheKeyContentTypes, $repository->getContentTypeNames());
+            }
+            if (!$this->getSession()->has($cacheKeyConfigTypes))
+            {
+                $this->getSession()->set($cacheKeyConfigTypes, $repository->getConfigTypeNames());
+            }
             $this->addRepository($repository);
         }
 

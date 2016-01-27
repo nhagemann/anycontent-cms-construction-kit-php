@@ -1,105 +1,13 @@
 getRecords bei form multi reference
 getRecords bei content view glossary
-
-http://www.online-excel.de/excel/singsel.php?f=128
-http://stackoverflow.com/questions/11172644/php-convert-the-full-excel-date-serial-format-to-unix-timestamp
-http://de.wikipedia.org/wiki/ISO_8601
-http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
-https://packagist.org/packages/phpoffice/phpexcel
-
-Excel auf Basis von Core/Listing bei Initialisierung Export-Typ angeben
+session cache for repository overview pages
 
 
-Locale management for date and numbers
-- https://github.com/KevinSheedy/jquery.alphanum
-
-
-Files: 
-- Cachhing noch rein, dazu Timestamp-Ermittlung für alle Files auf Server (sollte über die knp-API) gehen.
-- Repository-Selection hat einen Bug es kommt immer example
-- get ist für laden, href für linken, wenn href dann href!
-
-Numbers:
-- eventually no digit management if left blank (minDigits, maxDigits, Unit) Default 0 2
-
-Filter:
-- use record.id and property.id to distinct
-- check sort parameter of repository
 
 Sequences:
 - must work for configtypes and contenttypes equally
 - must have clipping name in editsequence route
 - must be able to acess form element definitions of elements of sequences within inserts
 
-Tables:
-- tables must disable minus button if only one row is left
-- autosize on focus aktivieren danach deaktiveren
 
 
-
-class Module
-{
-
-    public function bootstrap($aCms)
-    {
-        $aCms->registerLayout('plain', 'CLASS');
-
-        $aCms->registerBlock('menu_left', 'CLASS');
-
-        $aCms->addMenuItem('logout', $glyphicon, $url);
-
-        $aCms->removeMenuItem('xyz');
-
-        $aCms->registerRoute('horst', '/test/{abc}', 'CLASS::method');
-
-        $aCms->addBlockToRoute('horst', 'menu_left', 'plain');
-
-        $aCms->addBlockToLayout('horst', 'menu_left', 'plain');
-    }
-}
-
-
-class Route
-{
-
-    public function init($aCms,$request,$response)
-    {
-        $aCms->addContentQuery('current_news',ContentQuery $abc);
-
-        //$this->setLayout('plain');
-    }
-
-}
-
-
-class Layout
-{
-
-    public function init($aCms,$request,$response)
-    {
-        $aCms->addContentQuery('current_news',ContentQuery $abc);
-        $this->removeBlock('xyz');
-    }
-
-    public function render()
-    {
-
-    }
-
-}
-
-class Block
-{
-
-    public function init($aCms,$request,$response)
-    {
-        $aCms->addContentQuery('current_news',ContentQuery $abc);
-
-    }
-
-    public function render()
-    {
-
-    }
-
-}
