@@ -65,7 +65,7 @@ class ConfigService
 
 
 
-    public function getAppsConfiguration($repositoryShortcut)
+    public function getAppsConfiguration($repositoryName)
     {
         $yml = $this->getYML();
 
@@ -76,7 +76,9 @@ class ConfigService
             foreach ($yml['apps'] as $app)
             {
                 $repositories = explode(',', $app['repositories']);
-                if (in_array($repositoryShortcut, $repositories))
+                $repositories = array_map('trim',$repositories);
+
+                if (in_array($repositoryName, $repositories))
                 {
                     $apps[] = $app;
                 }

@@ -2,6 +2,8 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Repositories;
 
+use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
+use AnyContent\CMCK\Modules\Backend\Core\Application\ConfigService;
 use CMDL\Parser;
 
 use AnyContent\Client\Client;
@@ -11,6 +13,9 @@ use AnyContent\CMCK\Modules\Backend\Core\Context;
 
 class RepositoryManager
 {
+
+    /** @var  Application */
+    protected $app;
 
     /**
      * @var Repository[]
@@ -26,6 +31,20 @@ class RepositoryManager
     /** @var  UserInfo */
     protected $userInfo;
 
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+
+    /**
+     * @return ConfigService
+     */
+    protected function getConfigService()
+    {
+        return $this->app['config'];
+    }
 
     public function addRepository($name, Repository $repository, $title = null)
     {
@@ -173,7 +192,15 @@ class RepositoryManager
 
     public function listApps($id)
     {
-        return [ ];
+        $config = $this->getConfigService()->getAppsConfiguration($id);
+
+        $result = [];
+        foreach ($config as $item)
+        {
+            $result[$item['name']]=$item;
+        }
+
+        return $result;
     }
 
 

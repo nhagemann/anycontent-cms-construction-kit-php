@@ -45,28 +45,28 @@ class MenuManager
 
             $items = array();
 
-            foreach ($this->repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
+            foreach ($this->repositoryManager->listRepositories() as $repositoryName => $repositoryItem)
             {
 
                 $url     = $this->urlGenerator->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
                 $items[] = array( 'type' => 'header', 'text' => $repositoryItem['title'], 'url' => $url );
 
-                foreach ($this->repositoryManager->listContentTypes($repositoryUrl) as $contentTypName => $contentTypeItem)
+                foreach ($this->repositoryManager->listContentTypes($repositoryName) as $contentTypName => $contentTypeItem)
                 {
                     $url     = $this->urlGenerator->generate('listRecords', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'], 'page' => 1 ));
                     $items[] = array( 'type' => 'link', 'text' => $contentTypeItem['title'], 'url' => $url, 'glyphicon' => 'glyphicon-file' );
                 }
-                foreach ($this->repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
+                foreach ($this->repositoryManager->listConfigTypes($repositoryName) as $configTypeName => $configTypeItem)
                 {
                     $url     = $this->urlGenerator->generate('editConfig', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] ));
                     $items[] = array( 'type' => 'link', 'text' => $configTypeItem['title'], 'url' => $url, 'glyphicon' => 'glyphicon-wrench' );
                 }
-                if ($this->repositoryManager->hasFiles($repositoryUrl))
+                if ($this->repositoryManager->hasFiles($repositoryName))
                 {
                     $url     = $this->urlGenerator->generate('listFiles', array( 'repositoryAccessHash' => $repositoryItem['accessHash'], 'path' => '' ));
                     $items[] = array( 'type' => 'link', 'text' => 'Files', 'url' => $url, 'glyphicon' => 'glyphicon-folder-open' );
                 }
-                foreach ($this->repositoryManager->listApps($repositoryUrl) as $appName => $appItem)
+                foreach ($this->repositoryManager->listApps($repositoryName) as $appName => $appItem)
                 {
 
                     $url     = rtrim($appItem['url'], '/') . '/' . $repositoryItem['accessHash'];
