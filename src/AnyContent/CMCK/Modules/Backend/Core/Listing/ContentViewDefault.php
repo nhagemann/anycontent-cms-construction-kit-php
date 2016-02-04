@@ -247,7 +247,7 @@ class ContentViewDefault extends BaseContentView
 
         $sorting = $this->getSortingOrder();
 
-        return $repository->getRecords($filter, $page, $itemsPerPage, $sorting);
+        return $repository->getRecords($filter, $sorting, $page, $itemsPerPage);
 
         //return $repository->getRecords($this->getContext()->getCurrentWorkspace(), $viewName, $this->getContext()
         //->getCurrentLanguage(), $sorting[0], $sorting[1], $itemsPerPage, $page, $filter, null, $this->getContext()

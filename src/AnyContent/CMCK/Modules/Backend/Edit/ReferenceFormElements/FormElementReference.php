@@ -36,7 +36,7 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
 
 
             $records=[];
-            foreach ($repository->getRecords('',1,null,$this->definition->getOrder()) as $record)
+            foreach ($repository->getRecords('',$this->definition->getOrder(),1,null) as $record)
             {
                 $records[$record->getId()]=$record->getName();
             }

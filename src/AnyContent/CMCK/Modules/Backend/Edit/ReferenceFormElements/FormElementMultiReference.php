@@ -1,6 +1,7 @@
 <?php
 namespace AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements;
 
+use AnyContent\Client\DataDimensions;
 use AnyContent\Client\Repository;
 
 class FormElementMultiReference extends \AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements\FormElementMultiSelection
@@ -22,20 +23,29 @@ class FormElementMultiReference extends \AnyContent\CMCK\Modules\Backend\Edit\Se
             $contentTypeDefinition = $repository->getContentTypeDefinition();
 
             $workspace = $this->definition->getWorkspace();
-            $viewName  = $contentTypeDefinition->getListViewDefinition()->getName();
             $language  = $this->definition->getLanguage();
-            $order     = $this->definition->getOrder();
             $timeshift = $this->definition->getTimeShift();
 
-            $records = $repository->getRecords($workspace, $viewName, $language, $order, $timeshift);
+            $order = $this->definition->getOrder();
+
+            $viewName = $contentTypeDefinition->getListViewDefinition()->getName();
+
+            $dataDimensions = new DataDimensions();
+            $dataDimensions->setWorkspace($workspace);
+            $dataDimensions->setLanguage($language);
+            $dataDimensions->setTimeShift($timeshift);
+            $dataDimensions->setViewName($viewName);
+
+            $records = $repository->getRecords('', $order, 1, null, $dataDimensions);
 
             foreach ($records as $record)
             {
                 $options[$record->getId()] = '#' . $record->getId() . ' ' . $record->getName();
             }
         }
-        else{
-            $app['context']->addAlertMessage('Could not find referenced content type '.$this->definition->getContentType().'.');
+        else
+        {
+            $app['context']->addAlertMessage('Could not find referenced content type ' . $this->definition->getContentType() . '.');
         }
 
         $this->vars['options'] = $options;

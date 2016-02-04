@@ -29,7 +29,7 @@ class Exporter
         $repository->selectView($viewName);
 
         /** @var Record[] $records */
-        $records = $repository->getRecords('',1,null,'id');
+        $records = $repository->getRecords('','id',null);
 
         if ($records!==false)
         {
