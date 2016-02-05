@@ -202,34 +202,37 @@ class Application extends SilexApplication
 
         $repositoryFactory = new RepositoryFactory();
 
-        $config = $this['config']->getConfigurationSection('repositories');
-
-        foreach ($config as $k => $v)
+        if ($this['config']->hasConfigurationSection('repositories'))
         {
-            $options = [ ];
+            $config = $this['config']->getConfigurationSection('repositories');
 
-            $cacheKeyContentTypes = 'sessioncache.repository.' . $k . '.contenttypes';
-            $cacheKeyConfigTypes  = 'sessioncache.repository.' . $k . '.configtypes';
-            if ($this->getSession()->has($cacheKeyContentTypes))
+            foreach ($config as $k => $v)
             {
-                $options['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
-            }
-            if ($this->getSession()->has($cacheKeyConfigTypes))
-            {
-                $options['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
-            }
+                $options = [ ];
 
-            $repository = $repositoryFactory->createRestLikeRepository($k, $v, $options);
+                $cacheKeyContentTypes = 'sessioncache.repository.' . $k . '.contenttypes';
+                $cacheKeyConfigTypes  = 'sessioncache.repository.' . $k . '.configtypes';
+                if ($this->getSession()->has($cacheKeyContentTypes))
+                {
+                    $options['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
+                }
+                if ($this->getSession()->has($cacheKeyConfigTypes))
+                {
+                    $options['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
+                }
 
-            if (!$this->getSession()->has($cacheKeyContentTypes))
-            {
-                $this->getSession()->set($cacheKeyContentTypes, $repository->getContentTypeNames());
+                $repository = $repositoryFactory->createRestLikeRepository($k, $v, $options);
+
+                if (!$this->getSession()->has($cacheKeyContentTypes))
+                {
+                    $this->getSession()->set($cacheKeyContentTypes, $repository->getContentTypeNames());
+                }
+                if (!$this->getSession()->has($cacheKeyConfigTypes))
+                {
+                    $this->getSession()->set($cacheKeyConfigTypes, $repository->getConfigTypeNames());
+                }
+                $this->addRepository($repository);
             }
-            if (!$this->getSession()->has($cacheKeyConfigTypes))
-            {
-                $this->getSession()->set($cacheKeyConfigTypes, $repository->getConfigTypeNames());
-            }
-            $this->addRepository($repository);
         }
 
         foreach ($this->modules as $module)

@@ -21,6 +21,25 @@ class ConfigService
 
     }
 
+
+    public function hasConfigurationSection($sectionName, $topic = null)
+    {
+        if (!isset($yml[$sectionName]))
+        {
+            return false;
+        }
+        if ($topic != null)
+        {
+            if (!isset($yml[$topic]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     public function getConfigurationSection($sectionName, $topic = null)
     {
         $yml = $this->getYML();
@@ -44,6 +63,7 @@ class ConfigService
         return $yml;
     }
 
+
     public function getRepositoriesConfiguration()
     {
         $yml = $this->getYML();
@@ -64,7 +84,6 @@ class ConfigService
     }
 
 
-
     public function getAppsConfiguration($repositoryName)
     {
         $yml = $this->getYML();
@@ -76,7 +95,7 @@ class ConfigService
             foreach ($yml['apps'] as $app)
             {
                 $repositories = explode(',', $app['repositories']);
-                $repositories = array_map('trim',$repositories);
+                $repositories = array_map('trim', $repositories);
 
                 if (in_array($repositoryName, $repositories))
                 {
