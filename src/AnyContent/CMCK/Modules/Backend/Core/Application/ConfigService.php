@@ -24,6 +24,8 @@ class ConfigService
 
     public function hasConfigurationSection($sectionName, $topic = null)
     {
+        $yml = $this->getYML();
+
         if (!isset($yml[$sectionName]))
         {
             return false;

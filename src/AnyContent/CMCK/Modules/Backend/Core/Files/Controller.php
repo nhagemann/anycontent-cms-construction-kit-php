@@ -53,7 +53,7 @@ class Controller
 
             if ($path == '/')
             {
-                $breadcrumbs  = array( '/' );
+                $breadcrumbs  = array( '' );
                 $vars['root'] = true;
             }
 
