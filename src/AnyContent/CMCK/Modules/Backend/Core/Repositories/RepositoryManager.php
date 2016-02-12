@@ -216,6 +216,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return Repository|bool
+     */
     public function getRepositoryByRepositoryAccessHash($hash)
     {
         if (array_key_exists($hash, $this->repositoryAccessHashes))
@@ -229,6 +234,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return Repository|bool
+     */
     public function getRepositoryByContentTypeAccessHash($hash)
     {
 
@@ -247,6 +257,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return Repository|bool
+     */
     public function getRepositoryByConfigTypeAccessHash($hash)
     {
 
@@ -262,6 +277,11 @@ class RepositoryManager
     }
 
 
+    /**
+     * @param $hash
+     *
+     * @return bool|\CMDL\ConfigTypeDefinition
+     */
     public function getConfigTypeDefinitionByConfigTypeAccessHash($hash)
     {
 

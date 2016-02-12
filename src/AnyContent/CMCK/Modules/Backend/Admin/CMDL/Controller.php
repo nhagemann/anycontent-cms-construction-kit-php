@@ -2,19 +2,18 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Admin\CMDL;
 
-use AnyContent\Client\ContentFilter;
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 use CMDL\Parser;
 use CMDL\Util;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use AnyContent\Client\Repository;
-use AnyContent\Client\Record;
-use AnyContent\Client\UserInfo;
+
 
 use CMDL\ContentTypeDefinition;
 
@@ -34,11 +33,13 @@ class Controller
         $repositoryManager = $app['repos'];
 
         $items = array();
-        foreach ($repositoryManager->listRepositories() as $repositoryUrl => $repositoryItem)
+        foreach ($repositoryManager->listRepositories() as $repositoryName => $repositoryItem)
         {
-
-            $items[] = self::extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, false);
-
+            $repository = $repositoryManager->getRepositoryById($repositoryName);
+            if ($repository->isAdministrable())
+            {
+                $items[] = self::extractRepositoryInfos($app, $repositoryName, $repositoryItem, false);
+            }
         }
 
 
@@ -139,9 +140,9 @@ class Controller
                 /** @var ContentTypeDefinition $contentTypeDefinition */
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
-                $client = $repository->getClient();
+                $connection = $repository->getWriteConnection();
 
-                if ($client->saveContentTypeCMDL($contentTypeDefinition->getName(), $cmdl))
+                if ($connection->saveContentTypeCMDL($contentTypeDefinition->getName(), $cmdl))
                 {
                     $response['success'] = true;
                     $app['menus']->clearCache();
@@ -186,9 +187,9 @@ class Controller
                 /** @var ConfigTypeDefinition $contentTypeDefinition */
                 $configTypeDefinition = $repository->getConfigTypeDefinition();
 
-                $client = $repository->getClient();
+                $connection = $repository->getWriteConnection();
 
-                if ($client->saveConfigTypeCMDL($configTypeDefinition->getName(), $cmdl))
+                if ($connection->saveConfigTypeCMDL($configTypeDefinition->getName(), $cmdl))
                 {
                     $response['success'] = true;
                     $app['menus']->clearCache();
@@ -225,9 +226,9 @@ class Controller
             {
                 if (!$repository->hasContentType($contentTypeName))
                 {
-                    $client = $repository->getClient();
+                    $connection = $repository->getWriteConnection();
 
-                    if ($client->saveContentTypeCMDL($contentTypeName, '### definition of content type ' . $contentTypeName . ' ###' . PHP_EOL . PHP_EOL . 'Name'))
+                    if ($connection->saveContentTypeCMDL($contentTypeName, '### definition of content type ' . $contentTypeName . ' ###' . PHP_EOL . PHP_EOL . 'Name'))
                     {
                         $app['context']->addSuccessMessage('Content Type ' . $contentTypeName . ' created.');
                         $app['menus']->clearCache();
@@ -270,9 +271,9 @@ class Controller
             {
                 if (!$repository->hasConfigType($configTypeName))
                 {
-                    $client = $repository->getClient();
+                    $connection = $repository->getWriteConnection();
 
-                    if ($client->saveConfigTypeCMDL($configTypeName, '### definition of config type ' . $configTypeName . ' ###' . PHP_EOL))
+                    if ($connection->saveConfigTypeCMDL($configTypeName, '### definition of config type ' . $configTypeName . ' ###' . PHP_EOL))
                     {
                         $app['context']->addSuccessMessage('Config Type ' . $configTypeName . ' created.');
                         $app['menus']->clearCache();
@@ -309,9 +310,9 @@ class Controller
 
             $contentTypeName = $contentTypeDefinition->getName();
 
-            $client = $repository->getClient();
+            $connection = $repository->getWriteConnection();
 
-            if ($client->deleteContentType($contentTypeName))
+            if ($connection->deleteContentTypeCMDL($contentTypeName))
             {
                 $app['context']->addSuccessMessage('Content Type ' . $contentTypeName . ' deleted.');
                 $app['menus']->clearCache();
@@ -341,9 +342,9 @@ class Controller
 
             $configTypeName = $configTypeDefinition->getName();
 
-            $client = $repository->getClient();
+            $connection = $repository->getWriteConnection();
 
-            if ($client->deleteConfigType($configTypeName))
+            if ($connection->deleteConfigTypeCMDL($configTypeName))
             {
                 $app['context']->addSuccessMessage('Config Type ' . $configTypeName . ' deleted.');
                 $app['menus']->clearCache();
@@ -359,7 +360,7 @@ class Controller
     }
 
 
-    protected static function extractRepositoryInfos($app, $repositoryUrl, $repositoryItem, $definition = false)
+    protected static function extractRepositoryInfos($app, $repositoryName, $repositoryItem, $definition = false)
     {
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
@@ -371,14 +372,14 @@ class Controller
 
         $item                              = array();
         $item['title']                     = $repositoryItem['title'];
-        $item['url']                       = $repositoryUrl;
+        $item['url']                       = $repositoryName;
         $item['link']                      = $app['url_generator']->generate('indexRepository', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
         $item['links']['add_content_type'] = $app['url_generator']->generate('adminAddContentType', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
         $item['links']['add_config_type']  = $app['url_generator']->generate('adminAddConfigType', array( 'repositoryAccessHash' => $repositoryItem['accessHash'] ));
 
         $item['content_types'] = array();
 
-        foreach ($repositoryManager->listContentTypes($repositoryUrl) as $contentTypeName => $contentTypeItem)
+        foreach ($repositoryManager->listContentTypes($repositoryName) as $contentTypeName => $contentTypeItem)
         {
             $info = array( 'name' => $contentTypeName, 'title'=>$contentTypeItem['title'], 'edit' => $app['url_generator']->generate('adminEditContentType', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'] )), 'delete' => $app['url_generator']->generate('adminDeleteContentType', array( 'contentTypeAccessHash' => $contentTypeItem['accessHash'] )) );
 
@@ -392,7 +393,7 @@ class Controller
 
         $item['config_types'] = array();
 
-        foreach ($repositoryManager->listConfigTypes($repositoryUrl) as $configTypeName => $configTypeItem)
+        foreach ($repositoryManager->listConfigTypes($repositoryName) as $configTypeName => $configTypeItem)
         {
             $info = array( 'name' => $configTypeName, 'title'=>$configTypeItem['title'], 'edit' => $app['url_generator']->generate('adminEditConfigType', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )), 'delete' => $app['url_generator']->generate('adminDeleteConfigType', array( 'configTypeAccessHash' => $configTypeItem['accessHash'] )) );
 

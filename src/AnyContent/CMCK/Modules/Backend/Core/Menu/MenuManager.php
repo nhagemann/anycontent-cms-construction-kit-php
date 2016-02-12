@@ -139,6 +139,6 @@ class MenuManager
 
     public function clearCache()
     {
-        $this->session->clear('sessioncache.menu.main');
+        $this->session->remove('sessioncache.menu.main');
     }
 }
