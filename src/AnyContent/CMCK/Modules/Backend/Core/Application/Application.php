@@ -195,46 +195,13 @@ class Application extends SilexApplication
                 break;
         }
 
-        // Now add the repositories
-
         $client = $this->getClient();
         $client->setCacheProvider($cacheDriver);
 
-        $repositoryFactory = new RepositoryFactory();
+        // Now add the repositories
+        $this->getRepositoryManager()->init();
 
-        if ($this['config']->hasConfigurationSection('repositories'))
-        {
-            $config = $this['config']->getConfigurationSection('repositories');
-
-            foreach ($config as $k => $v)
-            {
-                $options = [ ];
-
-                $cacheKeyContentTypes = 'sessioncache.repository.' . $k . '.contenttypes';
-                $cacheKeyConfigTypes  = 'sessioncache.repository.' . $k . '.configtypes';
-                if ($this->getSession()->has($cacheKeyContentTypes))
-                {
-                    $options['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
-                }
-                if ($this->getSession()->has($cacheKeyConfigTypes))
-                {
-                    $options['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
-                }
-
-                $repository = $repositoryFactory->createRestLikeRepository($k, $v, $options);
-
-                if (!$this->getSession()->has($cacheKeyContentTypes))
-                {
-                    $this->getSession()->set($cacheKeyContentTypes, $repository->getContentTypeNames());
-                }
-                if (!$this->getSession()->has($cacheKeyConfigTypes))
-                {
-                    $this->getSession()->set($cacheKeyConfigTypes, $repository->getConfigTypeNames());
-                }
-                $this->addRepository($repository);
-            }
-        }
-
+        // Then run all modules
         foreach ($this->modules as $module)
         {
             $module['module']->run($this);
