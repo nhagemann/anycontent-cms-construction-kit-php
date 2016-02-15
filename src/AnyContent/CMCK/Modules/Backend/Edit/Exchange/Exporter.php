@@ -29,7 +29,7 @@ class Exporter
         $repository->selectView($viewName);
 
         /** @var Record[] $records */
-        $records = $repository->getRecords('','id',null);
+        $records = $repository->getRecords('','id');
 
         if ($records!==false)
         {
@@ -77,7 +77,7 @@ class Exporter
         $repository->selectView($viewName);
 
         /** @var Record[] $records */
-        $records = $repository->getRecords('',1,null,'id');
+        $records = $repository->getRecords('','.id',1);
 
         if ($records!==false)
         {
@@ -91,10 +91,10 @@ class Exporter
 
             // Set document properties
             $objPHPExcel->getProperties()->setCreator("AnyContent CMCK")
-                        ->setLastModifiedBy("AnyContent CMCK")
-                        ->setTitle("Full Export from content type " . $contentTypeDefinition->getTitle())
-                        ->setSubject("AnyContent Export")
-                        ->setDescription("");
+                ->setLastModifiedBy("AnyContent CMCK")
+                ->setTitle("Full Export from content type " . $contentTypeDefinition->getTitle())
+                ->setSubject("AnyContent Export")
+                ->setDescription("");
 
             $worksheet = $objPHPExcel->setActiveSheetIndex(0);
             $worksheet->setTitle('Export');
