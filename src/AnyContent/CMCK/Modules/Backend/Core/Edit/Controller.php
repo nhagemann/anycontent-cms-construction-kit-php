@@ -304,6 +304,8 @@ class Controller
 
             if ($record)
             {
+                $app['context']->setCurrentRecord($record);
+
                 /** @var ContentTypeDefinition $contentTypeDefinition */
                 $contentTypeDefinition = $repository->getContentTypeDefinition();
 
