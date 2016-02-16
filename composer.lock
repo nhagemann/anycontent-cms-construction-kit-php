@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4afa1a91b34192ac7c3697cab2141fac",
+    "hash": "41247228b1f9c922241f5cbd62a55bb7",
+    "content-hash": "7804d513eca1e4a4ec48948adf66e920",
     "packages": [
         {
             "name": "cpliakas/git-wrapper",
@@ -503,16 +504,16 @@
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "c6bbbd924089825d23d9e0e9f68b929a84ee83e8"
+                "reference": "3ed06dd519fdadbf7dcfb5d44f81349b89c0e6b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/c6bbbd924089825d23d9e0e9f68b929a84ee83e8",
-                "reference": "c6bbbd924089825d23d9e0e9f68b929a84ee83e8",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/3ed06dd519fdadbf7dcfb5d44f81349b89c0e6b6",
+                "reference": "3ed06dd519fdadbf7dcfb5d44f81349b89c0e6b6",
                 "shasum": ""
             },
             "require": {
@@ -550,7 +551,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2016-02-11 13:28:38"
+            "time": "2016-02-13 09:25:54"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
@@ -595,22 +596,23 @@
         },
         {
             "name": "nhagemann/kvmlogger",
-            "version": "1.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/kvmlogger.git",
-                "reference": "5b5c7789977f01a54b056329318a90204a3463e2"
+                "reference": "7ad6e7b03c28ae52f739179928f8099caf0af52a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/kvmlogger/zipball/5b5c7789977f01a54b056329318a90204a3463e2",
-                "reference": "5b5c7789977f01a54b056329318a90204a3463e2",
+                "url": "https://api.github.com/repos/nhagemann/kvmlogger/zipball/7ad6e7b03c28ae52f739179928f8099caf0af52a",
+                "reference": "7ad6e7b03c28ae52f739179928f8099caf0af52a",
                 "shasum": ""
             },
             "require": {
                 "katzgrau/klogger": "1.2.*",
                 "php": ">=5.4",
-                "psr/log": "1.*"
+                "psr/log": "1.*",
+                "symfony/yaml": "2.*"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7.0"
@@ -633,7 +635,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2016-01-18 14:10:04"
+            "time": "2016-02-13 17:57:39"
         },
         {
             "name": "nitra/php-min",
@@ -746,12 +748,12 @@
             "version": "v1.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fabpot/Pimple.git",
+                "url": "https://github.com/silexphp/Pimple.git",
                 "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
                 "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
                 "shasum": ""
             },
@@ -1133,12 +1135,12 @@
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
+                "url": "https://github.com/symfony/filesystem.git",
                 "reference": "d3c24d7d6e9c342008d8421b2fade460311647ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/d3c24d7d6e9c342008d8421b2fade460311647ea",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/d3c24d7d6e9c342008d8421b2fade460311647ea",
                 "reference": "d3c24d7d6e9c342008d8421b2fade460311647ea",
                 "shasum": ""
             },

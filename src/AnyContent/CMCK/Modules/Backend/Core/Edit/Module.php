@@ -8,6 +8,12 @@ use AnyContent\CMCK\Modules\Backend\Core\Edit\FormManager;
 
 class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 {
+    const EVENT_EDIT_RECORD_BEFORE_INSERT = 'event.record.before.insert';
+    const EVENT_EDIT_RECORD_BEFORE_UPDATE = 'event.edit.before.update';
+    const EVENT_EDIT_RECORD_BEFORE_DUPLICATE = 'event.record.before.duplicate';
+    const EVENT_EDIT_RECORD_BEFORE_DELETE = 'event.record.before.delete';
+
+
 
     public function init(Application $app, $options = array())
     {
@@ -24,8 +30,8 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->bind('addRecord')->value('workspace',null)->value('language',null);
 
         $app
-        ->get('/content/add/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::addRecord')
-        ->bind('addRecordVersion')->value('workspace',null)->value('language',null);
+            ->get('/content/add/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::addRecord')
+            ->bind('addRecordVersion')->value('workspace',null)->value('language',null);
 
         $app
             ->get('/content/delete/{contentTypeAccessHash}/{recordId}/{workspace}/{language}', 'AnyContent\CMCK\Modules\Backend\Core\Edit\Controller::deleteRecord')

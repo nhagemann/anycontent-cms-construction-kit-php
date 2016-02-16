@@ -373,12 +373,23 @@ class Controller
 
                 if ($save)
                 {
+                    if ($recordId) {
+                        $event = new EditRecordSaveEvent($app, $record);
+                        $app['dispatcher']->dispatch(Module::EVENT_EDIT_RECORD_BEFORE_UPDATE, $event);
+                    }
+                    else{
+                        $event = new EditRecordInsertEvent($app,$record);
+                        $app['dispatcher']->dispatch(Module::EVENT_EDIT_RECORD_BEFORE_INSERT, $event);
+                    }
+
                     $recordId = $repository->saveRecord($record);
 
                     $app['context']->resetTimeShift();
                     if ($recordId)
                     {
                         $app['context']->addSuccessMessage('Record saved.');
+
+
                     }
                     else
                     {
