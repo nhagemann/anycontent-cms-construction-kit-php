@@ -30,8 +30,11 @@ class ContentViewGlossary extends BaseContentView
 
         $glossary = array();
 
-        $this->repository->setOrder('name');
-        $records = $this->repository->getRecordsAsRecordObjects(null, null, 1, 'AnyContent\CMCK\Modules\Backend\Core\Listing\ListingRecord');
+        $this->getRepository()->registerRecordClassForContentType($this->getContentTypeDefinition()
+                                                                       ->getName(), 'AnyContent\CMCK\Modules\Backend\Core\Listing\ListingRecord');
+
+
+        $records = $this->getRepository()->getRecords('','name');
 
         /** @var ListingRecord $record */
         foreach ($records as $record)
