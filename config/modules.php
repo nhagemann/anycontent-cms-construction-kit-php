@@ -31,7 +31,6 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\View\CustomList');
 
 //$app->registerModule('AnyContent\Dev');
 
-
 \KVMLogger\KVMLoggerFactory::createWithKLogger('../');
 
 //\KVMLogger\KVMLoggerFactory::instance()->logRequest();

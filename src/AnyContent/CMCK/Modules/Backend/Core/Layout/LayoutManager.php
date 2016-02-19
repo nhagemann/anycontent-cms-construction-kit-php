@@ -24,6 +24,7 @@ class LayoutManager
 
     protected $cssLinks = array( 'head' => array(), 'body' => array() );
 
+    protected $brand = ['name'=>'AnyContent','logo'=>'/img/anycontent-logo.png'];
 
     public function __construct(Application $app, $twig, $context)
     {
@@ -140,9 +141,29 @@ class LayoutManager
     }
 
 
+    /**
+     * @return array
+     */
+    public function getBrand()
+    {
+        return $this->brand;
+    }
+
+
+    /**
+     * @param  $brand
+     */
+    public function setBrand($name,$logo)
+    {
+        $this->brand = ['name'=>$name,'logo'=>$logo];
+    }
+
+
     public function render($templateFilename, $vars = array(), $displayMessages = true)
     {
         $app = $this->getApplication();
+
+        $vars['brand'] = $this->getBrand();
 
         $vars = array_merge($this->vars, $vars);
 

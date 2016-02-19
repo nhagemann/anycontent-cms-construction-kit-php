@@ -3,8 +3,8 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             {% block logo %}
-                <a class="navbar-brand" href="/"><img src="/img/anycontent-logo.png" alt="AnyContent CMCK"
-                                                      title="AnyContent CMCK"></a>
+                <a class="navbar-brand" href="/"><img src="{{ brand.logo }}" alt="{{ brand.name }}"
+                                                      title="{{ brand.name }}"></a>
             {% endblock %}
         </div>
 
@@ -55,8 +55,8 @@
                         {% if timeshift.active %}
                             <li class="nav-timeshift-display">
 
-                                    <em>TimeShift: <span class="timeshift-blink">{{ timeshift.date }} {{ timeshift.time }}</span></em>&nbsp;
-
+                                <em>TimeShift: <span
+                                            class="timeshift-blink">{{ timeshift.date }} {{ timeshift.time }}</span></em>&nbsp;
 
 
                             </li>
