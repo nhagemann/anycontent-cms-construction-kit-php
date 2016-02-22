@@ -69,7 +69,7 @@ class Controller
             if (is_numeric($request->query->get('q')))
             {
                 $recordId = (int)$request->query->get('q');
-                if ($repository->getRecord($recordId, $app['context']->getCurrentWorkspace(), 'default', $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift()))
+                if ($repository->getRecord($recordId))
                 {
                     $app['context']->setCurrentSearchTerm('');
 
