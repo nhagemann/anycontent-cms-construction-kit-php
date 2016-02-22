@@ -15,12 +15,14 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
     protected function configure()
     {
         $this->setName('cmck:import')
-             ->setDescription('Import records of a content type.')
-             ->addArgument('repository', InputArgument::REQUIRED, 'Url of the repository having the content type to be imported, e.g. "https://www.anycontent.org". Use the list command to show available repositories.')
-             ->addArgument('content type', InputArgument::REQUIRED, 'Name of the content type to be imported.')
-             ->addArgument('filename', InputArgument::REQUIRED, 'Name of the file to be imported.')
-             ->addOption('json', 'j')
-             ->addOption('xlsx', 'x');
+            ->setDescription('Import records of a content type.')
+            ->addArgument('repository', InputArgument::REQUIRED, 'Name/Id of the repository having the content type to be imported. Use the list command to show available repositories.')
+            ->addArgument('content type', InputArgument::REQUIRED, 'Name of the content type to be imported.')
+            ->addArgument('workspace', InputArgument::REQUIRED, 'Name of the workspace to be imported.')
+            ->addArgument('language', InputArgument::REQUIRED, 'Name of the language to be imported.')
+            ->addArgument('filename', InputArgument::REQUIRED, 'Name of the file to be imported.')
+            ->addOption('json', 'j')
+            ->addOption('xlsx', 'x');
 
     }
 
@@ -34,57 +36,39 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $repositoryManager = $app['repos'];
 
         $contentTypeName = $input->getArgument('content type');
-        $repositoryUrl   = $input->getArgument('repository');
-        $filename        = $input->getArgument('filename');
+        $repositoryName = $input->getArgument('repository');
+        $workspace = $input->getArgument('workspace');
+        $language = $input->getArgument('language');
+        $filename = $input->getArgument('filename');
 
-        $workspace = 'default';
-        $language  = 'default';
 
         $output->writeln('Starting import for content type ' . $contentTypeName);
 
         $output->writeln('');
 
-        $repositories = $repositoryManager->listRepositories();
 
-        $repository = false;
-        foreach ($repositories as $url => $repositoryInfo)
-        {
-            if ($url == $repositoryUrl)
-            {
-                $repository = $repositoryManager->getRepositoryByRepositoryAccessHash($repositoryInfo['accessHash']);
+        $repository = $repositoryManager->getRepositoryById($repositoryName);
 
-                if (!$repository)
-                {
-                    $output->writeln(self::escapeError . 'Could not connect to ' . $repositoryUrl . '.' . self::escapeReset);
-
-                    return;
-                }
-                break;
-            }
-        }
-
-        if (!$repository)
-        {
-            $output->writeln(self::escapeError . 'Repository ' . $repositoryUrl . ' unknown. Use the list command to show available repositories.' . self::escapeReset);
+        if (!$repository->hasContentType($contentTypeName)) {
+            $output->writeln(self::escapeError . 'Repository ' . $repositoryName . ' does not have a content type named ' . $contentTypeName . '. Use the list command to show available content types.' . self::escapeReset);
 
             return;
         }
 
-        if (!$repository->hasContentType($contentTypeName))
-        {
-            $output->writeln(self::escapeError . 'Repository ' . $repositoryUrl . ' does not have a content type named ' . $contentTypeName . '. Use the list command to show available content types.' . self::escapeReset);
-
-            return;
+        if (!$repository->getContentTypeDefinition($contentTypeName)->hasWorkspace($workspace)) {
+            $output->writeln(self::escapeError . 'Content type ' . $contentTypeName . ' does not have a workspace named ' . $workspace . self::escapeReset);
         }
 
-        if (strpos($filename, '/') !== 0)
-        {
+        if (!$repository->getContentTypeDefinition($contentTypeName)->hasLanguage($language)) {
+            $output->writeln(self::escapeError . 'Content type ' . $contentTypeName . ' does not have a language named ' . $language . self::escapeReset);
+        }
+
+        if (strpos($filename, '/') !== 0) {
             $filename = getcwd() . '/' . $filename;
         }
         $filename = realpath($filename);
 
-        if (!file_exists($filename))
-        {
+        if (!file_exists($filename)) {
             $output->writeln(self::escapeError . 'Could not find/access file.' . self::escapeReset);
 
             return;
@@ -93,16 +77,16 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $output->writeln('Reading ' . $filename);
         $output->writeln('');
 
-        if ($input->getOption('xlsx') == true)
-        {
-            $importer = new Importer();
+        $importer = new Importer();
+
+        if ($input->getOption('xlsx') == true) {
+
             $importer->setOutput($output);
             $importer->importXLSX($repository, $contentTypeName, $filename, $workspace, $language);
-        }
-        else // default (JSON)
+        } else // default (JSON)
         {
-            $data     = file_get_contents($filename);
-            $importer = new Importer();
+            $data = file_get_contents($filename);
+
             $importer->setOutput($output);
             $importer->importJSON($repository, $contentTypeName, $data, $workspace, $language);
         }

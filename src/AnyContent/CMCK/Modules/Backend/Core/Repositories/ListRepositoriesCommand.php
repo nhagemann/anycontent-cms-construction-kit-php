@@ -33,7 +33,7 @@ class ListRepositoriesCommand extends \AnyContent\CMCK\Modules\Backend\Core\Appl
 
             foreach ($contentTypes as $contentTypeName => $contentType)
             {
-                $output->writeln(self::escapeBlue . $contentType['title'] . self::escapeReset . ' (' . $contentTypeName . ')');
+                $output->writeln(self::escapeMagenta . $contentType['title'] . self::escapeReset . ' (' . $contentTypeName . ')');
             }
             $output->writeln('');
         }

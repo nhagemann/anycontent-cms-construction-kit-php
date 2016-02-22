@@ -49,7 +49,7 @@ class Exporter
                 $result['records'][$record->getID()] = array( 'id' => $record->getID(), 'revision' => $record->getRevision(), 'properties' => $record->getProperties() );
             }
 
-            $json = json_encode($result);
+            $json = json_encode($result, JSON_PRETTY_PRINT);
 
             return $json;
 

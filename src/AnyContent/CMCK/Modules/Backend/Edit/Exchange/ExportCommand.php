@@ -18,95 +18,104 @@ class ExportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
     protected function configure()
     {
         $this->setName('cmck:export')
-             ->setDescription('Export records of a content type.')
-             ->addArgument('repository', InputArgument::REQUIRED, 'Url of the repository having the content type to be exported, e.g. "https://www.anycontent.org". Use the list command to show available repositories.')
-             ->addArgument('content type', InputArgument::REQUIRED, 'Name of the content type to be exported.')
-             ->addOption('json', 'j')
-             ->addOption('xlsx', 'x');
-
+            ->setDescription('Export records of a content type.')
+            ->addArgument('repository', InputArgument::REQUIRED, 'Name/Id of the repository having the content type to be exported. Use the list command to show available repositories.')
+            ->addArgument('contentType', InputArgument::REQUIRED, 'Name of the content type to be exported.')
+            ->addArgument('workspace', InputArgument::OPTIONAL, 'Name of the workspace to be exported [default].')
+            ->addArgument('language', InputArgument::OPTIONAL, 'Name of the language to be exported [default].')
+            ->addOption('json', 'j')
+            ->addOption('xlsx', 'x')
+            ->addOption('print', 'p');
     }
 
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = $this->getSilexApplication();
+
+        $verbose = !$input->getOption('print');
+
         /** @var RepositoryManager $repositoryManager */
         $repositoryManager = $app['repos'];
 
-        $contentTypeName = $input->getArgument('content type');
-        $repositoryUrl   = $input->getArgument('repository');
+        $contentTypeName = $input->getArgument('contentType');
+        $repositoryName = $input->getArgument('repository');
 
         $workspace = 'default';
-        $language  = 'default';
-
-        $output->writeln('');
-        $output->writeln('Starting export for content type ' . $contentTypeName);
-        $output->writeln('');
-        $exporter = new Exporter();
-        $exporter->setOutput($output);
-
-        $repositories = $repositoryManager->listRepositories();
-
-        $repository = false;
-        foreach ($repositories as $url => $repositoryInfo)
-        {
-            if ($url == $repositoryUrl)
-            {
-                $repository = $repositoryManager->getRepositoryByRepositoryAccessHash($repositoryInfo['accessHash']);
-
-                if (!$repository)
-                {
-                    $output->writeln(self::escapeError . 'Could not connect to ' . $repositoryUrl . '.' . self::escapeReset);
-
-                    return;
-                }
-                break;
-            }
+        if ($input->hasArgument('workspace')) {
+            $workspace = $input->getArgument('workspace');
         }
 
-        if (!$repository)
-        {
-            $output->writeln(self::escapeError . 'Repository ' . $repositoryUrl . ' unknown. Use the list command to show available repositories.' . self::escapeReset);
+        $language = 'default';
+        if ($input->hasArgument('language')) {
+            $language = $input->getArgument('language');
+        }
+
+        if ($verbose) {
+            $output->writeln('');
+            $output->writeln('Starting export for content type ' . $contentTypeName);
+            $output->writeln('');
+        }
+
+
+        $exporter = new Exporter();
+
+        if($verbose) {
+            $exporter->setOutput($output);
+        }
+
+        $repository = $repositoryManager->getRepositoryById($repositoryName);
+
+
+        if (!$repository) {
+            $output->writeln(self::escapeError . 'Repository ' . $repositoryName . ' unknown. Use the list command to show available repositories.' . self::escapeReset);
 
             return;
         }
 
-        if (!$repository->hasContentType($contentTypeName))
-        {
-            $output->writeln(self::escapeError . 'Repository ' . $repositoryUrl . ' does not have a content type named ' . $contentTypeName . '. Use the list command to show available content types.' . self::escapeReset);
+        if (!$repository->hasContentType($contentTypeName)) {
+            $output->writeln(self::escapeError . 'Repository ' . $repositoryName . ' does not have a content type named ' . $contentTypeName . '. Use the list command to show available content types.' . self::escapeReset);
         }
 
-        if ($input->getOption('xlsx') == true)
-        {
+        if (!$repository->getContentTypeDefinition($contentTypeName)->hasWorkspace($workspace)) {
+            $output->writeln(self::escapeError . 'Content type ' . $contentTypeName . ' does not have a workspace named ' . $workspace . self::escapeReset);
+        }
+
+        if (!$repository->getContentTypeDefinition($contentTypeName)->hasLanguage($language)) {
+            $output->writeln(self::escapeError . 'Content type ' . $contentTypeName . ' does not have a language named ' . $language . self::escapeReset);
+        }
+
+        if ($input->getOption('xlsx') == true) {
             $filename = $contentTypeName . '.' . $workspace . '.' . $language . '.xlsx';
             $data = $exporter->exportXLSX($repository, $contentTypeName, $workspace, $language);
-            if (!$data)
-            {
-                $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryUrl . '.' . self::escapeReset);
+            if (!$data) {
+                $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryName . '.' . self::escapeReset);
                 return;
             }
-        }
-        else // default (JSON)
+        } else // default (JSON)
         {
             $filename = $contentTypeName . '.' . $workspace . '.' . $language . '.json';
             $data = $exporter->exportJSON($repository, $contentTypeName, $workspace, $language);
-            if (!$data)
-            {
-                $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryUrl . '.' . self::escapeReset);
+            if (!$data) {
+                $output->writeln(self::escapeError . 'Could not access repository ' . $repositoryName . '.' . self::escapeReset);
                 return;
             }
         }
-
 
 
         $filesystem = new Filesystem();
 
-        $output->writeln('');
-        $output->writeln('Dumping data to ' . $filename);
-        $filesystem->dumpFile($filename, $data);
-        $output->writeln('');
-        $output->writeln('Done');
-        $output->writeln('');
+        if ($verbose) {
+            $output->writeln('');
+            $output->writeln('Dumping data to ' . $filename);
+            $filesystem->dumpFile($filename, $data);
+            $output->writeln('');
+            $output->writeln('Done');
+            $output->writeln('');
+        }
+        else{
+            $output->write($data);
+        }
 
     }
 }
