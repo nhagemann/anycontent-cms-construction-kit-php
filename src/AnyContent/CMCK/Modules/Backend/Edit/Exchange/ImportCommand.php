@@ -78,16 +78,13 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
         $output->writeln('');
 
         $importer = new Importer();
+        $importer->setOutput($output);
 
         if ($input->getOption('xlsx') == true) {
-
-            $importer->setOutput($output);
             $importer->importXLSX($repository, $contentTypeName, $filename, $workspace, $language);
         } else // default (JSON)
         {
             $data = file_get_contents($filename);
-
-            $importer->setOutput($output);
             $importer->importJSON($repository, $contentTypeName, $data, $workspace, $language);
         }
 

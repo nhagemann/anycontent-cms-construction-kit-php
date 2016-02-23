@@ -271,11 +271,11 @@ class Importer
             {
                 if ($v != null)
                 {
-                    $this->writeln('Imported record number ' . ($k + 1) . '. Id ' . $v . ' has been asigned.');
+                    $this->writeln('Imported record number ' . $k  . '. Id ' . $v . ' has been asigned.');
                 }
                 else
                 {
-                    $this->writeln('Import of record number ' . ($k + 1) . ' failed.');
+                    $this->writeln('Import of record number ' . $k . ' failed.');
                 }
             }
         }
