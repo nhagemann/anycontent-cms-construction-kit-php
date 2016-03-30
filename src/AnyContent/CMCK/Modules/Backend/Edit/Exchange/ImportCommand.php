@@ -46,7 +46,6 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
 
         $output->writeln('');
 
-
         $repository = $repositoryManager->getRepositoryById($repositoryName);
 
         if (!$repository->hasContentType($contentTypeName)) {
