@@ -87,7 +87,5 @@ class ImportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
             $data = file_get_contents($filename);
             $importer->importJSON($repository, $contentTypeName, $data, $workspace, $language);
         }
-
     }
-
 }
