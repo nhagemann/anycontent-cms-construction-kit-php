@@ -1,0 +1,36 @@
+{
+  "name": "nhagemann/anycontent-cms-construction-kit-php",
+  "description": "",
+  "type": "library",
+  "homepage": "http://www.nilshagemann.de",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nils Hagemann",
+      "email": "mail@nilshagemann.de",
+      "homepage": "http://www.nilshagemann.de"
+    }
+  ],
+  "require": {
+    "php": ">=5.4,<6.0",
+    "silex/silex": "1.2.*",
+    "twig/twig": "1.x",
+    "nitra/php-min": "dev-master",
+    "phpoffice/phpexcel": "1.8.*",
+    "symfony/filesystem": "2.5.*",
+    "symfony/yaml": "2.5.*",
+    "knplabs/console-service-provider": "1.0",
+    "monolog/monolog": "1.*",
+    "nhagemann/anycontent-client-php": "2.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.*"
+  },
+  "autoload": {
+    "psr-0": {
+      "AnyContent": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
