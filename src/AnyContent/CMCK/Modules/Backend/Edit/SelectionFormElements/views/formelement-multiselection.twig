@@ -6,7 +6,7 @@
         <div class="col-xs-5">
             <select multiple class="form-control" id="{{ id }}" name="{{ name }}[]">
                 {% for k,v in options %}
-                    {% if k in value %}
+                    {% if k == value %}
                         <option value="{{ k }}" selected="selected">{{ v }}</option>
                     {% else %}
                         <option value="{{ k }}">{{ v }}</option>
@@ -20,7 +20,7 @@
             {% for k,v in options %}
                 <div class="radio">
                     <label>
-                        {% if k in value %}
+                        {% if k == value %}
                             <input type="checkbox" name="{{ name }}[]" id="{{ id }}_{{ loop.index }}" value="{{ k }}"
                                    checked="checked"> {{ v }}
                         {% else %}
