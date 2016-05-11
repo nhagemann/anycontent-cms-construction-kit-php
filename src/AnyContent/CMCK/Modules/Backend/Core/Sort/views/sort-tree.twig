@@ -45,8 +45,8 @@
                 <div class="btn btn-success">
                     <small>#{{ record.id }}</small>
                     &nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
-                                class="badge subtype">{{ record.record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
-                            <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span></div>
+                                class="badge subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                            <span class="badge status">{{ record.statusLabel }}</span>{% endif %}</span></div>
 
 
                 {% set level = record.level %}
@@ -99,8 +99,8 @@
                                 <div class="btn btn-success">
                                     <small>#{{ record.id }}</small>
                                     &nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
-                                                class="badge subtype">{{ record.record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
-                                            <span class="badge status">{{ record.record.statusLabel }}</span>{% endif %}</span>
+                                                class="badge subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                                            <span class="badge status">{{ record.statusLabel }}</span>{% endif %}</span>
                                 </div>
 
 
