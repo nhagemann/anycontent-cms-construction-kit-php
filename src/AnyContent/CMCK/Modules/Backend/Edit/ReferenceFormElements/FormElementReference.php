@@ -73,6 +73,7 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
         }
 
         $this->vars['options'] = $options;
+        $this->vars['json']=$this->buildAutoCompleteLabelValueArray($options);
     }
 
 

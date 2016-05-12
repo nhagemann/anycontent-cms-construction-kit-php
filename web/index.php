@@ -6,6 +6,7 @@ if (!defined('APPLICATION_PATH'))
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+
 $app          = new \AnyContent\CMCK\Modules\Backend\Core\Application\Application();
 
 // Detect environment (default: prod) by checking for the existence of $app_env
