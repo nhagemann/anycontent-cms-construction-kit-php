@@ -43,6 +43,7 @@
                         else {
                             parent.cmck_modal_id('modal_files_file_zoom');
                         }
+                        parent.cmck_modal_id('modal_files_file_zoom');
                     });
 
 

@@ -96,7 +96,7 @@ class Controller
                         }
                         else
                         {
-                            $item['links']['src'] = $item['links']['view'];
+                           $item['links']['src'] = $item['links']['view'];
                         }
 
                         $files[] = $item;

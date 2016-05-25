@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 use CMDL\FormElementDefinition;
 
 use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
@@ -32,6 +33,8 @@ class FormElementDefault
 
     protected $options = array();
 
+    /** @var  RepositoryManager */
+    protected $repos;
 
     public function __construct($id, $name, $formElementDefinition, $app, $value = '', $options = array())
     {
