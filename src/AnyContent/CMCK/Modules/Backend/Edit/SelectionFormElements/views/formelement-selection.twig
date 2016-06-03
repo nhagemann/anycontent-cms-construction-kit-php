@@ -18,9 +18,11 @@
                                     $("#{{ id }}").focus();
                                 }
                             }
+
                         });
                         $("#{{ id }}").click(function () {
                             $("#{{ id }}").val('');
+                            $(this).autocomplete("search");
                         });
                     });
                 </script>
