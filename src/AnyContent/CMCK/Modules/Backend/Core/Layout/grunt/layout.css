@@ -9,6 +9,14 @@ body.layout-default {
     background-image: url(/img/subtle_dots.png);
 }
 
+body.layout-plain {
+    background-color: #f5f5f5;
+}
+
+body.layout-plain-white {
+    background-color: #ffffff;
+}
+
 /* position of AnyContent logo in navbar */
 
 .navbar-top li {

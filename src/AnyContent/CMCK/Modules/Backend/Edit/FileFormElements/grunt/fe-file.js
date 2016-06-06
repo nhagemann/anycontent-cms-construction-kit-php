@@ -30,10 +30,11 @@
                     var value = $(id).val();
 
                     $(parent.document).find('#modal_files_file_zoom_title').html(value);
-                    $(parent.document).find('#modal_files_file_zoom_iframe').attr('src', $(this).attr('href') + value);
+                    var url = $(id).attr('data-url-view') + value;
+                    $(parent.document).find('#modal_files_file_zoom_iframe').attr('src', url);
 
                     $.ajax({
-                        url : $(this).attr('href') + value,
+                        url : url,
                         type: 'HEAD'
                     }).always(function (o) {
 

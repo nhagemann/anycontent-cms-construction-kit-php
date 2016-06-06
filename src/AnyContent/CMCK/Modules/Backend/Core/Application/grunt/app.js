@@ -10,10 +10,13 @@ function cmck_modal_id(id, url, onShown) {
         }
     });
 
-    $(id).removeData();
-    $(id+' .modal-header').html('');
-    $(id+' .modal-body').html('');
-    $(id+' .modal-footer').html('');
+    if (typeof url != 'undefined'){
+        // clear modal content, if content should be retrieved via request
+        $(id).removeData();
+        $(id + ' .modal-header').html('');
+        $(id + ' .modal-body').html('');
+        $(id + ' .modal-footer').html('');
+    }
     $(id).appendTo("body");
 
     $(id).modal({

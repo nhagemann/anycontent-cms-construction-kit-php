@@ -49,3 +49,7 @@
 .media-heading {
     width: 180px;
 }
+
+.files-list-modal .media-heading {
+    width: 170px;
+}
