@@ -9,25 +9,31 @@
                 <script>
                     $(function () {
                         var availableTags = {{ json|json_encode|raw }};
-                        $("#{{ id }}").autocomplete({
+                        $("#{{ id }}_label").autocomplete({
                             source: availableTags,
                             minLength: 0,
                             change: function (event, ui) {
                                 if (ui.item == null) {
-                                    $("#{{ id }}").val('');
-                                    $("#{{ id }}").focus();
+                                    $("#{{ id }}_label").val('');
+                                    $("#{{ id }}_label").focus();
                                 }
+                            },
+                            select: function (event, ui) {
+                                $("#{{ id }}_label").val(ui.item.label);
+                                $("#{{ id }}").val(ui.item.value);
+                                return false;
                             }
 
                         });
-                        $("#{{ id }}").click(function () {
-                            $("#{{ id }}").val('');
-                            $(this).autocomplete("search");
+                        $("#{{ id }}_label").click(function () {
+                            $(this).autocomplete("search", $("#{{ id }}_label").val());
                         });
                     });
                 </script>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="{{ id }}" name="{{ name }}" placeholder=""
+                    <input type="name" class="form-control" id="{{ id }}_label" placeholder=""
+                           value="{{ label }}">
+                    <input type="hidden" class="form-control" id="{{ id }}" name="{{ name }}" placeholder=""
                            value="{{ value }}">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-option-horizontal"
                                                           aria-hidden="true"></span></span>

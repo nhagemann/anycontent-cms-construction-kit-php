@@ -2,6 +2,7 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Edit;
 
+use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
 use CMDL\FormElementDefinition;
 
@@ -17,10 +18,15 @@ class FormElementDefault
 
     /** @var  FormElementDefinition */
     protected $definition;
+    
     protected $value = '';
 
+    /** @var  Application */
     protected $app;
+
+    /** @var  \Twig_Environment */
     protected $twig;
+
     /** @var  ContextManager */
     protected $context;
 
