@@ -28,7 +28,7 @@ class ContextManager
     /** @var DataTypeDefinition */
     protected $dataTypeDefinition = null;
 
-    /** @var Recor */
+    /** @var Record */
     protected $record = null;
 
     protected $config = null;
@@ -219,6 +219,9 @@ class ContextManager
     }
 
 
+    /**
+     * @return Record
+     */
     public function getCurrentRecord()
     {
         return $this->record;
@@ -231,6 +234,9 @@ class ContextManager
     }
 
 
+    /**
+     * @return Config
+     */
     public function getCurrentConfig()
     {
         return $this->config;

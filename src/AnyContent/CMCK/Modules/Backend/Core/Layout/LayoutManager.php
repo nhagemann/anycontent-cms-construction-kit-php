@@ -3,6 +3,7 @@
 namespace AnyContent\CMCK\Modules\Backend\Core\Layout;
 
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
+use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 
 class LayoutManager
 {
@@ -12,6 +13,7 @@ class LayoutManager
 
     protected $twig;
 
+    /** @var  ContextManager */
     protected $context;
 
     protected $vars = array();
@@ -24,7 +26,8 @@ class LayoutManager
 
     protected $cssLinks = array( 'head' => array(), 'body' => array() );
 
-    protected $brand = ['name'=>'AnyContent','logo'=>'/img/anycontent-logo.png'];
+    protected $brand = [ 'name' => 'AnyContent', 'logo' => '/img/anycontent-logo.png' ];
+
 
     public function __construct(Application $app, $twig, $context)
     {
@@ -66,7 +69,7 @@ class LayoutManager
 
             $path = APPLICATION_PATH . '/web/css/add/' . $filename;
 
-            if ($this->app['debug'] == true || ! file_exists($path))
+            if ($this->app['debug'] == true || !file_exists($path))
             {
                 $data = $this->app['twig']->render($filename);
                 file_put_contents($path, $data);
@@ -95,7 +98,7 @@ class LayoutManager
 
         $path = APPLICATION_PATH . '/web/js/add/' . $filename;
 
-        if ($this->app['debug'] == true || ! file_exists($path))
+        if ($this->app['debug'] == true || !file_exists($path))
         {
             $data = $this->app['twig']->render($filename);
             file_put_contents($path, $data);
@@ -153,9 +156,9 @@ class LayoutManager
     /**
      * @param  $brand
      */
-    public function setBrand($name,$logo)
+    public function setBrand($name, $logo)
     {
-        $this->brand = ['name'=>$name,'logo'=>$logo];
+        $this->brand = [ 'name' => $name, 'logo' => $logo ];
     }
 
 
@@ -203,6 +206,45 @@ class LayoutManager
             $messages['error']   = $this->context->getErrorMessages();
             $vars['messages']    = $messages;
         }
+
+        $csscontext = [ ];
+
+        $repository = $this->context->getCurrentRepository();
+
+        if ($repository)
+        {
+
+            $csscontext[] = 'repository-' . strtolower($repository->getName());
+
+            $record = $this->context->getCurrentRecord();
+
+            if ($record)
+            {
+                $csscontext[] = 'contenttype-' . strtolower($record->getContentTypeName());
+
+                $definition = $record->getContentTypeDefinition();
+
+                if ($definition->hasSubtypes() && $record->getSubtype() != '')
+                {
+                    $csscontext[] = 'subtype-' . strtolower($record->getSubtype());
+                }
+
+                if ($definition->hasStatusList() && $record->getStatus() != '')
+                {
+                    $csscontext[] = 'status-' . strtolower($record->getStatus());
+                }
+            }
+
+            $config = $this->context->getCurrentConfig();
+
+            if ($config)
+            {
+                $csscontext[] = 'configtype-' . strtolower($config->getConfigTypeName());
+            }
+
+        }
+
+        $vars['csscontext'] = join(' ', $csscontext);
 
         $event = new LayoutTemplateRenderEvent($app, $templateFilename, $vars);
 
