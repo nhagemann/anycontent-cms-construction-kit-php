@@ -13,26 +13,32 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
 
     protected $definition;
 
-    public function __construct($id, $name, $formElementDefinition, Application $app, $value = '')
-    {
-        parent::__construct($id, $name, $formElementDefinition, $app, $value);
+    protected $templateName = 'formelement-reference.twig';
 
-        $this->vars['type'] = $this->definition->getType();
+    protected $optionsForSelectBox = false;
+
+    protected function getOptionsForSelectBox()
+    {
+
+        if ($this->optionsForSelectBox)
+        {
+            return $this->optionsForSelectBox;
+        }
 
         /** @var Repository $repository */
-        $repository = $app['context']->getCurrentRepository();
+        $repository = $this->app['context']->getCurrentRepository();
 
 
         if ($this->definition->hasRepositoryName())
         {
             /** @var RepositoryManager $repositoryManager */
-            $repositoryManager = $app['repos'];
+            $repositoryManager = $this->app['repos'];
 
             $repository = $repositoryManager->getRepositoryById($this->definition->getRepositoryName());
 
             if (!$repository)
             {
-                $app['context']->addAlertMessage('Could not find repository named '.$this->definition->getRepositoryName());
+                $this->app['context']->addAlertMessage('Could not find repository named '.$this->definition->getRepositoryName());
             }
         }
 
@@ -62,20 +68,20 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
                 }
 
                 /** @var RepositoryManager $repositoryManager */
-                $repositoryManager = $app['repos'];
+                $repositoryManager = $this->app['repos'];
 
                 $accessHash = $repositoryManager->getAccessHash($repository, $contentTypeDefinition);
 
                 $editUrl = '#';
                 if ($this->value != '')
                 {
-                    $editUrl = $app->getUrlGenerator()
-                                   ->generate('editRecord', array( 'contentTypeAccessHash' => $accessHash, 'recordId' => $value, 'workspace' => $workspace, 'language' => $language ));
+                    $editUrl = $this->app->getUrlGenerator()
+                                   ->generate('editRecord', array( 'contentTypeAccessHash' => $accessHash, 'recordId' => $this->value, 'workspace' => $workspace, 'language' => $language ));
                 }
 
                 $this->vars['editUrl'] = $editUrl;
 
-                $editUrlPattern = $app->getUrlGenerator()
+                $editUrlPattern = $this->app->getUrlGenerator()
                                       ->generate('editRecord', array( 'contentTypeAccessHash' => $accessHash, 'recordId' => 'recordId', 'workspace' => $workspace, 'language' => $language ));
 
                 $this->vars['editUrlPattern'] = $editUrlPattern;
@@ -89,27 +95,17 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
             }
             else
             {
-                $app['context']->addAlertMessage('Could not find referenced content type ' . $this->definition->getContentType() . '.');
+                $this->app['context']->addAlertMessage('Could not find referenced content type ' . $this->definition->getContentType() . '.');
             }
 
         }
 
-        $this->vars['options'] = $options;
-        if (count($options)>20)
-        {
-            $this->vars['label']='';
-            $this->vars['json'] = $this->buildAutoCompleteLabelValueArray($options);
-            if (array_key_exists($this->value,$options))
-            {
-                $this->vars['label'] = $options[$this->value];
-            }
-        }
+        $this->optionsForSelectBox = $options;
+
+        return $this->optionsForSelectBox;
     }
 
 
-    public function render($layout)
-    {
-        return $this->twig->render('formelement-reference.twig', $this->vars);
-    }
+
 
 }

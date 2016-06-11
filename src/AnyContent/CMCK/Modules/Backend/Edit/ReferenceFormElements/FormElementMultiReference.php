@@ -3,9 +3,14 @@ namespace AnyContent\CMCK\Modules\Backend\Edit\ReferenceFormElements;
 
 use AnyContent\Client\DataDimensions;
 use AnyContent\Client\Repository;
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
+use CMDL\FormElementDefinitions\MultiReferenceFormElementDefinition;
 
 class FormElementMultiReference extends \AnyContent\CMCK\Modules\Backend\Edit\SelectionFormElements\FormElementMultiSelection
 {
+    /** @var  MultiReferenceFormElementDefinition */
+
+    protected $definition;
 
     public function __construct($id, $name, $formElementDefinition, $app, $value = '')
     {
@@ -15,6 +20,19 @@ class FormElementMultiReference extends \AnyContent\CMCK\Modules\Backend\Edit\Se
 
         /** @var Repository $repository */
         $repository = $app['context']->getCurrentRepository();
+
+        if ($this->definition->hasRepositoryName())
+        {
+            /** @var RepositoryManager $repositoryManager */
+            $repositoryManager = $this->app['repos'];
+
+            $repository = $repositoryManager->getRepositoryById($this->definition->getRepositoryName());
+
+            if (!$repository)
+            {
+                $this->app['context']->addAlertMessage('Could not find repository named '.$this->definition->getRepositoryName());
+            }
+        }
 
         $options = array();
 

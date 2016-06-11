@@ -4,60 +4,60 @@
 
     {% if type=='dropdown' %}
 
-        {% if options|length >20 %}
-            <div class="col-xs-3">
-                <script>
-                    $(function () {
-                        var availableTags = {{ json|json_encode|raw }};
-                        $("#{{ id }}_label").autocomplete({
-                            source: availableTags,
-                            minLength: 0,
-                            change: function (event, ui) {
-                                if (ui.item == null) {
-                                    $("#{{ id }}_label").val('');
-                                    $("#{{ id }}_label").focus();
-                                }
-                            },
-                            select: function (event, ui) {
-                                $("#{{ id }}_label").val(ui.item.label);
-                                $("#{{ id }}").val(ui.item.value);
-                                return false;
-                            }
+        <div class="col-xs-4">
 
-                        });
-                        $("#{{ id }}_label").click(function () {
-                            $(this).autocomplete("search", $("#{{ id }}_label").val());
-                        });
+            <select class="form-control" id="{{ id }}" name="{{ name }}">
+                <option value="">...</option>
+                {% for k,v in options %}
+                    {% if value == k %}
+                        <option value="{{ k }}" selected="selected">{{ v }}</option>
+                    {% else %}
+                        <option value="{{ k }}">{{ v }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+    {% endif %}
+
+    {% if type=='autocomplete' %}
+        <div class="col-xs-4">
+            <script>
+                $(function () {
+                    var availableTags = {{ options|json_encode|raw }};
+                    $("#{{ id }}_label").autocompleteCat({
+                        source: availableTags,
+                        minLength: 0,
+                        change: function (event, ui) {
+                            if (ui.item == null) {
+                                $("#{{ id }}_label").val('');
+                                $("#{{ id }}_label").focus();
+                            }
+                        },
+                        select: function (event, ui) {
+                            $("#{{ id }}_label").val(ui.item.label);
+                            $("#{{ id }}").val(ui.item.value);
+                            return false;
+                        }
+
                     });
-                </script>
-                <div class="input-group">
-                    <input type="name" class="form-control" id="{{ id }}_label" placeholder=""
-                           value="{{ label }}">
-                    <input type="hidden" class="form-control" id="{{ id }}" name="{{ name }}" placeholder=""
-                           value="{{ value }}">
+                    $("#{{ id }}_label").click(function () {
+                        $(this).autocompleteCat("search", $("#{{ id }}_label").val());
+                    });
+                });
+            </script>
+            <div class="input-group">
+                <input type="name" class="form-control" id="{{ id }}_label" placeholder=""
+                       value="{{ label }}">
+                <input type="hidden" class="form-control" id="{{ id }}" name="{{ name }}" placeholder=""
+                       value="{{ value }}">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-option-horizontal"
                                                           aria-hidden="true"></span></span>
 
-                </div>
-
             </div>
-        {% else %}
-            <div class="col-xs-4">
-
-                <select class="form-control" id="{{ id }}" name="{{ name }}">
-                    <option value="">...</option>
-                    {% for k,v in options %}
-                        {% if value == k %}
-                            <option value="{{ k }}" selected="selected">{{ v }}</option>
-                        {% else %}
-                            <option value="{{ k }}">{{ v }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-        {% endif %}
-
+        </div>
     {% endif %}
+
     {% if type=='radio' %}
         <div class="col-xs-8">
             {% for k,v in options %}
