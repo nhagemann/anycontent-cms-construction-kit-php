@@ -61,6 +61,8 @@ class FormElementReference extends \AnyContent\CMCK\Modules\Backend\Edit\Selecti
                 $referenceDataDimensions->setViewName($contentTypeDefinition->getListViewDefinition()->getName());
                 $referenceDataDimensions->setTimeShift($this->definition->getTimeShift());
 
+                $repository->setDataDimensions($referenceDataDimensions);
+                
                 $records = [ ];
                 foreach ($repository->getRecords('', $this->definition->getOrder(), 1, null) as $record)
                 {
