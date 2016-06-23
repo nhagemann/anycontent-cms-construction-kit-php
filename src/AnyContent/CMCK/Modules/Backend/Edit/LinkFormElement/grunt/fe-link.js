@@ -38,9 +38,6 @@
 
                     }
                 });
-                return;
-
-                $(this).addClass('alert-danger');
             }
         };
 
