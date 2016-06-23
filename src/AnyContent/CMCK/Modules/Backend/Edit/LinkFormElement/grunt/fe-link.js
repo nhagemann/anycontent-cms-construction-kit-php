@@ -21,14 +21,21 @@
                     url: '/edit/check/link/' + url,
                     success: function (result) {
 
-                        if (result) {
+                        formelement.removeClass('alert-success');
+                        formelement.removeClass('alert-warning');
+                        formelement.removeClass('alert-danger');
+                        if (result == 200) {
                             formelement.addClass('alert-success');
-                            formelement.removeClass('alert-danger');
                         }
                         else {
-                            formelement.addClass('alert-danger');
-                            formelement.removeClass('alert-success');
+                            if (result > 400) {
+                                formelement.addClass('alert-danger');
+                            }
+                            else {
+                                formelement.addClass('alert-warning');
+                            }
                         }
+
                     }
                 });
                 return;
@@ -48,8 +55,7 @@
                 case 'sequenceForm.refresh':
                     $('div.formelement-link input').each(function () {
 
-                        val = $(this).val();
-                        $(this).on('focus', checkInput);
+                        $(this).off('blur');
                         $(this).on('blur', checkInput);
 
                     });

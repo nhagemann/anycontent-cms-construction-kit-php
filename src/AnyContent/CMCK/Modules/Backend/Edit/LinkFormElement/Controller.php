@@ -24,14 +24,10 @@ class Controller
         $ch = curl_init($path);
 
         curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         curl_exec($ch);
         $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        if ($retcode >=400)
-        {
-            return new JsonResponse(false);
-        }
 
         return new JsonResponse($retcode);
     }
