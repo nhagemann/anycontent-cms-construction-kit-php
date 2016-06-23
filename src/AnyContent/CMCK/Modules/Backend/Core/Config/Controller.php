@@ -2,8 +2,10 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Config;
 
+use AnyContent\Client\Config;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
+use CMDL\ConfigTypeDefinition;
 use CMDL\ContentTypeDefinition;
 use CMDL\ViewDefinition;
 
@@ -27,6 +29,7 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByConfigTypeAccessHash($configTypeAccessHash);
 
+        /** @var ConfigTypeDefinition $configTypeDefinition */
         $configTypeDefinition = $app['repos']->getConfigTypeDefinitionByConfigTypeAccessHash($configTypeAccessHash);
 
         if ($repository)
@@ -41,8 +44,14 @@ class Controller
 
             $app['form']->setDataTypeDefinition($configTypeDefinition);
 
+
+            $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+            $repository->selectLanguage($app['context']->getCurrentLanguage());
+            $repository->setTimeShift($app['context']->getCurrentTimeShift());
+            $repository->selectView('default');
+
             /** @var Config $record */
-            $record = $repository->getConfig($configTypeDefinition->getName(), $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+            $record = $repository->getConfig($configTypeDefinition->getName());
 
             if ($record)
             {
@@ -77,6 +86,7 @@ class Controller
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByConfigTypeAccessHash($configTypeAccessHash);
 
+        /** @var ConfigTypeDefinition $configTypeDefinition */
         $configTypeDefinition = $app['repos']->getConfigTypeDefinitionByConfigTypeAccessHash($configTypeAccessHash);
 
         if ($repository)
@@ -89,8 +99,15 @@ class Controller
             $app['context']->setCurrentWorkspace($hidden['workspace']);
             $app['context']->setCurrentLanguage($hidden['language']);
 
+
+            $repository->selectWorkspace($app['context']->getCurrentWorkspace());
+            $repository->selectLanguage($app['context']->getCurrentLanguage());
+            $repository->setTimeShift($app['context']->getCurrentTimeShift());
+            $repository->selectView('default');
+
+
             /** @var Config $record */
-            $record = $repository->getConfig($configTypeDefinition->getName(), $app['context']->getCurrentWorkspace(), $app['context']->getCurrentLanguage(), $app['context']->getCurrentTimeShift());
+            $record = $repository->getConfig($configTypeDefinition->getName());
 
             if ($record)
             {
