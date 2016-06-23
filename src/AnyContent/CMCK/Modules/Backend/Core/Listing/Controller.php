@@ -78,6 +78,8 @@ class Controller
             }
 
             $app['context']->setCurrentSearchTerm($request->query->get('q'));
+
+
         }
 
         // store sorting order

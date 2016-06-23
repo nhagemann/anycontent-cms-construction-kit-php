@@ -441,16 +441,16 @@
         },
         {
             "name": "ktamas77/firebase-php",
-            "version": "2.0.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ktamas77/firebase-php.git",
-                "reference": "52477150d423e88103264915b53fc2b41b5a71c5"
+                "reference": "915fcac8a3e4e1ba457ab0cd0801255ce41445c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/52477150d423e88103264915b53fc2b41b5a71c5",
-                "reference": "52477150d423e88103264915b53fc2b41b5a71c5",
+                "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/915fcac8a3e4e1ba457ab0cd0801255ce41445c5",
+                "reference": "915fcac8a3e4e1ba457ab0cd0801255ce41445c5",
                 "shasum": ""
             },
             "require": {
@@ -479,7 +479,7 @@
                 "rest",
                 "wrapper"
             ],
-            "time": "2015-03-04 13:35:41"
+            "time": "2016-06-14 20:11:14"
         },
         {
             "name": "monolog/monolog",
@@ -565,12 +565,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "a2d24b1dfc240e58b14129aa593ee3cc41728254"
+                "reference": "3d06c8d9919a30cd76a8cb6980a5dc08043b6c9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/a2d24b1dfc240e58b14129aa593ee3cc41728254",
-                "reference": "a2d24b1dfc240e58b14129aa593ee3cc41728254",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/3d06c8d9919a30cd76a8cb6980a5dc08043b6c9d",
+                "reference": "3d06c8d9919a30cd76a8cb6980a5dc08043b6c9d",
                 "shasum": ""
             },
             "require": {
@@ -609,7 +609,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2016-06-09 14:11:56"
+            "time": "2016-06-22 14:23:26"
         },
         {
             "name": "nhagemann/cmdl-parser-php",

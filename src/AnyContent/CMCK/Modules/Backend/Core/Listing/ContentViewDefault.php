@@ -25,6 +25,7 @@ class ContentViewDefault extends BaseContentView
 
     public function apply($vars)
     {
+
         // reset chained save operations (e.g. 'save-insert') to 'save' only upon listing of a content type
         if (key($this->getContext()->getCurrentSaveOperation()) != 'save-list')
         {
@@ -46,8 +47,6 @@ class ContentViewDefault extends BaseContentView
         $vars['table']  = false;
         $vars['pager']  = false;
         $vars['filter'] = false;
-
-        $sorting = $this->getSortingOrder();
 
         $records = $this->getRecords($filter);
 

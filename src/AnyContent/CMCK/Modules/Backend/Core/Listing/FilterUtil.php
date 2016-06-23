@@ -39,11 +39,12 @@ class FilterUtil
         catch (\Exception $e)
         {
             $app['context']->addAlertMessage('Could not parse query.');
-            $query  = '';
+            $app['context']->setCurrentSearchTerm('');
+            //$query  = '';
             $filter = '';
         }
 
-        $app['context']->setCurrentSearchTerm($query);
+        //$app['context']->setCurrentSearchTerm($query);
 
         return $filter;
 
