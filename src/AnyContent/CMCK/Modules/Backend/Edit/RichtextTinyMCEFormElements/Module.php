@@ -20,7 +20,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
     public function run(Application $app)
     {
-        $app['form']->registerFormElement('richtext', 'AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements\FormElementRichtext');
+        $app['form']->registerFormElement('richtext', 'AnyContent\CMCK\Modules\Backend\Edit\RichtextTinyMCEFormElements\FormElementRichtext',['cdn'=>$this->getOption('cdn',true)]);
     }
 
 }

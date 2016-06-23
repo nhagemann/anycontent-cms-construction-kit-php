@@ -10,8 +10,19 @@ class FormElementRichtext extends \AnyContent\CMCK\Modules\Backend\Edit\TextForm
 
     public function render($layout)
     {
-        $layout->addJsLinkToHead('//tinymce.cachefly.net/4/tinymce.min.js');
-        //$layout->addJsLinkToHead('/js/tinymce/tinymce.min.js');
+        // get libary from CDN or local
+        $cdn = $this->getOption('cdn', true);
+
+        if ($cdn)
+        {
+            $layout->addJsLinkToHead('//tinymce.cachefly.net/4/tinymce.min.js');
+        }
+        else
+        {
+            $layout->addJsLinkToHead('/js/tinymce/tinymce.min.js');
+        }
+
+        // Add default config
 
         $layout->addJsFile('tinymce.js');
 
