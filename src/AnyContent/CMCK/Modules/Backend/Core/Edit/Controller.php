@@ -541,13 +541,6 @@ class Controller
                         $app['dispatcher']->dispatch(Module::EVENT_EDIT_RECORD_BEFORE_INSERT, $event);
                     }
 
-                    if ($event->hasInfoMessage()) {
-                        $app['context']->addInfoMessage($event->getInfoMessage());
-                    }
-
-                    if ($event->hasAlertMessage()) {
-                        $app['context']->addAlertMessage($event->getAlertMessage());
-                    }
 
                     if ($event->hasErrorMessage()) {
 
@@ -559,6 +552,14 @@ class Controller
                         );
 
                         return new JsonResponse($response);
+                    }
+
+                    if ($event->hasInfoMessage()) {
+                        $app['context']->addInfoMessage($event->getInfoMessage());
+                    }
+
+                    if ($event->hasAlertMessage()) {
+                        $app['context']->addAlertMessage($event->getAlertMessage());
                     }
 
                     $recordId = $repository->saveRecord($record);
