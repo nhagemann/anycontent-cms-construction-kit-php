@@ -54,7 +54,7 @@ $(document).ready(function () {
                 // Check value of all form fiels having a id starting with the string provided in data-formelement.
                 // Usually it will be exactly one form fields, but some form elements split the input into different
                 // form fields, e.g. "geolocation".
-                $('[id^="'+ idFormelement+'"]').each(function(){
+                $('[id^="' + idFormelement + '"]').each(function () {
                     val = val + $(this).val().trim();
                     console.log(val);
                 });
@@ -83,7 +83,13 @@ $(document).ready(function () {
                         return false;
                     } else {
                         if (response.message != undefined) {
-                            cmck_message_alert(response.message);
+                            if (response.error != undefined && response.error == true) {
+                                cmck_message_error(response.message);
+                            }
+                            else {
+                                cmck_message_alert(response.message);
+                            }
+
                             if (response.properties != undefined) {
                                 for (i = 0; i < response.properties.length; i++) {
                                     property = response.properties[i];

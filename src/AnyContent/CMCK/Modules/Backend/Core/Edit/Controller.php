@@ -572,6 +572,7 @@ class Controller
                     } else {
                         $response = array(
                             'success' => false,
+                            'error' => true,
                             'message' => 'Could not save record. Please check your input.',
                             'properties' => array(''),
                         );
