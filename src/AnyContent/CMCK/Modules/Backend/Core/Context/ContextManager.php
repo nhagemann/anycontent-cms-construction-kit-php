@@ -641,10 +641,7 @@ class ContextManager
     {
         if ($this->isContentContext())
         {
-            if ($this->getCurrentContentType())
-            {
-                return $this->getCurrentContentType()->hasListOperation();
-            }
+            return true;
         }
 
         return false;

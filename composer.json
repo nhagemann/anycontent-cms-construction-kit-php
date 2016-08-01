@@ -21,7 +21,7 @@
     "symfony/yaml": "2.5.*",
     "knplabs/console-service-provider": "1.0",
     "monolog/monolog": "1.*",
-    "nhagemann/anycontent-client-php": "2.1"
+    "nhagemann/anycontent-client-php": "dev-develop"
   },
   "require-dev": {
     "phpunit/phpunit": "3.*"

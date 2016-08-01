@@ -68,7 +68,7 @@ class Controller
 
             $vars['definition'] = $contentTypeDefinition;
 
-            if ($contentTypeDefinition->hasInsertOperation() && $user->canDo(
+            if ($user->canDo(
                     'add',
                     $repository,
                     $contentTypeDefinition
