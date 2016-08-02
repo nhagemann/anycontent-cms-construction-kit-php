@@ -17,7 +17,7 @@
 
         <br/>
     </div>
-    <div class="row" id="sortable_tree">
+    <div id="sortable_tree" class="row contenttype-{{ definition.name | lower }}">
         <div class="col-xs-8">
 
             <ol class="sortable sortable-tree well" id="sortable_tree_left">
@@ -45,8 +45,8 @@
                 <div class="btn btn-success">
                     <small>#{{ record.id }}</small>
                     &nbsp;{{ record.name }}<span class="badges">{% if definition.hasSubtypes() %} <span
-                                class="badge subtype">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
-                            <span class="badge status">{{ record.statusLabel }}</span>{% endif %}</span></div>
+                                class="badge subtype subtype-{{ record.getSubtype | lower }}">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                            <span class="badge status stats-{{ record.getStatus | lower }}">{{ record.statusLabel }}</span>{% endif %}</span></div>
 
 
                 {% set level = record.level %}

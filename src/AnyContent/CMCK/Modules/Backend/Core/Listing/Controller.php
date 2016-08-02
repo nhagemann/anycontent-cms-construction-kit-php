@@ -58,7 +58,7 @@ class Controller
 
         $repository->selectWorkspace($app['context']->getCurrentWorkspace());
         $repository->selectLanguage($app['context']->getCurrentLanguage());
-        $repository->setTimeshift($app['context']->getCurrentTimeShift());
+        $repository->setTimeShift($app['context']->getCurrentTimeShift());
 
 
         // Jump to record if existing id has been entered into the search field
