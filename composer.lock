@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0708acc9a5eb625026d1f0b86848d031",
-    "content-hash": "b1767e32242302fdbfd6daaf438aedeb",
+    "hash": "33b2885100ca608c40dda7296966ee28",
     "packages": [
         {
             "name": "cpliakas/git-wrapper",
@@ -801,12 +800,12 @@
             "version": "v1.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/silexphp/Pimple.git",
+                "url": "https://github.com/fabpot/Pimple.git",
                 "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
                 "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
                 "shasum": ""
             },
@@ -1188,12 +1187,12 @@
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/filesystem.git",
+                "url": "https://github.com/symfony/Filesystem.git",
                 "reference": "d3c24d7d6e9c342008d8421b2fade460311647ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/d3c24d7d6e9c342008d8421b2fade460311647ea",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/d3c24d7d6e9c342008d8421b2fade460311647ea",
                 "reference": "d3c24d7d6e9c342008d8421b2fade460311647ea",
                 "shasum": ""
             },
