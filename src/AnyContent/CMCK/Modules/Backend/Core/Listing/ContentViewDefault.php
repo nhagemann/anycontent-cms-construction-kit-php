@@ -64,6 +64,8 @@ class ContentViewDefault extends BaseContentView
 
         }
 
+        $vars['class']='row contenttype-'.strtolower($this->getContext()->getCurrentContentType()->getName());
+
         return $vars;
     }
 

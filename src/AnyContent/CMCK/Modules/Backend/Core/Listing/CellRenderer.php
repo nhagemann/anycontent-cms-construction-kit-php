@@ -63,6 +63,7 @@ class CellRenderer
         $vars['value']        = $column->getValue($record);
         $vars['link']         = false;
         $vars['badge']        = $column->isBadge();
+        $vars['badgeclass']   = 'badge';
         $vars['editButton']   = false;
         $vars['deleteButton'] = false;
         $vars['customButton'] = false;
@@ -109,6 +110,16 @@ class CellRenderer
                     $vars     = $this->getUserInfoVars($record->getCreationUserInfo());
                     break;
             }
+        }
+
+        if ($column instanceof SubtypeColumn)
+        {
+            $vars['badgeclass']='badge subtype subtype-'.strtolower($record->getSubtype());
+        }
+
+        if ($column instanceof StatusColumn)
+        {
+            $vars['badgeclass']='badge status status-'.strtolower($record->getSubtype());
         }
 
         if ($column->isLinkToRecord())
