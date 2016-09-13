@@ -28,6 +28,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Admin\CMDL');
 
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Glossary');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\CustomList');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\View\Map');
 
 $app->registerModule('AnyContent\Dev');
 
