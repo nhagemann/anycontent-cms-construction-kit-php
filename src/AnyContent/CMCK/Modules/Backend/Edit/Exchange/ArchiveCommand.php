@@ -18,7 +18,7 @@ class ArchiveCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\C
     protected function configure()
     {
         $this->setName('cmck:archive')
-            ->setDescription('Exports a whole repository.')
+            ->setDescription('Exports a whole repository as file based content archive.')
             ->addArgument('repository', InputArgument::REQUIRED, 'Name/Id of the repository having the content type to be exported. Use the list command to show available repositories.')
             ->addArgument('path', InputArgument::REQUIRED, 'export path')
             ->addOption('json', 'j')

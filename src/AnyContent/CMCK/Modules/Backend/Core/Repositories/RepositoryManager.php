@@ -5,6 +5,7 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Repositories;
 use AnyContent\Client\RepositoryFactory;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use AnyContent\CMCK\Modules\Backend\Core\Application\ConfigService;
+use AnyContent\CMCK\Modules\Backend\Core\Repositories\ConnectionTypes\ConnectionTypeInterface;
 use CMDL\Parser;
 
 use AnyContent\Client\Client;
@@ -32,6 +33,9 @@ class RepositoryManager
 
     /** @var  UserInfo */
     protected $userInfo;
+
+    /** @var string[] array of classnames of connection types */
+    protected $connectionTypes = [];
 
 
     public function __construct(Application $app)
@@ -313,43 +317,35 @@ class RepositoryManager
     public function init()
     {
 
-        $repositoryFactory = new RepositoryFactory();
-
         if ($this->getConfigService()->hasConfigurationSection('repositories')) {
             $config = $this->getConfigService()->getConfigurationSection('repositories');
 
             foreach ($config as $k => $params) {
 
-                if (!is_array($params))
-                {
-                    $params = ['type'=>'rlike-v1','url'=>$params];
+                if (!is_array($params)) {
+                    $params = ['type' => 'restlike', 'url' => $params];
                 }
 
-                $options = [];
+                $session = [];
 
                 $cacheKeyContentTypes = 'sessioncache.repository.'.$k.'.contenttypes';
                 $cacheKeyConfigTypes = 'sessioncache.repository.'.$k.'.configtypes';
                 if ($this->getSession()->has($cacheKeyContentTypes)) {
-                    $options['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
+                    $session['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
                 }
                 if ($this->getSession()->has($cacheKeyConfigTypes)) {
-                    $options['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
+                    $session['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
                 }
 
-                switch ($params['type'])
+
+                if (array_key_exists($params['type'],$this->connectionTypes))
                 {
-                    case 'rlike-v1':
-                        $repository = $repositoryFactory->createRestLikeRepository($k, $params['url'], $options);
-                        $repository->setPublicUrl($params['url']);
-                        if (isset ($params['files']))
-                        {
-                            $fileManager =$repository->getFileManager();
-                            if ($fileManager)
-                            {
-                                $fileManager->setPublicUrl($params['files']);
-                            }
-                         }
-                        break;
+                    /** @var ConnectionTypeInterface $connectionType */
+                    $connectionType = new $this->connectionTypes[$params['type']];
+                    $repository = $connectionType->createRepository($k,$params,$session);
+                }
+                else{
+                    throw new \Exception('Unknown connection type '.$params['type']);
                 }
 
                 if (!$this->getSession()->has($cacheKeyContentTypes)) {
@@ -364,6 +360,11 @@ class RepositoryManager
 
             }
         }
+    }
+
+    public function registerConnectionType($key,$class)
+    {
+        $this->connectionTypes[$key] = $class;
     }
 
 

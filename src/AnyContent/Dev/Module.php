@@ -24,7 +24,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
     public function run(Application $app)
     {
         $app['form']->registerCustomFormElement('pageselector', 'AnyContent\Dev\PageSelector');
-        $app['layout']->addCssFile('test.css');
+        $app['layout']->addCssFile('dev.css');
         $app->addListener(\AnyContent\CMCK\Modules\Backend\Core\Edit\Module::EVENT_EDIT_RECORD_BEFORE_UPDATE,'AnyContent\Dev\EventListener::onRecordSave');
 
 
