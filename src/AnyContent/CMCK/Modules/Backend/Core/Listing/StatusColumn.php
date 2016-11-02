@@ -12,6 +12,8 @@ class StatusColumn extends PropertyColumn
 
     protected $badge = true;
 
+    protected $property = 'status';
+
     public function getValue(Record $record)
     {
         return $record->getStatusLabel();

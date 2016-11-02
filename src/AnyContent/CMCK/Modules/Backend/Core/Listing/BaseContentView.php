@@ -6,9 +6,11 @@ use AnyContent\Client\Repository;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
+use AnyContent\CMCK\Modules\Backend\Core\Pager\PagingHelper;
 use AnyContent\CMCK\Modules\Backend\Core\User\UserManager;
 use CMDL\Annotations\CustomAnnotation;
 use CMDL\ContentTypeDefinition;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class BaseContentView

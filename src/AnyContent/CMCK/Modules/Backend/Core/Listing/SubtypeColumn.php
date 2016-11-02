@@ -12,6 +12,8 @@ class SubtypeColumn extends PropertyColumn
 
     protected $badge = true;
 
+    protected $property = 'subtype';
+
 
     public function getValue(Record $record)
     {
