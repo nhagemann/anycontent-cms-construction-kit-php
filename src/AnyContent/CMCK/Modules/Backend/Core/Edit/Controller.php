@@ -80,15 +80,15 @@ class Controller
 
                 $viewDefinition = $contentTypeDefinition->getInsertViewDefinition();
 
-                $attributes = array();
+                $properties = array();
                 foreach ($viewDefinition->getFormElementDefinitions() as $formElementDefinition) {
-                    $attributes[$formElementDefinition->getName()] = $formElementDefinition->getDefaultValue();
+                    $properties[$formElementDefinition->getName()] = $formElementDefinition->getDefaultValue();
                 }
 
                 $vars['form'] = $formManager->renderFormElements(
                     'form_edit',
                     $viewDefinition->getFormElementDefinitions(),
-                    $attributes,
+                    $properties,
                     array(
                         'workspace' => $app['context']->getCurrentWorkspace(),
                         'language' => $app['context']->getCurrentLanguage(),
