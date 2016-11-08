@@ -344,21 +344,21 @@
         },
         {
             "name": "katzgrau/klogger",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/katzgrau/KLogger.git",
-                "reference": "87735262be7c3bd210740b5cd4831dee3d827c46"
+                "reference": "a4ed373fa8a214aa4ae7aa4f221fe2c6ce862ef1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/katzgrau/KLogger/zipball/87735262be7c3bd210740b5cd4831dee3d827c46",
-                "reference": "87735262be7c3bd210740b5cd4831dee3d827c46",
+                "url": "https://api.github.com/repos/katzgrau/KLogger/zipball/a4ed373fa8a214aa4ae7aa4f221fe2c6ce862ef1",
+                "reference": "a4ed373fa8a214aa4ae7aa4f221fe2c6ce862ef1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3",
-                "psr/log": "1.0.0"
+                "psr/log": "^1.0.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.0.*"
@@ -390,7 +390,7 @@
             "keywords": [
                 "logging"
             ],
-            "time": "2015-11-04 22:43:22"
+            "time": "2016-11-07 19:29:14"
         },
         {
             "name": "knplabs/console-service-provider",
@@ -560,12 +560,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "d9c1983389e266b06b86f9a0eb13f592167df7d3"
+                "reference": "9d2dbcb06bd85ae44c9335ab372b17786cada902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/d9c1983389e266b06b86f9a0eb13f592167df7d3",
-                "reference": "d9c1983389e266b06b86f9a0eb13f592167df7d3",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/9d2dbcb06bd85ae44c9335ab372b17786cada902",
+                "reference": "9d2dbcb06bd85ae44c9335ab372b17786cada902",
                 "shasum": ""
             },
             "require": {
@@ -604,7 +604,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2016-11-02 15:23:58"
+            "time": "2016-11-08 13:51:57"
         },
         {
             "name": "nhagemann/cmdl-parser-php",
@@ -612,12 +612,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/cmdl-parser-php.git",
-                "reference": "14e49fa8d817d46daedbee1ed48276b46b60c69f"
+                "reference": "a00c549ddaa8dbfd7938332294af3672ed08b7be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/14e49fa8d817d46daedbee1ed48276b46b60c69f",
-                "reference": "14e49fa8d817d46daedbee1ed48276b46b60c69f",
+                "url": "https://api.github.com/repos/nhagemann/cmdl-parser-php/zipball/a00c549ddaa8dbfd7938332294af3672ed08b7be",
+                "reference": "a00c549ddaa8dbfd7938332294af3672ed08b7be",
                 "shasum": ""
             },
             "require": {
@@ -645,7 +645,7 @@
             ],
             "description": "Library to parse CMDL files into an object representation",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2016-08-01 14:46:46"
+            "time": "2016-11-08 13:10:51"
         },
         {
             "name": "nhagemann/kvmlogger",
@@ -844,22 +844,30 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.3.0"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -873,12 +881,13 @@
                 }
             ],
             "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
             "keywords": [
                 "log",
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "react/promise",
