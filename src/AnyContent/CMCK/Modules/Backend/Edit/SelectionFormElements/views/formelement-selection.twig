@@ -42,7 +42,9 @@
 
                     });
                     $("#{{ id }}_label").click(function () {
-                        $(this).autocompleteCat("search", $("#{{ id }}_label").val());
+                        $("#{{ id }}_label").val('');
+                        $("#{{ id }}").val('');
+                        $(this).autocompleteCat("search");
                     });
                 });
             </script>
