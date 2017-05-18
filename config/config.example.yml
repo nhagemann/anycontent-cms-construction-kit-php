@@ -1,21 +1,45 @@
-# Either simple list all your repositories, e.g.:
+# List all your repositories, e.g.:
 #
-# repositories:
-#   - http://anycontent.dev/1/example1
-#   - http://anycontent.dev/1/example2
+#   repos_name_1:
+#     type: restlike
+#     url: http://acrs.company.com/1/repos_name_1
+#     files: http://assets.company.com
 #
-# or give them shortcuts, so you can reference them in your code or in advanced configurations, e.g.:
+#   repos_name_2:
+#     type: mysqlschemaless
+#     host:       127.0.0.1
+#     dbname:     anycontent
+#     user:       dbuser
+#     password:   password
 #
-# repositories:
-#   shortcut1: http://anycontent.dev/1/example1
-#   shortcut2: http://anycontent.dev/1/example2
+#    repos_name_3:
+#       type: archive
+#       folder: /var/www/repos/name_3
+#       files: true
+#
+#  Additionally you can specify a distinct filemanager
+#
+#    repos_name_2:
+#       ...
+#       filemanager:
+#         type: restlike
+#         repository_url: http://acrs.company.com/1/repos_name_1
+#         files_url: http://assets.company.com
+#
+#    repos_name_3:
+#       ...
+#       filemanager:
+#         type: directory
+#         path: var/www/assets
+#         files_url: http://assets.company.com
+#
 #
 
 repositories:
-  - http://anycontent.dev/1/example
+
 
 #
-# If you want to access non rest like repositories, add them via repositories.php
+# If you want to access non standard repositories, add them via repositories.php
 #
 
 
@@ -46,3 +70,6 @@ authentication:
   type: config
   users:
      - {username: john@example.org, firstname: John, lastname: Doe, password: john@example.org, encryption: none }
+
+service:
+     path: "/acrs"

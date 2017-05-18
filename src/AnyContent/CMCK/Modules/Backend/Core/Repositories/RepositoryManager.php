@@ -5,10 +5,6 @@ namespace AnyContent\CMCK\Modules\Backend\Core\Repositories;
 use AnyContent\Client\RepositoryFactory;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 use AnyContent\CMCK\Modules\Backend\Core\Application\ConfigService;
-use AnyContent\CMCK\Modules\Backend\Core\Repositories\ConnectionTypes\ConnectionTypeInterface;
-use CMDL\Parser;
-
-use AnyContent\Client\Client;
 use AnyContent\Client\UserInfo;
 use AnyContent\Client\Repository;
 use AnyContent\CMCK\Modules\Backend\Core\Context;
@@ -34,15 +30,10 @@ class RepositoryManager
     /** @var  UserInfo */
     protected $userInfo;
 
-    /** @var string[] array of classnames of connection types */
-    protected $connectionTypes = [];
-
-
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
-
 
     /**
      * @return ConfigService
@@ -89,39 +80,33 @@ class RepositoryManager
         $this->repositoryAccessHashes[$this->getRepositoryAccessHash(
             $repository
         )] = ['repositoryId' => $repository->getName()];
-
     }
-
 
     public function getRepositoryAccessHash(Repository $repository)
     {
         return md5($repository->getName());
     }
 
-
     public function getContentTypeAccessHash(Repository $repository, $contentTypeName)
     {
-        return md5($repository->getName().'-contentType-'.$contentTypeName);
+        return md5($repository->getName() . '-contentType-' . $contentTypeName);
     }
-
 
     public function getConfigTypeAccessHash(Repository $repository, $configTypeName)
     {
-        return md5($repository->getName().'-contentType-'.$configTypeName);
+        return md5($repository->getName() . '-contentType-' . $configTypeName);
     }
-
 
     public function getAccessHash($repository, $contentTypeDefinition = null)
     {
 
         if ($contentTypeDefinition != null) {
             return $this->getContentTypeAccessHash($repository, $contentTypeDefinition->getName());
-        } else {
+        }
+        else {
             return $this->getRepositoryAccessHash($repository);
         }
-
     }
-
 
     public function setUserInfo(UserInfo $userInfo)
     {
@@ -130,7 +115,6 @@ class RepositoryManager
             $repository->setUserInfo($userInfo);
         }
     }
-
 
     public function listRepositories()
     {
@@ -143,14 +127,13 @@ class RepositoryManager
             }
 
             $repositories[$repository->getName()] = array(
-                'title' => $title,
+                'title'      => $title,
                 'accessHash' => $this->getRepositoryAccessHash($repository),
             );
         }
 
         return $repositories;
     }
-
 
     public function listContentTypes($id)
     {
@@ -162,17 +145,15 @@ class RepositoryManager
 
             foreach ($repository->getContentTypeList() as $name => $title) {
                 $contentTypes[$name] = array(
-                    'name' => $name,
-                    'title' => $title,
+                    'name'       => $name,
+                    'title'      => $title,
                     'accessHash' => $this->getContentTypeAccessHash($repository, $name),
                 );
             }
-
         }
 
         return $contentTypes;
     }
-
 
     public function listConfigTypes($id)
     {
@@ -185,17 +166,15 @@ class RepositoryManager
             foreach ($repository->getConfigTypeList() as $name => $title) {
 
                 $configTypes[$name] = array(
-                    'name' => $name,
-                    'title' => $title,
+                    'name'       => $name,
+                    'title'      => $title,
                     'accessHash' => $this->getConfigTypeAccessHash($repository, $name),
                 );
             }
-
         }
 
         return $configTypes;
     }
-
 
     public function hasFiles($id)
     {
@@ -207,7 +186,6 @@ class RepositoryManager
 
         return false;
     }
-
 
     public function listApps($id)
     {
@@ -221,7 +199,6 @@ class RepositoryManager
         return $result;
     }
 
-
     public function getRepositoryById($id)
     {
 
@@ -231,7 +208,6 @@ class RepositoryManager
 
         return false;
     }
-
 
     /**
      * @param $hash
@@ -249,7 +225,6 @@ class RepositoryManager
         return false;
     }
 
-
     /**
      * @param $hash
      *
@@ -259,9 +234,9 @@ class RepositoryManager
     {
 
         if (array_key_exists($hash, $this->contentTypeAccessHashes)) {
-            $id = $this->contentTypeAccessHashes[$hash]['repositoryId'];
+            $id              = $this->contentTypeAccessHashes[$hash]['repositoryId'];
             $contentTypeName = $this->contentTypeAccessHashes[$hash]['contentTypeName'];
-            $repository = $this->getRepositoryById($id);
+            $repository      = $this->getRepositoryById($id);
 
             $repository->selectContentType($contentTypeName);
 
@@ -270,7 +245,6 @@ class RepositoryManager
 
         return false;
     }
-
 
     /**
      * @param $hash
@@ -281,7 +255,7 @@ class RepositoryManager
     {
 
         if (array_key_exists($hash, $this->configTypeAccessHashes)) {
-            $id = $this->configTypeAccessHashes[$hash]['repositoryId'];
+            $id         = $this->configTypeAccessHashes[$hash]['repositoryId'];
             $repository = $this->getRepositoryById($id);
 
             return $repository;
@@ -289,7 +263,6 @@ class RepositoryManager
 
         return false;
     }
-
 
     /**
      * @param $hash
@@ -300,19 +273,17 @@ class RepositoryManager
     {
 
         if (array_key_exists($hash, $this->configTypeAccessHashes)) {
-            $id = $this->configTypeAccessHashes[$hash]['repositoryId'];
+            $id             = $this->configTypeAccessHashes[$hash]['repositoryId'];
             $configTypeName = $this->configTypeAccessHashes[$hash]['configTypeName'];
-            $repository = $this->getRepositoryById($id);
+            $repository     = $this->getRepositoryById($id);
 
             if ($repository->hasConfigType($configTypeName)) {
                 return $repository->getConfigTypeDefinition($configTypeName);
             }
-
         }
 
         return false;
     }
-
 
     public function init()
     {
@@ -320,52 +291,15 @@ class RepositoryManager
         if ($this->getConfigService()->hasConfigurationSection('repositories')) {
             $config = $this->getConfigService()->getConfigurationSection('repositories');
 
+            $repositoryFactory = new RepositoryFactory();
+
             foreach ($config as $k => $params) {
 
-                if (!is_array($params)) {
-                    $params = ['type' => 'restlike', 'url' => $params];
-                }
-
-                $session = [];
-
-                $cacheKeyContentTypes = 'sessioncache.repository.'.$k.'.contenttypes';
-                $cacheKeyConfigTypes = 'sessioncache.repository.'.$k.'.configtypes';
-                if ($this->getSession()->has($cacheKeyContentTypes)) {
-                    $session['contenttypes'] = $this->getSession()->get($cacheKeyContentTypes);
-                }
-                if ($this->getSession()->has($cacheKeyConfigTypes)) {
-                    $session['configtypes'] = $this->getSession()->get($cacheKeyConfigTypes);
-                }
-
-
-                if (array_key_exists($params['type'],$this->connectionTypes))
-                {
-                    /** @var ConnectionTypeInterface $connectionType */
-                    $connectionType = new $this->connectionTypes[$params['type']];
-                    $repository = $connectionType->createRepository($k,$params,$session);
-                }
-                else{
-                    throw new \Exception('Unknown connection type '.$params['type']);
-                }
-
-                if (!$this->getSession()->has($cacheKeyContentTypes)) {
-                    $this->getSession()->set($cacheKeyContentTypes, $repository->getContentTypeNames());
-                }
-                if (!$this->getSession()->has($cacheKeyConfigTypes)) {
-                    $this->getSession()->set($cacheKeyConfigTypes, $repository->getConfigTypeNames());
-                }
-
+                $repository = $repositoryFactory->createRepositoryFromConfigArray($k, $params);
                 $repository = $this->app->getClient()->addRepository($repository);
                 $this->addRepository($repository->getName(), $repository, $repository->getTitle());
-
             }
         }
     }
-
-    public function registerConnectionType($key,$class)
-    {
-        $this->connectionTypes[$key] = $class;
-    }
-
 
 }

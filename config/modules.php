@@ -31,7 +31,6 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\View\CustomList');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Map');
 
 $app->registerModule('AnyContent\Dev');
-$app->registerModule('AnyContent\CMCK\Modules\Backend\ConnectionTypes\ContentArchiveConnectionType');
 
 \KVMLogger\KVMLoggerFactory::createWithKLogger('../');
 

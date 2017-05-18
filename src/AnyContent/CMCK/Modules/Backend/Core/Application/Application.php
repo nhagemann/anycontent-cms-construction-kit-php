@@ -10,6 +10,7 @@ use AnyContent\CMCK\Modules\Backend\Core\Context\ContextManager;
 use AnyContent\CMCK\Modules\Backend\Core\Layout\LayoutManager;
 use AnyContent\CMCK\Modules\Backend\Core\Menu\MenuManager;
 use AnyContent\CMCK\Modules\Backend\Core\Repositories\RepositoryManager;
+use AnyContent\Service\Service;
 use Doctrine\Common\Cache\ArrayCache;
 use Silex\Application as SilexApplication;
 
@@ -209,6 +210,13 @@ class Application extends SilexApplication
 
         $this['repos']->setUserInfo($this['user']->getClientUserInfo());
 
+
+        /** @var ConfigService $config */
+        $config = $this['config'];
+        if ($config->hasConfigurationSection('service'))
+        {
+            $this['acrs']=new Service($this, $config->getConfigurationSection('repositories'),'acrs', Service::API_RESTLIKE_1);
+        }
     }
 
 
