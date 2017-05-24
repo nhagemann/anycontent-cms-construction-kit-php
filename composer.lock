@@ -601,12 +601,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "6d57fef460cc7d13bc09055bde062db0e51c45c9"
+                "reference": "876517bdaf5d92e91821dc7686bf52759b2e6286"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/6d57fef460cc7d13bc09055bde062db0e51c45c9",
-                "reference": "6d57fef460cc7d13bc09055bde062db0e51c45c9",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/876517bdaf5d92e91821dc7686bf52759b2e6286",
+                "reference": "876517bdaf5d92e91821dc7686bf52759b2e6286",
                 "shasum": ""
             },
             "require": {
@@ -645,7 +645,7 @@
                 }
             ],
             "homepage": "http://www.nilshagemann.de",
-            "time": "2017-05-18 12:35:25"
+            "time": "2017-05-23 10:41:29"
         },
         {
             "name": "nhagemann/anycontent-service-php",
