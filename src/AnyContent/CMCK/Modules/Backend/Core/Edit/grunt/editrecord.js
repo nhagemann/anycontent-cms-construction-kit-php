@@ -18,7 +18,6 @@ $(document).on("cmck", function (e, params) {
     }
 });
 
-
 $(document).ready(function () {
 
     $('#form_edit_button_save_options a').click(function () {
@@ -117,6 +116,16 @@ $(document).ready(function () {
     });
 
 
+    $('.button_delete').click(function () {
+        var url = $(this).attr('href')
+        bootbox.confirm('Are you sure?', function (result) {
+            if (result) {
+                document.location = url;
+            }
+        });
+        return false;
+    });
+
     $('#form_edit_button_transfer').click(function () {
         cmck_modal($(this).attr('href'));
         return false;
@@ -135,6 +144,8 @@ $(document).ready(function () {
 
     // inform form elements about loading of the editing form
     $.event.trigger('cmck', {type: 'editForm.init'});
+
+
 });
 
 
