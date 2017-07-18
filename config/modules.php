@@ -32,6 +32,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Map');
 
 $app->registerModule('AnyContent\Dev');
 
+
 \KVMLogger\KVMLoggerFactory::createWithKLogger('../');
 
 //\KVMLogger\KVMLoggerFactory::instance()->logRequest();

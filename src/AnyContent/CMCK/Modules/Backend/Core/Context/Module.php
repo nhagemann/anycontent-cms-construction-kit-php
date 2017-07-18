@@ -20,7 +20,10 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['context'] = $app->share(function ($app)
         {
-            return new ContextManager($app);
+            $manager = new ContextManager($app);
+
+            $manager->setDefaultNumberOfItemsPerPage($this->getOption('items_per_page',10));
+            return $manager;
         });
     }
 
