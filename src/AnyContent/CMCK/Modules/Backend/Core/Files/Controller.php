@@ -28,6 +28,8 @@ class Controller
             $listFilesRouteName    = 'listFilesSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
             $app['layout']->addJsFile('files-modal.js');
+            //https://sunnywalker.github.io/jQuery.FilterTable/
+            $app['layout']->addJsFile('jquery.filtertable.min.js');
         }
         else
         {
@@ -36,6 +38,7 @@ class Controller
         }
 
         $vars['links']['files'] = $app['url_generator']->generate($listFilesRouteName, array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => '' ));
+        $vars['links']['newwindow'] = $app['url_generator']->generate('listFiles', array( 'repositoryAccessHash' => $repositoryAccessHash, 'path' => $path ));
 
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByRepositoryAccessHash($repositoryAccessHash);
@@ -87,7 +90,15 @@ class Controller
                         $item                      = array();
                         $item['file']              = $file;
                         $item['links']['download'] = $app['url_generator']->generate('downloadFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
-                        $item['links']['view']     = $app['url_generator']->generate('viewFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
+
+                        if ($file->hasPublicUrl())
+                        {
+                            $item['links']['view'] = $file->getUrl('default');
+                        }
+                        else {
+                            $item['links']['view'] = $app['url_generator']->generate('viewFile', array('repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId()));
+                        }
+
                         $item['links']['delete']   = $app['url_generator']->generate('deleteFile', array( 'repositoryAccessHash' => $repositoryAccessHash, 'id' => $file->getId() ));
 
                         if ($file->hasPublicUrl())
@@ -112,6 +123,7 @@ class Controller
 
             $vars['folders'] = $folders;
             $vars['files']   = $files;
+            $vars['tiles']=false;
 
         }
 

@@ -3,6 +3,10 @@ body {
     margin-bottom: 150px;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 /* subtle pattern background */
 
 body.layout-default {

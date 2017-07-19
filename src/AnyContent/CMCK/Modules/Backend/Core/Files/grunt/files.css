@@ -50,6 +50,58 @@
     width: 180px;
 }
 
-.files-list-modal .media-heading {
-    width: 170px;
+.files-list-modal ul.nav-tabs {
+
+    overflow-y: hidden;
+    overflow-x: auto;
+    display: flex;
+
+
+}
+
+.files-list-modal ul.nav-tabs li a {
+    border: 1px solid #ddd;
+    background-color:#fff;
+}
+
+.files-list-modal ul.nav-tabs li.active a {
+    background-color:#eee;
+}
+
+.files-list-modal #modal_files_table {
+    margin-top: 15px;
+    background-color: #fff;
+}
+
+.files-list-modal #modal_files_table td:nth-child(1) {
+    width: 65px;
+}
+
+.files-list-modal #modal_files_table td:nth-child(2) {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.files-list-modal #modal_files_table td:nth-child(3) {
+    width: 100px;
+}
+
+.files-list-modal #modal_files_table td:nth-child(4) {
+    width: 100px;
+}
+
+.files-list-modal #modal_files_table td:nth-child(5) {
+    width: 20px;
+}
+
+#files-list-modal-footer {
+    position: fixed;
+    height: 45px;
+    background-color: #fff;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding-top: 10px;
+    margin-bottom: 0px;
+    border-top: 1px solid #ddd;
 }
