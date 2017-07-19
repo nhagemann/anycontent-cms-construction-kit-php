@@ -4,7 +4,8 @@
             <li class="media">
                 {% if file.file.isImage %}
                     <div class="file-item-preview pull-left">
-                        <a class="" href="{{ file.links.src }}" style="width:60px">
+                        <a class="files-file-zoom"
+                           data-title="{{ file.file.getName }}" href="{{ file.links.src }}" style="width:60px">
                             <img class="media-object" src="{{ file.links.src }}" width="60" alt="...">
                         </a>
                     </div>
@@ -12,7 +13,8 @@
 
                 <div class="media-body">
 
-                    <h4 class="media-heading" title="{{ file.file.getName }}"><a href="{{ file.links.src }}">{{ file.file.getName }}</a></h4>
+                    <h4 class="media-heading" title="{{ file.file.getName }}"><a class="files-file-zoom"
+                        data-title="{{ file.file.getName }}" href="{{ file.links.src }}">{{ file.file.getName }}</a></h4>
                     {{ (file.file.getSize/1024) |number_format(1) }}
                     Kb {% if file.file.getWidth %}({{ file.file.getWidth }} x {{ file.file.getHeight }}){% endif %}
                     <br/>
@@ -28,6 +30,8 @@
                                         class="glyphicon glyphicon-edit"></span></a>
                         </div>
                         <div class="pull-right">
+                            <a href="{{ file.links.view }}" target="_blank"><span
+                                        class="glyphicon glyphicon-share-alt"></span></a> &nbsp;
                             <a href="{{ file.links.download }}" alt="Download"><span
                                         class="glyphicon glyphicon-cloud-download"></span></a>
                             &nbsp; <a href="{{ file.links.src }}" alt="Zoom" class="files-file-zoom"

@@ -50,7 +50,7 @@
     width: 180px;
 }
 
-.files-list-modal ul.nav-tabs {
+.folders-list ul.nav-tabs {
 
     overflow-y: hidden;
     overflow-x: auto;
@@ -59,12 +59,12 @@
 
 }
 
-.files-list-modal ul.nav-tabs li a {
+.folders-list ul.nav-tabs li a {
     border: 1px solid #ddd;
     background-color:#fff;
 }
 
-.files-list-modal ul.nav-tabs li.active a {
+.folders-list ul.nav-tabs li.active a {
     background-color:#eee;
 }
 

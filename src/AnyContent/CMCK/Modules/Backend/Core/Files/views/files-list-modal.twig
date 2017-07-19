@@ -4,8 +4,9 @@
     <div class="container files-list-modal">
 
         <div class="row"><div class="col-xs-12">{% include 'messages.twig' %}</div></div>
+
         {% for folder in folders %}
-            <div class="row">
+            <div class="row folders-list">
 
                 <ul class="nav nav-tabs">
                     {% if loop.first %}
