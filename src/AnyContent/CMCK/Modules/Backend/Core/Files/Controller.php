@@ -23,13 +23,14 @@ class Controller
         $vars         = array();
         $vars['root'] = false;
 
+        //https://sunnywalker.github.io/jQuery.FilterTable/
+        $app['layout']->addJsFile('jquery.filtertable.min.js');
+        
         if ($mode == 'modal')
         {
             $listFilesRouteName    = 'listFilesSelect';
             $listFilesTemplateName = 'files-list-modal.twig';
             $app['layout']->addJsFile('files-modal.js');
-            //https://sunnywalker.github.io/jQuery.FilterTable/
-            $app['layout']->addJsFile('jquery.filtertable.min.js');
         }
         else
         {
