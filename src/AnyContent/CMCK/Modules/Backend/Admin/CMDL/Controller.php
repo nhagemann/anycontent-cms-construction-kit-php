@@ -368,6 +368,17 @@ class Controller
             'indexRepository',
             array('repositoryAccessHash' => $repositoryItem['accessHash'])
         );
+        $item['links']['backup_repository'] = $app['url_generator']->generate(
+            'adminBackupRepository',
+            array('repositoryAccessHash' => $repositoryItem['accessHash'])
+        );
+        $item['links']['post_backup_repository'] = $app['url_generator']->generate(
+            'adminPostBackupRepository',
+            array('repositoryAccessHash' => $repositoryItem['accessHash'])
+        );
+
+
+
         $item['links']['add_content_type'] = $app['url_generator']->generate(
             'adminAddContentType',
             array('repositoryAccessHash' => $repositoryItem['accessHash'])
@@ -385,6 +396,10 @@ class Controller
                 'title' => $contentTypeItem['title'],
                 'edit' => $app['url_generator']->generate(
                     'adminEditContentType',
+                    array('contentTypeAccessHash' => $contentTypeItem['accessHash'])
+                ),
+                'backup' => $app['url_generator']->generate(
+                    'adminBackupContentType',
                     array('contentTypeAccessHash' => $contentTypeItem['accessHash'])
                 ),
                 'delete' => $app['url_generator']->generate(

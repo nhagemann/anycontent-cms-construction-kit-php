@@ -56,6 +56,7 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
             ->post('/admin/add/config_type/{repositoryAccessHash}', 'AnyContent\CMCK\Modules\Backend\Admin\CMDL\Controller::adminAddConfigType')
             ->bind('adminAddConfigType');
 
+
     }
 
 }

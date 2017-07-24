@@ -16,7 +16,9 @@
         <br/>
         <h3>
             <a href="{{ repository.link }}">{{ repository.title }}</a>
-            <a href="{{ repository.url }}"><small>{{ repository.url }}</small></a>
+            <a href="{{ repository.url }}">
+                <small>{{ repository.url }}</small>
+            </a>
         </h3>
         <br/>
 
@@ -43,6 +45,10 @@
                                                               role="button"><span
                                                     class="glyphicon glyphicon-pencil"></span>
                                             Configure</a>&nbsp;
+                                        <a href="{{ contenttype.backup }}" class="btn btn-primary"
+                                           role="button"><span
+                                                    class="glyphicon glyphicon-download-alt"></span>
+                                            Backup</a>&nbsp;
                                         <a href="{{ contenttype.delete }}"
                                            class="btn btn-danger admin_button_delete_content_type"><span
                                                     class="glyphicon glyphicon-remove"></span> Delete</a>
@@ -96,9 +102,26 @@
 
             {% block admin_content_types_add %}
                 <div class="col-xs-6">
+                    <form action="{{ repository.links.post_backup_repository }}" method="post"
+                          enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="file" name="upload_file" class="pull-left">
+                                <button type="submit" class="btn btn-default" id="modal_files_button_upload_file"><span
+                                            class="glyphicon glyphicon-cloud-upload"></span> Import Backup
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <p></p>
+                    <a href="{{ repository.links.backup_repository }}"
+                       class="btn btn-default"
+                       role="button"><span class="glyphicon glyphicon-download-alt"></span> Backup All Content Types</a>
+                    <p></p>
                     <a href="{{ repository.links.add_content_type }}"
                        class="btn btn-default admin_button_create_content_type"
                        role="button"><span class="glyphicon glyphicon-plus"></span> Add Content Type</a>
+                    <p></p>
                 </div>
             {% endblock %}
 
