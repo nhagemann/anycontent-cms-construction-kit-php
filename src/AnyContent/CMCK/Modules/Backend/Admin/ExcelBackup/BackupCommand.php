@@ -76,6 +76,8 @@ class BackupCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
             $realPath = realpath($path);
             if (!$realPath) {
                 $output->writeln(self::escapeError . 'Path ' . $path . ' not found.' . self::escapeReset);
+
+                return;
             }
 
             $filename = $path . '/' . $filename;
