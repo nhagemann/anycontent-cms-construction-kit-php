@@ -25,7 +25,9 @@ class BackupCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
                  InputArgument::REQUIRED,
                  'Name/Id of the repository having the content type to be exported. Use the list command to show available repositories.'
              )
-             ->addArgument('contentType', InputArgument::OPTIONAL, 'Name of the content type to be exported.');
+             ->addArgument('contentType', InputArgument::OPTIONAL, 'Name of the content type to be exported.')
+             ->addOption('path', 'p', InputOption::VALUE_REQUIRED, 'Provide path to export folder.')
+             ->addOption('filename', 'f', InputOption::VALUE_REQUIRED, 'Set filename to export.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,12 +60,28 @@ class BackupCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
             $filename = $repositoryName . '_' . $input->getArgument('contentType') . '_' . date('Ymd_hi') . '.xlsx';
         }
         else {
-            $data = $exporter->backupXLSX($repository);
+            $data     = $exporter->backupXLSX($repository);
             $filename = $repositoryName . '_all_' . date('Ymd_hi') . '.xlsx';
         }
 
-        $filesystem = new Filesystem();
+        // Check if filename has been provied
+        if ($input->getOption('filename')) {
+            $filename = $input->getOption('filename');
+        }
 
+        // Check if path has been provided
+
+        if ($input->getOption('path')) {
+            $path     = $input->getOption('path');
+            $realPath = realpath($path);
+            if (!$realPath) {
+                $output->writeln(self::escapeError . 'Path ' . $path . ' not found.' . self::escapeReset);
+            }
+
+            $filename = $path . '/' . $filename;
+        }
+
+        $filesystem = new Filesystem();
         $output->writeln('Dumping data to ' . $filename);
         $filesystem->dumpFile($filename, $data);
         $output->writeln('');
