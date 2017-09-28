@@ -215,7 +215,11 @@ class Application extends SilexApplication
         $config = $this['config'];
         if ($config->hasConfigurationSection('service'))
         {
-            $this['acrs']=new Service($this, $config->getConfigurationSection('repositories'),'acrs', Service::API_RESTLIKE_1);
+           $section = $config->getConfigurationSection('service');
+           if (array_key_exists('path',$section)) {
+               $this['acrs'] = new Service($this, $config->getConfigurationSection('repositories'), $section['path'],
+                   Service::API_RESTLIKE_1);
+           }
         }
     }
 

@@ -1,4 +1,7 @@
 <?php
+
+use Silex\Provider\HttpCacheServiceProvider;
+
 if (!defined('APPLICATION_PATH'))
 {
     define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/..'));
@@ -46,7 +49,15 @@ if (file_exists(APPLICATION_PATH .'/config/repositories.php'))
     require_once(APPLICATION_PATH . '/config/repositories.php');
 }
 
-$app->run();
+if ($app['config']->hasConfigurationSection('http_cache') && $app['config']->getConfigurationSection('http_cache') === true) {
+    $app->register(new HttpCacheServiceProvider(), array(
+        'http_cache.cache_dir' => APPLICATION_PATH . '/var/cache',
+    ));
+    $app['http_cache']->run();
+}
+else {
+    $app->run();
+}
 
 \KVMLogger\KVMLogger::instance()->logResources();
 

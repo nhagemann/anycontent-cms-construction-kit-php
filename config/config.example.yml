@@ -71,5 +71,11 @@ authentication:
   users:
      - {username: john@example.org, firstname: John, lastname: Doe, password: john@example.org, encryption: none }
 
-service:
-     path: "/acrs"
+# Activate REST like service
+#
+#service:
+#     path: "/acrs"
+
+# Activate HTTP Caching - recommend if using the rest service
+#
+#http_cache: true

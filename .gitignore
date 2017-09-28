@@ -1,14 +1,11 @@
 /config/config.yml
 /config/modules.php
+/config/repositories.php
 twig-cache/*
 doctrine-cache/*
 vendor/*
+node_modules
+tmp
+kvm.log
 
-# php storm files
-.idea/
-twig-cache/*
-vendor/*
 
-# mac os
-*.DS_Store
-._*
