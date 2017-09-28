@@ -7,5 +7,5 @@ vendor/*
 node_modules
 tmp
 kvm.log
-
+/var
 

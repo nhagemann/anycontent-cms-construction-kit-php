@@ -156,7 +156,7 @@ class Application extends SilexApplication
             'twig.path' => array_reverse($this->templatesFolder)
         ));
 
-        $this['twig']->setCache(APPLICATION_PATH . '/twig-cache');
+        $this['twig']->setCache(APPLICATION_PATH . '/var/twig');
 
         // Init Cache
 
@@ -184,7 +184,7 @@ class Application extends SilexApplication
                 $this->setCacheDriver($cacheDriver);
                 break;
             case 'file':
-                $cacheDriver = new PhPFileCache(APPLICATION_PATH . '/doctrine-cache', 'txt');
+                $cacheDriver = new PhPFileCache(APPLICATION_PATH . '/var/doctrine', 'txt');
                 $this->setCacheDriver($cacheDriver);
                 break;
             case 'mysql':

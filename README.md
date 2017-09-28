@@ -11,7 +11,7 @@ Just create a composer.json file with following content and run `composer instal
     {
         "require": {
             "php": ">=5.3",
-            "nhagemann/anycontent-cms-construction-kit-php": "0.9.*"
+            "nhagemann/anycontent-cms-construction-kit-php": "^3.0"
     
         },
         "scripts": {

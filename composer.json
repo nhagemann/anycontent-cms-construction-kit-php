@@ -15,17 +15,15 @@
     "php": ">=5.4",
     "silex/silex": "^1",
     "twig/twig": "^1",
-    "nitra/php-min": "dev-master",
     "phpoffice/phpexcel": "^1.8",
     "symfony/filesystem": "^2",
     "symfony/yaml": "^2",
     "knplabs/console-service-provider": "^1",
     "monolog/monolog": "^1",
     "nhagemann/anycontent-client-php": "^3.0",
-    "nhagemann/anycontent-service-php": "dev-develop"
+    "nhagemann/anycontent-service-php": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "3.*"
   },
   "autoload": {
     "psr-0": {
