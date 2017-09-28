@@ -43,7 +43,9 @@ class Module extends \AnyContent\CMCK\Modules\Backend\Core\Core\Module
 
         $app['console']->add(new ExportCommand());
         $app['console']->add(new ImportCommand());
+        $app['console']->add(new ImportFolderCommand());
         $app['console']->add(new ArchiveCommand());
+
     }
 
 
