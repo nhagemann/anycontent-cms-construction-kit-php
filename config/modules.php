@@ -30,12 +30,12 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Glossary');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\CustomList');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\View\Map');
 
-$app->registerModule('AnyContent\Dev');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Admin\ExcelBackup');
 
 
 \KVMLogger\KVMLoggerFactory::createWithKLogger('../');
 
-//\KVMLogger\KVMLoggerFactory::instance()->logRequest();
-//\KVMLogger\KVMLoggerFactory::instance()->enablePHPExceptionLogging();
-//\KVMLogger\KVMLoggerFactory::instance()->enablePHPErrorLogging();
+//\KVMLogger\KVMLogger::instance()->logRequest();
+//\KVMLogger\KVMLogger::instance()->enablePHPExceptionLogging();
+//\KVMLogger\KVMLogger::instance()->enablePHPErrorLogging();
+

@@ -19,7 +19,7 @@ class ExportCommand extends \AnyContent\CMCK\Modules\Backend\Core\Application\Co
     protected function configure()
     {
         $this->setName('cmck:export')
-            ->setDescription('Export records of a content type.')
+            ->setDescription('Export records of a content type into one json or Excel/XML file.')
             ->addArgument(
                 'repository',
                 InputArgument::REQUIRED,
