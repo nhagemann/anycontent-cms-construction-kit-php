@@ -10,6 +10,10 @@ $(document).on("cmck", function (e, params) {
                 rows = $(this).attr('rows');
                 h = 90 + rows * 18;
 
+                readonly = 0;
+                if($(this).attr('disabled')=='disabled'){
+                    readonly = 1;
+                }
 
                 tinymce.init({
                     selector: '#' + id, height: h, setup: function (editor) {
@@ -18,6 +22,7 @@ $(document).on("cmck", function (e, params) {
                         })
 
                     },
+                    readonly: readonly,
                     plugins: ["code", "link", "anchor", "paste"],
                     toolbar: "undo redo | bold italic | bullist numlist | link unlink anchor | styleselect |  alignleft aligncenter alignright alignjustify | indent outdent | removeformat | code  ",
 
