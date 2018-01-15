@@ -82,6 +82,15 @@ class Controller
                                                                           ->getName(), $workspace, $language);
                 $filename = strtolower(date('Ymd') . '_export_' . $contentTypeDefinition->getName() . '_' . $workspace . '_' . $language . '.xlsx');
             }
+
+            if ($exporter->gotErrors())
+            {
+                foreach ($exporter->getErrors() as $error)
+                {
+                    $app['context']->addErrorMessage($error);
+                }
+            }
+
             if ($data)
             {
 

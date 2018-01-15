@@ -12,6 +12,8 @@ class Exporter
 
     protected $output;
 
+    protected $errors = [];
+
     public function exportJSON(Repository $repository, $contentTypeName, $workspace = 'default', $language = 'default', $viewName = 'exchange')
     {
         $repository->selectContentType($contentTypeName);
@@ -57,6 +59,7 @@ class Exporter
 
     public function exportXLSX(Repository $repository, $contentTypeName, $workspace = 'default', $language = 'default', $viewName = 'exchange')
     {
+        $this->errors = [];
         $repository->selectContentType($contentTypeName);
 
         // Select view and fallback if necessary
@@ -125,8 +128,7 @@ class Exporter
                     /** @var Record[] $records */
                     $records = $repository->getRecords('', '.id', 1);
 
-                    $this->writeln('Writing sheet '.$title.' with '.count($records).' record(s).');
-
+                    $this->writeln('Writing sheet ' . $title . ' with ' . count($records) . ' record(s).');
 
                     $objPHPExcel = $this->addRecordsToExcelSheet($objPHPExcel, $i, $records, $contentTypeDefinition, $viewName, $title);
 
@@ -218,7 +220,11 @@ class Exporter
 
             $column = 2;
             foreach ($contentTypeDefinition->getProperties($viewName) as $property) {
-                $worksheet->setCellValueByColumnAndRow($column, $row, $record->getProperty($property));
+                $value = $record->getProperty($property);
+                if (strlen($value) > 32767) {
+                    $this->addError('The Excel character limit for a cell has been exceeded. Could not export record ' . $record->getId() . ' successfully. File corrupt.');
+                }
+                $worksheet->setCellValueByColumnAndRow($column, $row, $value);
                 $column++;
             }
             $row++;
@@ -240,6 +246,27 @@ class Exporter
         if ($this->output) {
             $this->output->writeln($msg);
         }
+    }
+
+    public function gotErrors()
+    {
+        return (boolean)count($this->errors);
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param string $error
+     */
+    protected function addError($error)
+    {
+        $this->errors[] = $error;
     }
 
 }
