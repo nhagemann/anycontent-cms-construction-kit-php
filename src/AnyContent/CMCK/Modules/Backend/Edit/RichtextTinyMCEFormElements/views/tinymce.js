@@ -22,6 +22,7 @@ $(document).on("cmck", function (e, params) {
                         })
 
                     },
+                    content_css: "/css/tinymce.css",
                     readonly: readonly,
                     plugins: ["code", "link", "anchor", "paste"],
                     toolbar: "undo redo | bold italic | bullist numlist | link unlink anchor | styleselect |  alignleft aligncenter alignright alignjustify | indent outdent | removeformat | code  ",

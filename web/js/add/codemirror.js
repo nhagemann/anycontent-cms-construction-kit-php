@@ -16,7 +16,8 @@ $(document).on("cmck", function (e, params) {
 
             $('.textarea-codemirror').each(function () {
 
-                var options = {lineNumbers: true, lineWrapping: true};
+
+                var options = {lineNumbers: true, lineWrapping: true, autoRefresh:true};
 
 
                 var mode = ($(this).attr('data-mode'));
@@ -62,8 +63,8 @@ $(document).on("cmck", function (e, params) {
                     $(that).val(cMirror.getValue());
                 });
                 codeMirrorList.push(codeMirrorInstance);
-            });
 
+            });
             break;
     }
 });
