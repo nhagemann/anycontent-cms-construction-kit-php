@@ -9,16 +9,20 @@
                    title="{{ definition.name }}">{% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</a>
             </li>
         </ol>
+
         {% if record %}
 
-                        <h3><span class="label label-info">#{{ record.id }}
-                    <small>.{{ record.revision }}</small></span> {{ record.name }}{% if definition.hasSubtypes() %}
-                    <span
-                            class="badge primary subtype{% if record.subtype !='' %} subtype-{{ record.subtype|lower }}{% endif %}">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
-                    <span class="badge primary status{% if record.status !='' %} status-{{ record.status|lower }}{% endif %}">{{ record.statusLabel }}</span>{% endif %}</h3>
+                        <h3>
+                            <span class="label label-info">#{{ record.id }}  <small>.{{ record.revision }}</small></span>
+                            {{ record.name }}{% if definition.hasSubtypes() %}
+                    <span class="badge primary subtype{% if record.subtype !='' %} subtype-{{ record.subtype|lower }}{% endif %}">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+                    <span class="badge primary status{% if record.status !='' %} status-{{ record.status|lower }}{% endif %}">{{ record.statusLabel }}</span>{% endif %}</span>
+                        </h3>
+
         {% else %}
             <h3><span class="label label-info">#new</span> New Record</h3>
         {% endif %}
+
     </div>
 
     <div class="row">
@@ -80,9 +84,18 @@
             <input type="hidden" name="$hidden[workspace]" value="{{ workspaces.current }}">
             <input type="hidden" name="$hidden[language]" value="{{ languages.current }}">
         </form>
-
-
     </div>
+
+    {% if record %}
+        <div class="row">
+            <span class="pull-right">Last modification: {{ record.lastChangeUserInfo.timestamp | date('d.m.Y H:i')}} {% if record.lastChangeUserInfo.name %}- {{ record.lastChangeUserInfo.name }}{% endif %}
+                    {%if record.repository.supportsRevisions  %}
+                        &nbsp;<a href="{{ links.revisions }}" class="btn btn-default btn-xs" role="button" id="listing_button_revisions"><span class="glyphicon glyphicon-grain"></span> Show Revisions</a>
+                    {% endif %}
+            </span>
+
+        </div>
+    {% endif %}
 
     {% block buttons %}
         <div class="row">

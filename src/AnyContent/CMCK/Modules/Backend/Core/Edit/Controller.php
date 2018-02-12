@@ -353,6 +353,16 @@ class Controller
                 )
             );
 
+            $vars['links']['revisions'] = $app['url_generator']->generate(
+                'listRecordRevisions',
+                array(
+                    'recordId'=>$recordId,
+                    'contentTypeAccessHash' => $contentTypeAccessHash,
+                    'workspace' => $app['context']->getCurrentWorkspace(),
+                    'language' => $app['context']->getCurrentLanguage(),
+                )
+            );
+
             if ($record) {
                 $app['context']->setCurrentRecord($record);
                 $vars['record'] = $record;

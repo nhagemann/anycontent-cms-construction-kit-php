@@ -1,0 +1,72 @@
+{% extends "layout-default.twig" %}
+
+{% block content %}
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li>
+                <a href="{{ links.repository }}">{% if repository.title %}{{ repository.title }}{% else %}{{ repository.name }}{% endif %}</a>
+            </li>
+            <li><a href="{{ links.listRecords }}"
+                   title="{{ definition.name }}">{% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</a>
+            </li>
+        </ol>
+
+
+        <h3>
+            <span class="label label-info">#{{ record.id }}
+                <small>.{{ record.revision }}</small></span>
+            {{ record.name }}{% if definition.hasSubtypes() %}
+                <span
+                class="badge primary subtype{% if record.subtype !='' %} subtype-{{ record.subtype|lower }}{% endif %}">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
+            <span class="badge primary status{% if record.status !='' %} status-{{ record.status|lower }}{% endif %}">{{ record.statusLabel }}</span>{% endif %}</span>
+        </h3>
+
+
+    </div>
+
+    <div class="row">
+        <br/>
+        <table class="table table-striped">
+
+            <tr>
+                <th>Nr</th>
+                <th>UserInfo</th>
+                <th>Diff</th>
+                <th>&nbsp;</th>
+            </tr>
+            {% for revision in revisions %}
+                <tr>
+                    <td>{{ revision.record.revision }}</td>
+                    <td> {{ revision.record.lastChangeUserInfo.timestamp | date('d.m.Y H:i') }}</td>
+                    <td>
+                        {% if revision.diff %}
+                            {% for diff in revision.diff %}
+                                <strong>{{ diff.label }}</strong>:&nbsp;
+                                {{ diff.html | raw }}<br/>
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td><a href="/content/edit/ee678018f2a451c8ab3661e366b6a86d/90/default/default"
+                           class="btn btn-primary">Edit</a>&nbsp;<a
+                                href="/content/delete/ee678018f2a451c8ab3661e366b6a86d/90/default/default"
+                                class="btn btn-success">Recreate</a></td>
+                </tr>
+
+            {% endfor %}
+        </table>
+    </div>
+
+
+
+    {% block buttons %}
+        <div class="row">
+            <hr/>
+            {{ buttons | raw }}
+        </div>
+    {% endblock %}
+
+    {% include "files-modal-file-zoom.twig" %}
+{% endblock %}

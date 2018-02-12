@@ -26,6 +26,7 @@ $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Sort');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Edit');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Start');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Config');
+$app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Revisions');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\Files');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\TimeShift');
 $app->registerModule('AnyContent\CMCK\Modules\Backend\Core\WorkspacesLanguages');

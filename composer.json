@@ -21,7 +21,8 @@
     "knplabs/console-service-provider": "^1",
     "monolog/monolog": "^1",
     "nhagemann/anycontent-client-php": "^3.0",
-    "nhagemann/anycontent-service-php": "^1.0"
+    "nhagemann/anycontent-service-php": "^1.0",
+    "cogpowered/finediff": "^0.3"
   },
   "require-dev": {
   },
