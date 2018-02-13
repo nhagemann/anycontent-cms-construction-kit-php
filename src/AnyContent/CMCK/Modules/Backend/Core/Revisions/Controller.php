@@ -2,11 +2,13 @@
 
 namespace AnyContent\CMCK\Modules\Backend\Core\Revisions;
 
+use AnyContent\Client\AbstractRecord;
 use AnyContent\Client\ContentFilter;
 use AnyContent\CMCK\Modules\Backend\Core\Application\Application;
 
 use AnyContent\CMCK\Modules\Backend\Core\User\UserManager;
 use CMDL\ContentTypeDefinition;
+use CMDL\DataTypeDefinition;
 use CMDL\ViewDefinition;
 
 use AnyContent\Client\Repository;
@@ -21,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
 
 class Controller
 {
@@ -29,8 +32,6 @@ class Controller
     {
         /** @var UserManager $user */
         $user = $app['user'];
-
-        $differ = new Diff();
 
         $vars = array();
 
@@ -121,39 +122,31 @@ class Controller
 
                 $vars['definition'] = $contentTypeDefinition;
 
-
                 $revisions = $repository->getRevisionsOfRecord($recordId);
 
+                $properties = self::getPropertiesForDiff($contentTypeDefinition);
+
+                /** @var Record|false $compare */
                 $compare = false;
-                foreach ($revisions as $revision)
-                {
-                    $item = ['record'=>$revision,'diff'=>false];
-                    if ($compare)
-                    {
-                        $diff = [];
-                        foreach ($contentTypeDefinition->getViewDefinition()->getFormElementDefinitions() as $formElementDefinition)
-                        {
-                            $property = $formElementDefinition->getName();
-                            if ($property)
-                            {
-                                if ($revision->getProperty($property)!=$compare->getProperty($property))
-                                {
-                                    $html= $differ->render($revision->getProperty($property),$compare->getProperty($property));
+                foreach ($revisions as $revision) {
 
-                                    $label = $formElementDefinition->getLabel()?$formElementDefinition->getLabel():$property;
-                                    $diff[]=['label'=>$label,'html'=>$html];
+                    if ($compare) {
+                        $item = ['record' => $compare, 'diff' => self::diffRecords($compare, $revision, $properties)];
 
-
-                                }
-                            }
-                        }
-                        if (count($diff)>0) {
-                            $item['diff'] = $diff;
-                        }
-
+                        $item ['username'] = $compare->getLastChangeUserInfo()->getName();
+                        $item ['gravatar'] = md5($compare->getLastChangeUserInfo()->getUsername());
+                        $item ['date'] = $compare->getLastChangeUserInfo()->getTimestamp();
+                        $items[] = $item;
                     }
+                    if ($revision === end($revisions)) {
+                        $item    = ['record' => $revision, 'diff' => self::diffRecords($revision, null, $properties)];
+                        $item ['username'] = $revision->getLastChangeUserInfo()->getName();
+                        $item ['gravatar'] = md5($revision->getLastChangeUserInfo()->getUsername());
+                        $item ['date'] = $revision->getLastChangeUserInfo()->getTimestamp();
+                        $items[] = $item;
+                    }
+
                     $compare = $revision;
-                    $items[]=$item;
                 }
 
                 $vars['revisions'] = $items;
@@ -168,6 +161,86 @@ class Controller
         }
 
         return $app->renderPage('forbidden.twig', $vars);
+    }
+
+    protected static function getPropertiesForDiff(DataTypeDefinition $dataTypeDefinition)
+    {
+        $properties = [];
+
+        // First add properties from view definition with labels
+
+        foreach ($dataTypeDefinition->getViewDefinition()->getFormElementDefinitions() as $formElementDefinition) {
+            if ($formElementDefinition->getName()) {
+                $properties[$formElementDefinition->getName()] = $formElementDefinition->getLabel();
+            }
+        }
+
+        // Then add all available properties not yet added
+
+        $properties = array_merge(array_combine($dataTypeDefinition->getProperties(), $dataTypeDefinition->getProperties()), $properties);
+
+        return $properties;
+    }
+
+    /**
+     * @param AbstractRecord      $record1
+     * @param AbstractRecord|null $record2
+     * @param                     $properties
+     */
+    protected static function diffRecords(AbstractRecord $record1, $record2 = null, $properties)
+    {
+
+        $differ = new Diff();
+        $diff   = [];
+        foreach ($properties as $property => $label) {
+            $value1 = $record1->getProperty($property);
+            $value2 = '';
+            if ($record2) {
+                $value2 = $record2->getProperty($property);
+            }
+            if ($value1 != $value2) {
+
+                $jsontest = json_decode($value1, true);
+                if (json_last_error() == JSON_ERROR_NONE && is_array($jsontest)) {
+
+                    $value1 = Yaml::dump($jsontest,4);
+                    $value2 = Yaml::dump(json_decode($value2,true),4);
+                    if ($value2=='null')
+                    {
+                        $value2='';
+                    }
+                }
+
+
+                $html   = $differ->render($value2, $value1);
+                $diff[] = ['label' => $label, 'html' => $html];
+            }
+        }
+        if (count($diff) > 0) {
+            return $diff;
+        }
+
+        return false;
+        /*
+                      foreach ($contentTypeDefinition->getViewDefinition()->getFormElementDefinitions() as $formElementDefinition)
+                      {
+                          $property = $formElementDefinition->getName();
+                          if ($property)
+                          {
+                              if ($revision->getProperty($property)!=$compare->getProperty($property))
+                              {
+                                  $html= $differ->render($revision->getProperty($property),$compare->getProperty($property));
+
+                                  $label = $formElementDefinition->getLabel()?$formElementDefinition->getLabel():$property;
+                                  $diff[]=['label'=>$label,'html'=>$html];
+
+
+                              }
+                          }
+                      }*/
+        if (count($diff) > 0) {
+            $item['diff'] = $diff;
+        }
     }
 
 }

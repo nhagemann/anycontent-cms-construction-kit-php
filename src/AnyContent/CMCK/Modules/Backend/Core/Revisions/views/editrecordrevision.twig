@@ -1,6 +1,15 @@
 {% extends "layout-default.twig" %}
 
 {% block content %}
+    <style>
+        ins {
+            color: green;
+        }
+
+        del {
+            color: red;
+        }
+    </style>
     <div class="row">
         <ol class="breadcrumb">
             <li><a href="/">Home</a></li>
@@ -30,15 +39,24 @@
         <table class="table table-striped">
 
             <tr>
-                <th>Nr</th>
-                <th>UserInfo</th>
+                <th style="width: 40px">Nr</th>
+                <th style="width: 200px">UserInfo</th>
                 <th>Diff</th>
-                <th>&nbsp;</th>
+                <th style="width: 150px">&nbsp;</th>
             </tr>
             {% for revision in revisions %}
                 <tr>
                     <td>{{ revision.record.revision }}</td>
-                    <td> {{ revision.record.lastChangeUserInfo.timestamp | date('d.m.Y H:i') }}</td>
+                    <td>
+
+                        <div class="pull-left gravatar">
+                            <img src="https://www.gravatar.com/avatar/{{ revision.gravatar }}?s=40" height="40"
+                                 width="40"/>
+                        </div>
+                        <div class="userinfo">{{ revision.username }}<br/>
+                            <small>{{ revision.date | date ('d.m.Y H:i:s') }}</small>
+                        </div>
+                    </td>
                     <td>
                         {% if revision.diff %}
                             {% for diff in revision.diff %}
