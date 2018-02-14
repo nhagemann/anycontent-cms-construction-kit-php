@@ -10,29 +10,14 @@
             color: red;
         }
     </style>
-    <div class="row">
-        <ol class="breadcrumb">
-            <li><a href="/">Home</a></li>
-            <li>
-                <a href="{{ links.repository }}">{% if repository.title %}{{ repository.title }}{% else %}{{ repository.name }}{% endif %}</a>
-            </li>
-            <li><a href="{{ links.listRecords }}"
-                   title="{{ definition.name }}">{% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</a>
-            </li>
-        </ol>
+
+    {% if id is defined %}
+        {% include "editrecord-breadcrumb.twig" %}
+    {% else %}
+        {% include "editconfig-breadcrumb.twig" %}
+    {% endif %}
 
 
-        <h3>
-            <span class="label label-info">#{{ record.id }}
-                <small>.{{ record.revision }}</small></span>
-            {{ record.name }}{% if definition.hasSubtypes() %}
-                <span
-                class="badge primary subtype{% if record.subtype !='' %} subtype-{{ record.subtype|lower }}{% endif %}">{{ record.subtypeLabel }}</span>{% endif %}{% if definition.hasStatusList() %}
-            <span class="badge primary status{% if record.status !='' %} status-{{ record.status|lower }}{% endif %}">{{ record.statusLabel }}</span>{% endif %}</span>
-        </h3>
-
-
-    </div>
 
     <div class="row">
         <br/>
@@ -42,10 +27,12 @@
                 <th style="width: 40px">Nr</th>
                 <th style="width: 200px">UserInfo</th>
                 <th>Diff</th>
-                <th style="width: 150px">&nbsp;</th>
+                {% if definition.isTimeShiftable %}
+                    <th style="width: 150px">&nbsp;</th>
+                {% endif %}
             </tr>
             {% for revision in revisions %}
-                <tr>
+                <tr{% if revision.deleted %} class="danger"{% endif %}>
                     <td>{{ revision.record.revision }}</td>
                     <td>
 
@@ -53,24 +40,31 @@
                             <img src="https://www.gravatar.com/avatar/{{ revision.gravatar }}?s=40" height="40"
                                  width="40"/>
                         </div>
-                        <div class="userinfo">{{ revision.username }}<br/>
+                        <div class="userinfo">{% if revision.username %}{{ revision.username }}<br/>{% endif %}
                             <small>{{ revision.date | date ('d.m.Y H:i:s') }}</small>
                         </div>
                     </td>
-                    <td>
-                        {% if revision.diff %}
-                            {% for diff in revision.diff %}
-                                <strong>{{ diff.label }}</strong>:&nbsp;
-                                {{ diff.html | raw }}<br/>
-                            {% endfor %}
-                        {% else %}
-                            -
+                    {% if revision.deleted %}
+                        <td>Record deleted</td>
+                        <td>&nbsp;</td>
+                    {% else %}
+                        <td>
+                            {% if revision.diff %}
+                                {% for diff in revision.diff %}
+                                    <strong>{{ diff.label }}</strong>:&nbsp;
+                                    {{ diff.html | raw }}<br/>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        {% if definition.isTimeShiftable %}
+                            <td>
+                                <a href="{{ revision.links.edit }}" class="btn btn-primary">Edit</a>&nbsp;<a
+                                        href="{{ revision.links.recreate }}" class="btn btn-success">Recreate</a>
+                            </td>
                         {% endif %}
-                    </td>
-                    <td><a href="/content/edit/ee678018f2a451c8ab3661e366b6a86d/90/default/default"
-                           class="btn btn-primary">Edit</a>&nbsp;<a
-                                href="/content/delete/ee678018f2a451c8ab3661e366b6a86d/90/default/default"
-                                class="btn btn-success">Recreate</a></td>
+                    {% endif %}
                 </tr>
 
             {% endfor %}

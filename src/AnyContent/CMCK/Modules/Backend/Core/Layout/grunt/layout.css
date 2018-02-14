@@ -21,6 +21,10 @@ body.layout-plain-white {
     background-color: #ffffff;
 }
 
+.navbar {
+    border-radius: 0px;
+}
+
 /* position of AnyContent logo in navbar */
 
 .navbar-top li {
@@ -36,6 +40,16 @@ body.layout-plain-white {
 .nav-timeshift-display {
     padding-top: 9px;
     padding-bottom: 9px;
+    width: 175px;
+    text-align: center;
+}
+
+.timeshift-blink{
+    color: red;
+}
+
+.body-timeshift {
+    background-image: url(/img/gplaypattern.png) !important;
 }
 
 /* smaller margins for h-tags used within the print form element*/

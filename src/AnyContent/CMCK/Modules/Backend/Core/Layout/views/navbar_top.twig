@@ -17,7 +17,7 @@
                             <form class="form-inline" action="{{ links.workspaces }}" method="post">
 
                                 <div class="form-group">
-                                    <em>Workspace:</em>
+                                    Workspace:&nbsp;
                                 </div>
                                 <div class="form-group">
                                     <select class="form-control" onchange="this.form.submit()" name="workspace">
@@ -37,7 +37,7 @@
                             <form class="form-inline" action="{{ links.languages }}" method='post'>
 
                                 <div class="form-group">
-                                    <em>Language:</em>
+                                    Language:&nbsp;
                                 </div>
                                 <div class="form-group">
                                     <select class="form-control" onchange="this.form.submit()" name="language">
@@ -54,11 +54,7 @@
                     {% if app.context.canDoTimeshift %}
                         {% if timeshift.active %}
                             <li class="nav-timeshift-display">
-
-                                <em>TimeShift: <span
-                                            class="timeshift-blink">{{ timeshift.date }} {{ timeshift.time }}</span></em>&nbsp;
-
-
+                                TimeShift:&nbsp;<span class="timeshift-blink">{{ timeshift.date }}&nbsp;{{ timeshift.time }}</span>
                             </li>
                         {% endif %}
                     {% endif %}

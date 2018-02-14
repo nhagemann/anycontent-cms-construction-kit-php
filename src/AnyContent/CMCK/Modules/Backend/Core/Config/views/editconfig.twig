@@ -1,15 +1,7 @@
 {% extends "layout-default.twig" %}
 
 {% block content %}
-    <div class="row">
-        <ol class="breadcrumb">
-            <li><a href="/">Home</a></li>
-            <li><a href="{{ links.repository }}">{{ repository.name }}</a></li>
-        </ol>
-
-        <h2 title="{{ definition.name }}"><small><span class="glyphicon glyphicon-wrench"></span></small> {% if definition.title %}{{ definition.title }}{% else %}{{ definition.name }}{% endif %}</h2>
-
-    </div>
+    {% include "editconfig-breadcrumb.twig" %}
 
     <div class="row">
         <form class="well" role="form" method="post" name="form_edit" action="" id="form_edit" data-event-countdown="0">
@@ -39,6 +31,17 @@
         </form>
 
     </div>
+
+    {% if record and record.lastChangeUserInfo %}
+        <div class="row">
+            <span class="pull-right">Last modification: {{ record.lastChangeUserInfo.timestamp | date('d.m.Y H:i')}} {% if record.lastChangeUserInfo.name %}- {{ record.lastChangeUserInfo.name }}{% endif %}
+                {%if record.repository.supportsRevisions  %}
+                    &nbsp;<a href="{{ links.revisions }}" class="btn btn-default btn-xs" role="button" id="listing_button_revisions"><span class="glyphicon glyphicon-grain"></span> Show Revisions</a>
+                {% endif %}
+            </span>
+
+        </div>
+    {% endif %}
 
     {% include "files-modal-file-zoom.twig" %}
 {% endblock %}

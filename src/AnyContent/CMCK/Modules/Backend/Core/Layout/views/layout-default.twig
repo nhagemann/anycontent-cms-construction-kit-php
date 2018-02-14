@@ -23,12 +23,12 @@
     <![endif]-->
 
 
-
     {{ jsheadlinks | raw }}
     {{ cssheadlinks | raw }}
 
 </head>
-<body class="layout-default {{ csscontext }}">
+<body class="layout-default {{ csscontext }} {% if app.context.canDoTimeshift %}{% if timeshift.active %}body-timeshift{% endif %}{% endif %}">
+
 <script src="/js/anycontent.min.js" rel="stylesheet"></script>
 
 {% block navbar %}

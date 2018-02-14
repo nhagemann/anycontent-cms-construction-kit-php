@@ -68,6 +68,7 @@ class Controller
                 $vars['links']['timeshift']  = $app['url_generator']->generate('timeShiftEditConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
                 $vars['links']['workspaces'] = $app['url_generator']->generate('changeWorkspaceEditConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
                 $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageEditConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
+                $vars['links']['revisions']  = $app['url_generator']->generate('listConfigRevisions', array( 'configTypeAccessHash' => $configTypeAccessHash,'workspace'=>$app['context']->getCurrentWorkspace(),'language'=>$app['context']->getCurrentLanguage() ));
 
                 return $app->renderPage('editconfig.twig', $vars);
 

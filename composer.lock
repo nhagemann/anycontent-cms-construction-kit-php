@@ -553,16 +553,16 @@
         },
         {
             "name": "nhagemann/anycontent-client-php",
-            "version": "3.2.0",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nhagemann/anycontent-client-php.git",
-                "reference": "2f74efb715cb4414912c4ea5bd90352bf7f0df87"
+                "reference": "fa69943e02547e15e6f589b2dc32507542d30c67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/2f74efb715cb4414912c4ea5bd90352bf7f0df87",
-                "reference": "2f74efb715cb4414912c4ea5bd90352bf7f0df87",
+                "url": "https://api.github.com/repos/nhagemann/anycontent-client-php/zipball/fa69943e02547e15e6f589b2dc32507542d30c67",
+                "reference": "fa69943e02547e15e6f589b2dc32507542d30c67",
                 "shasum": ""
             },
             "require": {
@@ -602,7 +602,7 @@
             ],
             "description": "Client library to work with AnyContent repositories. Provides connectors for different repository types (file based, mysql, rest).",
             "homepage": "http://www.nilshagemann.de",
-            "time": "2018-02-12T12:56:04+00:00"
+            "time": "2018-02-14T12:59:25+00:00"
         },
         {
             "name": "nhagemann/anycontent-service-php",
