@@ -159,6 +159,7 @@ class Controller
                     array('contentTypeAccessHash' => $contentTypeAccessHash)
                 );
 
+                $app['layout']->addJsFile('editrecord.js');
                 return $app->renderPage('editrecord.twig', $vars);
             } else {
                 return $app->renderPage('forbidden.twig', $vars);
@@ -384,6 +385,7 @@ class Controller
                     []
                 );
 
+                $app['layout']->addJsFile('editrecord.js');   
                 return $app->renderPage('editrecord.twig', $vars);
             } else {
                 $vars['id'] = $recordId;
@@ -391,6 +393,8 @@ class Controller
                 return $app->renderPage('record-not-found.twig', $vars);
             }
         }
+
+
 
         return $app->renderPage('forbidden.twig', $vars);
     }
