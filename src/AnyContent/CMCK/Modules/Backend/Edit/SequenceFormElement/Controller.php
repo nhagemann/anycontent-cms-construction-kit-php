@@ -56,6 +56,8 @@ class Controller
             )
         );
 
+        $app['layout']->addJsFile('editsequence.js');
+
         $vars['property'] = $property;
 
         /** @var Repository $repository */

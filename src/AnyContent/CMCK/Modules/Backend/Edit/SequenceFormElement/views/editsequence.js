@@ -51,7 +51,12 @@ function cmck_sequence_trigger_change(object)
         };
 
 
+        console.log('editsequence.js');
+        
         $(document).on("cmck", function (e, params) {
+
+
+            console.log (params.type);
 
               switch (params.type) {
 
