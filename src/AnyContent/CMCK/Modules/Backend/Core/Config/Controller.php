@@ -70,6 +70,7 @@ class Controller
                 $vars['links']['languages']  = $app['url_generator']->generate('changeLanguageEditConfig', array( 'configTypeAccessHash' => $configTypeAccessHash ));
                 $vars['links']['revisions']  = $app['url_generator']->generate('listConfigRevisions', array( 'configTypeAccessHash' => $configTypeAccessHash,'workspace'=>$app['context']->getCurrentWorkspace(),'language'=>$app['context']->getCurrentLanguage() ));
 
+                $app['layout']->addJsFile('editrecord.js');
                 return $app->renderPage('editconfig.twig', $vars);
 
             }

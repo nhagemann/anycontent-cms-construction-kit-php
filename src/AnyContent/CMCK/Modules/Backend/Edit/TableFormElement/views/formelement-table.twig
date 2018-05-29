@@ -20,12 +20,18 @@
 
                     {% for cell in row %}
 
-                        <td><textarea name="{{ name }}[]">{{ cell }}</textarea></td>
+                        <td><textarea name="{{ name }}[]"
+                                      {% if definition.isProtected %}disabled="disabled"{% endif %}>{{ cell }}</textarea>
+                        </td>
 
                     {% endfor %}
                     <td width="3%">
-                        <a class="btn btn-default btn-xs" href="#" tabindex="-1" data-action="plus">+</button></a>
-                        <a class="btn btn-default btn-xs" href="#" tabindex="-1" data-action="minus">-</button></a>
+                        {% if definition.isProtected %}
+                            &nbsp;
+                        {% else %}
+                            <a class="btn btn-default btn-xs" href="#" tabindex="-1" data-action="plus">+</button></a>
+                            <a class="btn btn-default btn-xs" href="#" tabindex="-1" data-action="minus">-</button></a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

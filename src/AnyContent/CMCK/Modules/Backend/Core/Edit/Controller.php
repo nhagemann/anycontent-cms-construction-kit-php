@@ -437,6 +437,10 @@ class Controller
                 break;
         }
 
+        if ($hidden['duplicate']==1) {
+            $duplicate = true;
+        }
+
         /** @var Repository $repository */
         $repository = $app['repos']->getRepositoryByContentTypeAccessHash($contentTypeAccessHash);
 
@@ -595,6 +599,7 @@ class Controller
                     }
                 }
                 if ($duplicate) {
+                    $record->setName('Duplicate from '.$record->getId().' - '.$record->getName());
                     $record->setId(null);
                     $recordId = $repository->saveRecord(
                         $record,

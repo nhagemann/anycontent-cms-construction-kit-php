@@ -40,15 +40,19 @@
 
                         {% if record %}
                             {% if links.delete is defined %}
-                                <span class="btn-group">
-                        <a href="{{ links.delete }}" class="btn btn-danger button_delete">Delete</a>
-                    </span>
 
+                        <a href="{{ links.delete }}" class="btn btn-danger button_delete">Delete</a>
+
+
+                                <input type="hidden" id="form_edit_button_duplicate" name="$hidden[duplicate]"
+                                       value="0">
                                 {% if links.transfer is defined %}
-                                    <span class="btn-group">
+                                    <input type="submit" class="btn btn-success" href="#" value="Duplicate"
+                                           onclick="$('#form_edit_button_duplicate').val(1)"/>
+                                    
                             <a href="{{ links.transfer }}" class="btn btn-success" role="button"
                                id="form_edit_button_transfer">Transfer</a>
-                                </span>
+                               
                                 {% endif %}
                             {% endif %}
 
