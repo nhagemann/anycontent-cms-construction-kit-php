@@ -81,9 +81,6 @@ class Controller
             $repository->setTimeShift($app['context']->getCurrentTimeShift());
             $repository->selectView('default');
 
-            /** @var Record $record */
-            $record = $repository->getRecord($recordId);
-
             $buttons      = array();
             $buttons[100] = array(
                 'label'     => 'List Records',
@@ -125,28 +122,23 @@ class Controller
 
                 /** @var Record|false $compare */
                 $compare = false;
+
                 foreach ($revisions as $revision) {
 
-                    if ($revision->isADeletedRevision())
-                    {
+                    if ($revision->isADeletedRevision()) {
                         $revision->setProperties([]);
-                    }
-
-                    if ($revision === end($revisions)) {
-
-                        $app['context']->setCurrentRecord($revision);
-                        $vars['record'] = $revision;
                     }
 
                     if ($compare) {
 
                         $item = ['record' => $compare, 'diff' => self::diffRecords($compare, $revision, $properties)];
 
-                        $item ['username']          = $compare->getLastChangeUserInfo()->getName();
-                        $item ['gravatar']          = md5($compare->getLastChangeUserInfo()->getUsername());
-                        $item ['date']              = $compare->getLastChangeUserInfo()->getTimestamp();
-                        $item ['deleted']           = $compare->isADeletedRevision();
-                        $item ['links']['edit']     = $app['url_generator']->generate(
+                        $item ['username'] = $compare->getLastChangeUserInfo()->getName();
+                        $item ['gravatar'] = md5($compare->getLastChangeUserInfo()->getUsername());
+                        $item ['date']     = $compare->getLastChangeUserInfo()->getTimestamp();
+                        $item ['deleted']  = $compare->isADeletedRevision();
+
+                        $item ['links']['edit'] = $app['url_generator']->generate(
                             'timeShiftIntoRecordRevision',
                             [
                                 'contentTypeAccessHash' => $contentTypeAccessHash,
@@ -155,6 +147,7 @@ class Controller
                                 'workspace'             => $app['context']->getCurrentWorkspace(),
                                 'language'              => $app['context']->getCurrentLanguage(),
                             ]);
+
                         $item ['links']['recreate'] = $app['url_generator']->generate(
                             'recreateRecordRevision',
                             [
@@ -165,6 +158,10 @@ class Controller
                                 'language'              => $app['context']->getCurrentLanguage(),
                             ]);
                         $items[]                    = $item;
+                    }
+                    else {
+                        $vars['record'] = $revision;
+                        $app['context']->setCurrentRecord($revision);
                     }
                     if ($revision === end($revisions)) {
                         $item                       = ['record' => $revision, 'diff' => self::diffRecords($revision, null, $properties)];
@@ -190,11 +187,11 @@ class Controller
                                 'workspace'             => $app['context']->getCurrentWorkspace(),
                                 'language'              => $app['context']->getCurrentLanguage(),
                             ]);
-                        $items[]                    = $item;
+
+                        $items[] = $item;
                     }
 
                     $compare = $revision;
-
                 }
 
                 $vars['revisions'] = $items;
