@@ -53,7 +53,7 @@ function cmck_sequence_trigger_change(object)
         
         $(document).on("cmck", function (e, params) {
 
-
+              var item;
 
               switch (params.type) {
 
