@@ -168,7 +168,7 @@ class Application extends SilexApplication
                 $cacheDriver = new ArrayCache();
                 break;
             case 'apc':
-                $cacheDriver = new  \Doctrine\Common\Cache\ApcCache();
+                $cacheDriver = new  \Doctrine\Common\Cache\ApcuCache();
                 $this->setCacheDriver($cacheDriver);
                 break;
             case 'memcached':
