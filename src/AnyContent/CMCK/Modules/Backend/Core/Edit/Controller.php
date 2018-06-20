@@ -436,8 +436,8 @@ class Controller
                 $insert = true;
                 break;
         }
-
-        if ($hidden['duplicate']==1) {
+        
+        if ( isset($hidden['duplicate']) && $hidden['duplicate']==1 ) {
             $duplicate = true;
         }
 

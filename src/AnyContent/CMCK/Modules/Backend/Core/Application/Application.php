@@ -45,7 +45,7 @@ class Application extends SilexApplication
 
         parent::__construct($values);
 
-        $this['config'] = $this->share(function ($this)
+        $this['config'] = $this->share(function ()
         {
             return new ConfigService($this);
         });
@@ -168,7 +168,7 @@ class Application extends SilexApplication
                 $cacheDriver = new ArrayCache();
                 break;
             case 'apc':
-                $cacheDriver = new  \Doctrine\Common\Cache\ApcCache();
+                $cacheDriver = new  \Doctrine\Common\Cache\ApcuCache();
                 $this->setCacheDriver($cacheDriver);
                 break;
             case 'memcached':
