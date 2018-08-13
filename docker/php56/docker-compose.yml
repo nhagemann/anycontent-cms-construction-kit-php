@@ -9,8 +9,8 @@ services:
     volumes:
       - ./config/php/php.ini:/usr/local/etc/php/php.ini
       - ../../:/application
-      - ../../:/var/www
       - ../../web/:/var/www/html
+      - ../../:/var/www
       - ../../data/:/var/repositories
     ports:
       - "8056:80"

@@ -5,3 +5,4 @@ RUN apt-get update && \
     && a2enmod rewrite
 
 RUN cd /; curl --silent --show-error https://getcomposer.org/installer | php
+

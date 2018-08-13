@@ -9,6 +9,11 @@ services:
     volumes:
       - ./config/php/php.ini:/usr/local/etc/php/php.ini
       - ../../:/application
+      - ../../web/:/var/www/html
+      - ../../:/var/www
+      - ../../data/:/var/repositories
+    ports:
+      - "8070:80"
     networks:
       - anycontent
 networks:
