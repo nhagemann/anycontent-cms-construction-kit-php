@@ -1,0 +1,16 @@
+version: '2'
+services:
+  anycontent-cms-construction-kit-php70:
+    container_name: anycontent-cms-construction-kit-php70
+    build:
+      context: ./build/php
+      dockerfile: Dockerfile
+    image: anycontent-cms-construction-kit-php70:1.0.0
+    volumes:
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ../../:/application
+    networks:
+      - anycontent
+networks:
+  anycontent:
+    driver: "bridge"

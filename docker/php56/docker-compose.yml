@@ -1,0 +1,21 @@
+version: '2'
+services:
+  anycontent-cms-construction-kit-php56:
+    container_name: anycontent-cms-construction-kit-php56
+    build:
+      context: ./build/php
+      dockerfile: Dockerfile
+    image: anycontent-cms-construction-kit-php56:1.0.0
+    volumes:
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ../../:/application
+      - ../../:/var/www
+      - ../../web/:/var/www/html
+      - ../../data/:/var/repositories
+    ports:
+      - "8056:80"
+    networks:
+      - anycontent
+networks:
+  anycontent:
+    driver: "bridge"
