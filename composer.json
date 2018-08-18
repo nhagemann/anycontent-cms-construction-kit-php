@@ -12,7 +12,7 @@
     }
   ],
   "require": {
-    "php": ">=5.4",
+    "php": ">=7.0",
     "silex/silex": "^1",
     "twig/twig": "^1",
     "phpoffice/phpexcel": "^1.8",
@@ -20,8 +20,8 @@
     "symfony/yaml": "^2",
     "knplabs/console-service-provider": "^1",
     "monolog/monolog": "^1",
-    "nhagemann/anycontent-client-php": "^3.0",
-    "nhagemann/anycontent-service-php": "^1.0",
+    "nhagemann/anycontent-client-php": "^4.0",
+    "nhagemann/anycontent-service-php": "^4.0",
     "cogpowered/finediff": "^0.3"
   },
   "require-dev": {
