@@ -71,7 +71,7 @@ function cmck_sequence_trigger_change(object)
                     }
 
                     $(".sequence-accordion").accordion({
-                        header: "h3",
+                        header: ".accordionTitle",
                         collapsible: true,
                         heightStyle: "content",
                         active: parseInt($('#form_sequence').attr('data-active-item')),
@@ -85,11 +85,11 @@ function cmck_sequence_trigger_change(object)
                     if (params.type=='sequenceForm.init') {
                         $(".sequence-accordion").sortable({
                             axis: "y",
-                            handle: "h3",
+                            handle: ".accordionTitle",
                             stop: function (event, ui) {
                                 // IE doesn't register the blur when sorting
                                 // so trigger focusout handlers to remove .ui-state-focus
-                                ui.item.children("h3").triggerHandler("focusout");
+                                ui.item.children(".accordionTitle").triggerHandler("focusout");
                             }});
                     }
 
