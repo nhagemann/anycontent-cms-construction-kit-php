@@ -100,3 +100,15 @@ function cmck_document()
 {
     return document;
 }
+
+$(document).ready(function () {
+    $('.button_delete').click(function () {
+        var url = $(this).attr('href');
+        bootbox.confirm('Are you sure?', function (result) {
+            if (result) {
+                document.location = url;
+            }
+        });
+        return false;
+    });
+});
