@@ -20,8 +20,8 @@ class Installer
         {
             echo "Creating web folder\n";
             $filesystem->mkdir($baseDir . '/web');
-            $filesystem->mirror($packageDir . '/web', $baseDir . '/web');
         }
+        $filesystem->mirror($packageDir . '/web', $baseDir . '/web');
 
         echo "Creating config folder with example config.\n";
 
