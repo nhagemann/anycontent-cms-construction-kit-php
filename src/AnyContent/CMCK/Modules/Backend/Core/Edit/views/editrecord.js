@@ -116,16 +116,6 @@ $(document).ready(function () {
     });
 
 
-    $('.button_delete').click(function () {
-        var url = $(this).attr('href');
-        bootbox.confirm('Are you sure?', function (result) {
-            if (result) {
-                document.location = url;
-            }
-        });
-        return false;
-    });
-
     $('#form_edit_button_transfer').click(function () {
         cmck_modal($(this).attr('href'));
         return false;
